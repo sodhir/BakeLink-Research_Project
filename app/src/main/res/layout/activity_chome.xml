@@ -124,8 +124,48 @@
             android:id="@+id/recycler_view_trending_bakers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal" />
+
+        <!-- Top Cake Categories Heading -->
+        <TextView
+            android:id="@+id/tv_top_cakes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Top Cake Categories"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- RecyclerView for Top Cake Categories -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Deals and discounts Heading -->
+        <TextView
+            android:id="@+id/tv_deals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deals &amp; Discounts"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- RecyclerView for deals and discounts -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/deals_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"/>
 
     </LinearLayout>
 

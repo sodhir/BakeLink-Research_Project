@@ -26,12 +26,22 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
         public ImageView bakerImage;
         public TextView bakerName;
         public TextView bakerRating;
+        public ImageView star1;
+        public ImageView star2;
+        public ImageView star3;
+        public ImageView star4;
+        public ImageView star5;
 
         public ViewHolder(View view) {
             super(view);
             bakerImage = view.findViewById(R.id.baker_image);
             bakerName = view.findViewById(R.id.baker_name);
             bakerRating = view.findViewById(R.id.baker_rating);
+            star1 = view.findViewById(R.id.star_1);
+            star2 = view.findViewById(R.id.star_2);
+            star3 = view.findViewById(R.id.star_3);
+            star4 = view.findViewById(R.id.star_4);
+            star5 = view.findViewById(R.id.star_5);
         }
     }
 
@@ -49,9 +59,35 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
         holder.bakerRating.setText(String.valueOf(baker.getRating()));
 
         Context context = holder.itemView.getContext();
-        Glide.with(context)
-                .load(baker.getImageUrl())
-                .into(holder.bakerImage);
+
+        String imageUrl = baker.getImageUrl();
+
+        // Checking if the imageUrl starts with "drawable" or is a URL
+        if (imageUrl != null && imageUrl.startsWith("drawable/")) {
+            // Get the drawable resource name from imageUrl
+            String drawableName = imageUrl.replace("drawable/", "");
+
+            // Get the resource ID from the drawable name
+            int resourceId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
+
+            // Use Glide to load from the drawable resource
+            Glide.with(context)
+                    .load(resourceId) // Load from drawable
+                    .into(holder.bakerImage);
+        } else {
+            // Load from URL using Glide
+            Glide.with(context)
+                    .load(imageUrl) // Load from URL
+                    .into(holder.bakerImage);
+        }
+
+        // Setting the number of filled stars based on the rating
+        int rating = (int) Math.round(baker.getRating());
+        holder.star1.setImageResource(rating >= 1 ? R.drawable.ic_star_filled : R.drawable.ic_star);
+        holder.star2.setImageResource(rating >= 2 ? R.drawable.ic_star_filled : R.drawable.ic_star);
+        holder.star3.setImageResource(rating >= 3 ? R.drawable.ic_star_filled : R.drawable.ic_star);
+        holder.star4.setImageResource(rating >= 4 ? R.drawable.ic_star_filled : R.drawable.ic_star);
+        holder.star5.setImageResource(rating >= 5 ? R.drawable.ic_star_filled : R.drawable.ic_star);
     }
 
     @Override
