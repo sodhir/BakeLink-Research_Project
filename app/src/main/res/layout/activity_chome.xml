@@ -91,6 +91,9 @@
 </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Main content area -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -168,6 +171,7 @@
             android:orientation="horizontal"/>
 
     </LinearLayout>
+    </ScrollView>
 
     <!-- Floating Action Button for Request a Quote -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

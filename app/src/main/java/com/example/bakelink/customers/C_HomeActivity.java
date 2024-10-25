@@ -4,23 +4,22 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.appcompat.widget.Toolbar;
-
-import com.example.bakelink.R;
-
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bakelink.R;
 import com.example.bakelink.customers.adapters.DealsAdapter;
 import com.example.bakelink.customers.adapters.TopCakeCategoryAdapter;
 import com.example.bakelink.customers.adapters.TrendingBakerAdapter;
 import com.example.bakelink.customers.modal.Baker;
 import com.example.bakelink.customers.modal.CakeCategory;
 import com.example.bakelink.customers.modal.Deal;
+
 import java.util.ArrayList;
 import java.util.List;
 
