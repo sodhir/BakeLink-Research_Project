@@ -6,4 +6,8 @@
     <string name="passwordHintText">Password</string>
     <string name="loginText">Get Started</string>
     <string name="textSignUp">Sign Up</string>
+    <string name="aboutBakerText">About the Baker</string>
+    <string name="servicestext"><![CDATA[Services & Specialities]]></string>
+    <string name="cakeSampleText">Cake Samples</string>
+    <string name="customerReviewsText">Customer Reviews</string>
 </resources>
