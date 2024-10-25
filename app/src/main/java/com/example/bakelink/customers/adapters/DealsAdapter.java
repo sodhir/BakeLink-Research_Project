@@ -36,8 +36,9 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.DealViewHold
     public void onBindViewHolder(@NonNull DealViewHolder holder, int position) {
         Deal deal = dealsList.get(position);
         holder.dealName.setText(deal.getName());
-        holder.dealTag.setText(deal.getDealCode()); // Displaying deal code in the tag
-        holder.dealValidTill.setText(deal.getValidTill()); // Assuming you want to show valid till date
+        holder.dealTag.setText(deal.getDealCode());
+        holder.dealValidTill.setText(deal.getValidTill());
+        holder.dealTopTag.setText(deal.getDealTag());
 
         Context context = holder.itemView.getContext();
         String imageUrl = deal.getImageUrl();
@@ -68,14 +69,15 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.DealViewHold
 
     static class DealViewHolder extends RecyclerView.ViewHolder {
         ImageView dealImage;
-        TextView dealTag, dealName, dealValidTill;
+        TextView dealTag, dealName, dealValidTill, dealTopTag;
 
         DealViewHolder(@NonNull View itemView) {
             super(itemView);
             dealImage = itemView.findViewById(R.id.deal_image);
             dealTag = itemView.findViewById(R.id.deal_tag);
             dealName = itemView.findViewById(R.id.deal_name);
-            dealValidTill = itemView.findViewById(R.id.deal_valid_till); // New TextView for validity date
+            dealValidTill = itemView.findViewById(R.id.deal_valid_till);
+            dealTopTag = itemView.findViewById(R.id.deal_top_tag);
         }
     }
 }

@@ -18,8 +18,13 @@ import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.BakerCakeAdapter;
 import com.example.bakelink.bakers.models.Cake;
+import com.example.bakelink.customers.C_AllBakersActivity;
+import com.example.bakelink.customers.C_CakeRequestsActivity;
+import com.example.bakelink.customers.C_HomeActivity;
+import com.example.bakelink.customers.C_ProfileActivity;
 import com.example.bakelink.customers.adapters.CakeServiceAdapter;
 import com.example.bakelink.customers.adapters.CustomerReviewAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +58,8 @@ public class BakerPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        setupBottomNavigation();
 
         Intent intent = getIntent();
         String strBaker = intent.getStringExtra("bakerName");
@@ -167,5 +174,32 @@ public class BakerPage extends AppCompatActivity {
     private List<String> populateCakeServiceList() {
         List<String> cakeServiceList = List.of("Custom Wedding Cakes", "Gluten free", "Vegan");
         return cakeServiceList;
+    }
+
+
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        bottomNav.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (item.getItemId() == R.id.nav_bakers) {
+                startActivity(new Intent(getApplicationContext(), C_AllBakersActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (item.getItemId() == R.id.nav_cake_request) {
+                startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                startActivity(new Intent(getApplicationContext(), C_ProfileActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -13,6 +13,30 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".customers.C_RequestQuoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_CakeRequestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_AllBakersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.BakerPage"
+            android:exported="false" />
+        <activity
+            android:name=".TestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
@@ -26,11 +50,11 @@
             android:exported="true" />
         <activity
             android:name=".customers.C_HomeActivity"
-            android:exported="true"></activity>
-        <activity
-            android:name=".customers.C_HomeActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
