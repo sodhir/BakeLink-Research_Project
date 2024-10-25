@@ -11,8 +11,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.bakelink.customers.C_HomeActivity;
-
 import java.util.Random;
 
 
@@ -56,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Start the main activity after the splash screen duration
-                Intent intent = new Intent(SplashScreenActivity.this, C_HomeActivity.class);
+                Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }

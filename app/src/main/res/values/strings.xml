@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">BakeLink</string>
+    <string name="titleText">BakeLink</string>
+    <string name="textSubtitle"><![CDATA[Connecting Bakers & Cake Lovers]]></string>
+    <string name="emailHintText">Email address</string>
+    <string name="passwordHintText">Password</string>
+    <string name="loginText">Get Started</string>
+    <string name="textSignUp">Sign Up</string>
+    <string name="aboutBakerText">About the Baker</string>
+    <string name="servicestext"><![CDATA[Services & Specialities]]></string>
+    <string name="cakeSampleText">Cake Samples</string>
+    <string name="customerReviewsText">Customer Reviews</string>
 </resources>
