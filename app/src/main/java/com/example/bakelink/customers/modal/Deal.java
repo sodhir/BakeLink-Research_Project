@@ -4,14 +4,16 @@ public class Deal {
     private String name;       // For the name of the deal
     private String dealCode;   // For the deal code
     private String validTill;   // For the validity date of the deal
-    private String imageUrl;    // For the image URL
+    private String imageUrl;
+    private String dealTag;    // For the image URL
 
     // Constructor
-    public Deal(String name, String dealCode, String validTill, String imageUrl) {
+    public Deal(String name, String dealCode, String validTill, String imageUrl, String dealTag) {
         this.name = name;
         this.dealCode = dealCode;
         this.validTill = validTill;
         this.imageUrl = imageUrl;
+        this.dealTag = dealTag;
     }
 
     // Getters
@@ -29,5 +31,9 @@ public class Deal {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getDealTag() {
+        return dealTag;
     }
 }

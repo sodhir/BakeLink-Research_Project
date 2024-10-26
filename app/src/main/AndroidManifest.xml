@@ -13,6 +13,18 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".customers.C_RequestQuoteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_CakeRequestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customers.C_AllBakersActivity"
+            android:exported="false" />
+        <activity
             android:name=".bakers.BakerPage"
             android:exported="false" />
         <activity
@@ -38,7 +50,7 @@
             android:exported="true" />
         <activity
             android:name=".customers.C_HomeActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customers.C_RequestQuoteActivity">
+
+    <!-- AppBarLayout for top bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
+
+        <!-- Toolbar with search field and icons -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/top_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <!-- Search Field -->
+                <EditText
+                    android:id="@+id/search_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Search cakes, bakers..."
+                    android:background="@drawable/rounded_search_background"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="4dp"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/chat_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0" />
+
+                <!-- Chat Icon -->
+                <ImageButton
+                    android:id="@+id/chat_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chat"
+                    android:contentDescription="Chat"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintEnd_toStartOf="@+id/bell_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    android:padding="8dp" />
+
+                <!-- Bell Icon -->
+                <ImageButton
+                    android:id="@+id/bell_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_notifications"
+                    android:contentDescription="Notifications"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintEnd_toStartOf="@+id/cart_icon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="1"
+                    android:padding="8dp" />
+
+                <!-- Cart Icon -->
+                <ImageButton
+                    android:id="@+id/cart_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cart"
+                    android:contentDescription="Cart"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="8dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- NestedScrollView for Main content area -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingBottom="120dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="?attr/actionBarSize">
+
+            <!-- Upload picture Heading -->
+            <TextView
+                android:id="@+id/tv_upload_cake_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Upload Your Cake"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_gravity="center"
+                android:clipToPadding="false"
+                android:padding="8dp"
+                android:background="@drawable/rounded_upload_background">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_upload"   />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_upload_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Upload a photo of a cake you love, and we'll match it with the perfect cakes for you!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/button_request_quote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button_background"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Customize Your Cake"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Floating Action Button for Request a Quote -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_request_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="75dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_quote"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="12dp"/>
+
+    <!-- Bottom Navigation Bar -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/bottom_navigation_menu" />
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

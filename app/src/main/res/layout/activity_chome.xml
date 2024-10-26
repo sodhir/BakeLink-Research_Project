@@ -90,10 +90,12 @@
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main content area -->
-    <ScrollView
+    <!-- NestedScrollView for Main content area -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:paddingBottom="120dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -128,7 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal" />
+            android:orientation="horizontal"
+            android:nestedScrollingEnabled="false"/>
 
         <!-- Top Cake Categories Heading -->
         <TextView
@@ -168,10 +171,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal"
+            android:nestedScrollingEnabled="false"/>
 
     </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- Floating Action Button for Request a Quote -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
