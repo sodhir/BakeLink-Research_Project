@@ -6,6 +6,9 @@ public class Baker {
     private String imageUrl;
     private float rating;
 
+    public Baker() {
+    }
+
     // Constructor
     public Baker(String name, String imageUrl, float rating) {
         this.name = name;

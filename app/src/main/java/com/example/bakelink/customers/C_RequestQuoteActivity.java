@@ -37,9 +37,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         setupBottomNavigation();
-
 
         cakeImg = findViewById(R.id.uploadedImg);
         uploadButton = findViewById(R.id.btnUpload);

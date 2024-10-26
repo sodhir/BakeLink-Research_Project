@@ -2,6 +2,7 @@ package com.example.bakelink.customers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
@@ -24,11 +25,20 @@ import com.example.bakelink.customers.modal.Baker;
 import com.example.bakelink.customers.modal.CakeCategory;
 import com.example.bakelink.customers.modal.Deal;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class C_HomeActivity extends AppCompatActivity {
+
+    private DatabaseReference databaseReference;
 
     private RecyclerView recyclerViewTrendingBakers;
     private TrendingBakerAdapter trendingBakerAdapter;
@@ -57,14 +67,16 @@ public class C_HomeActivity extends AppCompatActivity {
         // Initialize RecyclerView
         recyclerViewTrendingBakers = findViewById(R.id.recycler_view_trending_bakers);
         trendingBakersList = new ArrayList<>(); // Populate this with your data
-        trendingBakersList.add(new Baker("Sweet Crumbs Bakery", "drawable/baker_a_image", 4.8f));
-        trendingBakersList.add(new Baker("Frosted Perfection", "drawable/baker_b_image", 4.7f));
-        trendingBakersList.add(new Baker("Bake Me Happy", "drawable/baker_c_image", 4.7f));
+       // trendingBakersList.add(new Baker("Sweet Crumbs Bakery", "drawable/baker_a_image", 4.8f));
+        //trendingBakersList.add(new Baker("Frosted Perfection", "drawable/baker_b_image", 4.7f));
+        //trendingBakersList.add(new Baker("Bake Me Happy", "drawable/baker_c_image", 4.7f));
 
         // Setup the adapter
         trendingBakerAdapter = new TrendingBakerAdapter(trendingBakersList);
         recyclerViewTrendingBakers.setAdapter(trendingBakerAdapter);
         recyclerViewTrendingBakers.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        fetchBakers();
 
         //Top cake categories section
         //recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
@@ -123,5 +135,49 @@ public class C_HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+    }
+
+
+    private void uploadBakerDetails(String name, String url, float rating){
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("bakers");
+        String bakerId = databaseReference.push().getKey(); // Create a unique ID for each baker
+
+        if (bakerId != null) {
+            Baker baker = new Baker(name, url, rating);
+            databaseReference.child(bakerId).setValue(baker)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("db", "Baker details uploaded successfully");
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d("db", "Failed to upload baker details");
+                    });
+        }
+
+    }
+
+    private void fetchBakers(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                trendingBakersList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Baker baker = snapshot.getValue(Baker.class);
+                    if (baker != null) {
+                        trendingBakersList.add(baker);
+                    }
+                }
+                trendingBakerAdapter.notifyDataSetChanged(); // Notify adapter of data change
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("db", "Failed to read data: " + databaseError.getMessage());
+            }
+        });
+
     }
 }
