@@ -116,6 +116,23 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/btnUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_button_background"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Upload image"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+
+
             <RelativeLayout
                 android:layout_width="280dp"
                 android:layout_height="280dp"
@@ -125,10 +142,11 @@
                 android:background="@drawable/rounded_upload_background">
 
                 <ImageView
+                    android:id="@+id/uploadedImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_upload"   />
+                    android:src="@drawable/ic_upload" />
             </RelativeLayout>
 
             <TextView
