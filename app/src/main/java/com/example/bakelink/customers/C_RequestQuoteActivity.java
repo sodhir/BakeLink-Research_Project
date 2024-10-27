@@ -50,11 +50,6 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
        });
 
 
-        Button requestQuoteButton = findViewById(R.id.button_request_quote);
-        requestQuoteButton.setOnClickListener(v -> {
-
-        });
-
 
     }
 
@@ -67,7 +62,17 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
                         Uri imageUri = result.getData().getData();
                         if (imageUri != null) {
                             cakeImg.setImageURI(imageUri); // Display the selected image
+
+                            Button requestQuoteButton = findViewById(R.id.button_request_quote);
+                            requestQuoteButton.setOnClickListener(v -> {
+
+                                Intent intent = new Intent(C_RequestQuoteActivity.this, C_CustomCakeRequestActivity.class);
+                                intent.putExtra("imageUri", imageUri.toString());
+                                startActivity(intent);
+
+                            });
                         }
+
                     }
                 }
             });
