@@ -82,6 +82,33 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
         imagePickerLauncher.launch(intent);
     }
 
+//    private void analyzeImageColors(Uri imageUri) {
+//        try (ImageAnnotatorClient visionClient = ImageAnnotatorClient.create()) {
+//            ByteString imageBytes = ByteString.readFrom(getContentResolver().openInputStream(imageUri));
+//            Image image = Image.newBuilder().setContent(imageBytes).build();
+//
+//            Feature feature = Feature.newBuilder().setType(Feature.Type.IMAGE_PROPERTIES).build();
+//            AnnotateImageRequest request = AnnotateImageRequest.newBuilder()
+//                    .addFeatures(feature)
+//                    .setImage(image)
+//                    .build();
+//
+//            AnnotateImageResponse response = visionClient.batchAnnotateImages(Collections.singletonList(request)).getResponses(0);
+//            if (response.hasError()) {
+//                Log.e("Vision API", "Error: " + response.getError().getMessage());
+//                return;
+//            }
+//
+//            // Extract color information
+//            List<ColorInfo> colors = response.getImagePropertiesAnnotation().getDominantColors().getColorsList();
+//            for (ColorInfo color : colors) {
+//                Log.d("Color", "Color: " + color.getColor() + " - Score: " + color.getScore());
+//            }
+//        } catch (Exception e) {
+//            Log.e("Vision API", "Failed to analyze image colors", e);
+//        }
+//    }
+
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 

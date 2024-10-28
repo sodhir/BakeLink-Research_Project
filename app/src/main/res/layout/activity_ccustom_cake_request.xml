@@ -348,7 +348,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Date"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:clickable="true"/>
 
                 <EditText
                     android:id="@+id/txtDeliveryTime"
@@ -356,7 +358,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Time"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    android:focusable="false"
+                    android:clickable="true"/>
             </LinearLayout>
 
             <!-- Additional Notes -->

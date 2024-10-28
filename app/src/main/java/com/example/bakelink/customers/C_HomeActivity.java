@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -48,6 +49,8 @@ public class C_HomeActivity extends AppCompatActivity {
     private List<CakeCategory> cakeCategoriesList;
     private TopCakeCategoryAdapter topCakeCategoryAdapter;
 
+    TextView welcomeText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,11 @@ public class C_HomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        String currentUserEmail = getIntent().getStringExtra("email");
+
+        welcomeText = findViewById(R.id.tv_welcome_back);
+        welcomeText.setText("Welcome Back, " + currentUserEmail+"!");
 
         // Set up the top toolbar
         Toolbar toolbar = findViewById(R.id.top_toolbar);

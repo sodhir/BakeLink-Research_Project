@@ -1,9 +1,12 @@
 package com.example.bakelink.customers;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,12 +24,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
 import com.example.bakelink.customers.modal.CustomCakeRequest;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Calendar;
 
 public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
@@ -89,6 +96,29 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         deliveryTimeEditText = findViewById(R.id.txtDeliveryTime);
         additionalNotesEditText = findViewById(R.id.txtAdditionalNotes);
 
+        deliveryDateEditText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
+                deliveryDateEditText.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+            }, year, month, day);
+            datePickerDialog.show();
+        });
+
+        deliveryTimeEditText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, (view, selectedHour, selectedMinute) -> {
+                deliveryTimeEditText.setText(selectedHour + ":" + (selectedMinute < 10 ? "0" + selectedMinute : selectedMinute));
+            }, hour, minute, true);
+            timePickerDialog.show();
+        });
+
 
         requestQuote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +126,31 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                 addCustomCakeRequestToDatabase();
             }
 
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_home) {
+                    startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_bakers) {
+                    startActivity(new Intent(getApplicationContext(), C_AllBakersActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_cake_request) {
+                    startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_profile) {
+                    startActivity(new Intent(getApplicationContext(), C_ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                }
+                return false;
+            }
         });
 
     }

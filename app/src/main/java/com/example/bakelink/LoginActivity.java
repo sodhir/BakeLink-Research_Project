@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private Button login;
+    String txtEmail;
 
     private FirebaseAuth auth;
 
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String txtEmail = email.getText().toString();
+                txtEmail = email.getText().toString();
                 String txtPass = password.getText().toString();
                 Log.d("hello", "Clicked");
                 if(TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPass)){
@@ -84,7 +85,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    startActivity(new Intent(LoginActivity.this, C_HomeActivity.class));
+                    Intent intent = new Intent(LoginActivity.this, C_HomeActivity.class);
+                    intent.putExtra("email", txtEmail);
+                    startActivity(intent);
                 }
                 else{
                     Toast.makeText(LoginActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();

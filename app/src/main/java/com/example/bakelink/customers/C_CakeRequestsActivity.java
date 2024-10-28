@@ -1,10 +1,13 @@
 package com.example.bakelink.customers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.customers.adapters.CakeRequestAdapter;
 import com.example.bakelink.customers.modal.CustomCakeRequest;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,6 +46,30 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
         });
 
         getAllCakeRequests();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_home) {
+                    // Already in home, no action needed
+                    return true;
+                } else if (item.getItemId() == R.id.nav_bakers) {
+                    startActivity(new Intent(getApplicationContext(), C_AllBakersActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_cake_request) {
+                    startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_profile) {
+                    startActivity(new Intent(getApplicationContext(), C_ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void getAllCakeRequests() {
@@ -60,7 +88,7 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
                             cakeRequests.add(cakeRequest);
                         }
                     }
-                    // Now that we have the data, update the RecyclerView
+                    // update the RecyclerView
                     updateRecyclerView(cakeRequests);
                 }
 
