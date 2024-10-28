@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 String txtPass = password.getText().toString();
                 Log.d("hello", "Clicked");
                 if(TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPass)){
-                    Toast.makeText(LoginActivity.this, "Please enter the txt and pass", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Please enter the email and password", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     logIn(txtEmail, txtPass);

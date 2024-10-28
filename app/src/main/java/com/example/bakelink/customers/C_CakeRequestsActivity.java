@@ -48,11 +48,14 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
         getAllCakeRequests();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_cake_request);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_home) {
-                    // Already in home, no action needed
+                    startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
+                    overridePendingTransition(0, 0);
                     return true;
                 } else if (item.getItemId() == R.id.nav_bakers) {
                     startActivity(new Intent(getApplicationContext(), C_AllBakersActivity.class));

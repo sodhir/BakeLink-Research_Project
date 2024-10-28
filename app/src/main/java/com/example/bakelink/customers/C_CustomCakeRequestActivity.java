@@ -178,6 +178,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                 databaseReference.child(requestId).setValue(cakeRequest)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(C_CustomCakeRequestActivity.this, "Request saved successfully!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(C_CustomCakeRequestActivity.this, "Failed to save request", Toast.LENGTH_SHORT).show();
