@@ -17,12 +17,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.bakelink.bakers.B_HomeActivity;
 import com.example.bakelink.customers.C_HomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -80,19 +87,48 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void logIn(String txtEmail, String txtPass) {
-        auth.signInWithEmailAndPassword(txtEmail, txtPass).addOnCompleteListener(LoginActivity.this,new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    Intent intent = new Intent(LoginActivity.this, C_HomeActivity.class);
-                    intent.putExtra("email", txtEmail);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Unsuccessful", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    private void logIn(String email, String password) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Get the user ID
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (currentUser != null) {
+                            String userId = currentUser.getUid();
+
+                            // Retrieve user type from Firebase
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        User user = snapshot.getValue(User.class);
+                                        Log.d("hello", "User type: " + user.getUserType());
+                                        if (user != null) {
+                                            String userType = user.getUserType();
+                                            // Route user based on their type
+                                            if ("Baker".equals(userType)) {
+                                               Intent intent = new Intent(LoginActivity.this, B_HomeActivity.class);
+                                               startActivity(intent);
+                                            } else if ("Customer".equals(userType)) {
+                                               Intent intent = new Intent(LoginActivity.this, C_HomeActivity.class);
+                                               startActivity(intent);
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "User data not found.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError error) {
+                                    Toast.makeText(LoginActivity.this, "Error fetching user data.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Sign-in failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

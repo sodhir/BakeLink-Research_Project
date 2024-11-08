@@ -12,41 +12,35 @@
         android:id="@+id/txtTitleSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="320dp"
+        android:layout_marginEnd="35dp"
         android:fontFamily="@font/baloo_2"
         android:text="@string/titleText"
         android:textColor="@color/primaryColor"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txtSubtitleSignUp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/txtSubtitleSignUp"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/txtSubtitleSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="29dp"
         android:fontFamily="@font/baloo_2"
         android:text="@string/textSubtitle"
         android:textColor="@color/primaryColor"
         app:layout_constraintBottom_toTopOf="@+id/txtEmailSignUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitleSignUp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/txtEmailSignUp"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="24dp"
         android:editable="true"
         android:ems="10"
         android:enabled="true"
@@ -57,17 +51,14 @@
         app:layout_constraintBottom_toTopOf="@+id/txtPasswordSignUp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSubtitleSignUp"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
     <EditText
         android:id="@+id/txtPasswordSignUp"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:editable="true"
         android:ems="10"
         android:enabled="true"
@@ -75,39 +66,63 @@
         android:focusableInTouchMode="true"
         android:hint="@string/passwordHintText"
         android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
+        app:layout_constraintBottom_toTopOf="@+id/rdbCakeTypeGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmailSignUp"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
+    <RadioGroup
+        android:id="@+id/rdbCakeTypeGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:paddingStart="64dp"
+        android:paddingEnd="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/rdbBaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Baker"
+            android:textAlignment="gravity" />
+
+        <RadioButton
+            android:id="@+id/rdbCaustomer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Customer" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/btnSignUp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/primaryColor"
         android:text="@string/textSignUp"
+        app:layout_constraintBottom_toTopOf="@+id/txtSignIn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPasswordSignUp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/txtSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="34dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginBottom="25dp"
         android:clickable="true"
         android:focusable="auto"
         android:minHeight="48dp"
         android:text="Already have an account? Sign In"
         android:textColor="@color/primaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignUp" />
+        app:layout_constraintStart_toStartOf="@+id/btnSignUp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
