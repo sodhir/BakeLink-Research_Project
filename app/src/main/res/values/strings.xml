@@ -10,4 +10,19 @@
     <string name="servicestext"><![CDATA[Services & Specialities]]></string>
     <string name="cakeSampleText">Cake Samples</string>
     <string name="customerReviewsText">Customer Reviews</string>
+
+    <string-array name="cake_types">
+        <item>Birthday Cake</item>
+        <item>Wedding Cake</item>
+        <item>Vegan Cake</item>
+        <item>Theme Cake</item>
+    </string-array>
+
+    <string-array name="weight_types">
+        <item>1 lbs</item>
+        <item>2 lbs</item>
+        <item>3 lbs</item>
+        <item>4 lbs</item>
+        <item>5 lbs</item>
+    </string-array>
 </resources>

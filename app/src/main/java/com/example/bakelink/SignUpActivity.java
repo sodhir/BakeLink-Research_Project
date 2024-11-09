@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.bakers.B_HomeActivity;
+import com.example.bakelink.bakers.B_ProfileSetupActivity;
 import com.example.bakelink.customers.C_HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -75,7 +76,16 @@ public class SignUpActivity extends AppCompatActivity {
     private void userSignUp() {
         String email = txtEmailSignUp.getText().toString().trim();
         String password = txtPasswordSignUp.getText().toString().trim();
-        String userType = rdbBaker.isChecked() ? "Baker" : "Customer"; // Check which radio button is selected
+        String userType;
+
+        if (!rdbBaker.isChecked() && !rdbCustomer.isChecked()) {
+            // Show an error message and exit the method if no radio button is selected
+            Toast.makeText(this, "Please select either Baker or Customer.", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            // Initialize userType based on the selected radio button
+            userType = rdbBaker.isChecked() ? "Baker" : "Customer";
+        }
 
         progressDialog = new ProgressDialog(SignUpActivity.this);
         progressDialog.setMessage("Signing up...");
@@ -101,10 +111,11 @@ public class SignUpActivity extends AppCompatActivity {
                                         if (saveTask.isSuccessful()) {
                                             Toast.makeText(SignUpActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
 
-                                            if(userType.equals("Baker")){
-                                                Intent intent = new Intent(SignUpActivity.this, B_HomeActivity.class);
+                                            // Navigate based on userType
+                                            if (userType.equals("Baker")) {
+                                                Intent intent = new Intent(SignUpActivity.this, B_ProfileSetupActivity.class);
                                                 startActivity(intent);
-                                            }else{
+                                            } else {
                                                 Intent intent = new Intent(SignUpActivity.this, C_HomeActivity.class);
                                                 startActivity(intent);
                                             }

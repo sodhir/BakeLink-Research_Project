@@ -15,6 +15,27 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".bakers.B_AddNewCakeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_MyQuoteSetupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_MyCakesSetupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_MyCakesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_ScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bakers.B_ProfileSetupActivity"
+            android:exported="false" />
+        <activity
             android:name=".bakers.B_HomeActivity"
             android:exported="false" />
         <activity
