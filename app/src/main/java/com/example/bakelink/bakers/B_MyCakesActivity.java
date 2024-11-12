@@ -17,6 +17,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,6 +65,27 @@ public class B_MyCakesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 saveCakeData(mcCakeImageUri);
             }
+        });
+
+        // Set up bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
+        bottomNavigationView.setSelectedItemId(R.id.nav_my_cakes);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(B_MyCakesActivity.this, B_HomeActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_schedule) {
+                startActivity(new Intent(B_MyCakesActivity.this, B_MyScheduleActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_my_cakes) {
+                //no action
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                startActivity(new Intent(B_MyCakesActivity.this, B_ProfileActivity.class));
+                return true;
+            }
+            return false;
         });
     }
 

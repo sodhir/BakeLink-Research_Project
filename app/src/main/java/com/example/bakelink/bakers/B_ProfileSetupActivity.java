@@ -78,7 +78,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
                 startActivity(new Intent(B_ProfileSetupActivity.this, B_HomeActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_schedule) {
-                startActivity(new Intent(B_ProfileSetupActivity.this, B_ScheduleActivity.class));
+                startActivity(new Intent(B_ProfileSetupActivity.this, B_MyScheduleActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_my_cakes) {
                 startActivity(new Intent(B_ProfileSetupActivity.this, B_MyCakesActivity.class));

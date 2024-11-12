@@ -43,7 +43,7 @@
                 android:orientation="horizontal"
                 android:nestedScrollingEnabled="false"/>
 
-            <!-- Heading: "New Quote Requests" -->
+            <!-- Heading: "Track submitted quotes Requests" -->
             <TextView
                 android:id="@+id/headingTrackSubmittedQuote"
                 android:layout_width="wrap_content"
@@ -54,6 +54,92 @@
                 android:textStyle="bold"
                 android:textColor="#000000"
                 android:layout_marginTop="16dp"/>
+
+            <!-- RecyclerView for Track submitted Quote Cards -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTrackSubmittedQuote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:nestedScrollingEnabled="false"/>
+
+            <!-- Heading: "Weekly/Monthly Sales" -->
+            <TextView
+                android:id="@+id/headingSales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Weekly&#47;Monthly Sales"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginTop="16dp"/>
+
+            <!-- Chip Group for Weekly and Monthly -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/chip_weekly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#F5F5F5"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="Weekly"
+                    android:textSize="14sp"
+                    android:textColor="#80000000"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/chip_monthly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#F5F5F5"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="Monthly"
+                    android:textSize="14sp"
+                    android:textColor="#80000000"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Placeholder for Graph -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#E0E0E0"
+                android:gravity="center"
+                android:text="Nothing to show now"
+                android:textColor="#808080"
+                android:textSize="16sp" />
+
+            <!-- Total Sales and Total Orders Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Sales:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Orders:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

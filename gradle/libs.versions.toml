@@ -26,3 +26,4 @@ glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
+
