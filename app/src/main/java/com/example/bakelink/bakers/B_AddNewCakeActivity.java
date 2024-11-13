@@ -64,7 +64,7 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
                 startActivity(new Intent(B_AddNewCakeActivity.this, B_MyScheduleActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_my_cakes) {
-                startActivity(new Intent(B_AddNewCakeActivity.this, B_MyCakesActivity.class));
+                startActivity(new Intent(B_AddNewCakeActivity.this, B_MyCakesSetupActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
                 startActivity(new Intent(B_AddNewCakeActivity.this, B_ProfileActivity.class));
