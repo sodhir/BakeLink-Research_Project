@@ -1,15 +1,46 @@
 package com.example.bakelink.bakers.models;
 
 public class Cake {
+
+    String cakeId;
+
     String cakeName;
     Double price;
 
+    String description;
+
     String cakeImgUrl;
+
+    public Cake(String cakeImgUrl, Double price, String description, String cakeName) {
+        this.cakeImgUrl = cakeImgUrl;
+        this.price = price;
+        this.description = description;
+        this.cakeName = cakeName;
+    }
 
     public Cake(Double price, String cakeName, String cakeImgUrl) {
         this.price = price;
         this.cakeName = cakeName;
         this.cakeImgUrl = cakeImgUrl;
+    }
+
+    public Cake() {
+    }
+
+    public String getCakeId() {
+        return cakeId;
+    }
+
+    public void setCakeId(String cakeId) {
+        this.cakeId = cakeId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCakeName() {

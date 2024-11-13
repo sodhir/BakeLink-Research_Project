@@ -3,7 +3,6 @@ package com.example.bakelink.bakers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +29,7 @@ public class B_MyCakesSetupActivity extends AppCompatActivity {
             return insets;
         });
 
-        ckbtnAddNewCake = findViewById(R.id.ckbtnAddNewCake);
+        ckbtnAddNewCake = findViewById(R.id.allckbtnAddNewCake);
         ckbtnSaveAndContinue = findViewById(R.id.ckbtnSaveAndContinue);
 
         // Add new cake button click listener

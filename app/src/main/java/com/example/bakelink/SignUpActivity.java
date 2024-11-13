@@ -127,6 +127,8 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     } else {
                         Toast.makeText(SignUpActivity.this, "Sign-up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+
                     }
                 });
     }

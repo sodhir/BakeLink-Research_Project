@@ -114,10 +114,10 @@ public class B_MyCakesActivity extends AppCompatActivity {
         // Get user inputs
         String cakeName = mcCakeName.getText().toString().trim();
         String description = mcDescription.getText().toString().trim();
-        String price = mcPrice.getText().toString().trim();
+        Double price = Double.parseDouble(mcPrice.getText().toString());
 
         // Validation (simple example)
-        if (cakeName.isEmpty() || description.isEmpty() || price.isEmpty() || imageUri == null) {
+        if (cakeName.isEmpty() || description.isEmpty() || price == null || imageUri == null) {
             Toast.makeText(this, "Please fill in all fields and upload an image.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -141,7 +141,7 @@ public class B_MyCakesActivity extends AppCompatActivity {
                         cakeData.put("cakeName", cakeName);
                         cakeData.put("description", description);
                         cakeData.put("price", price);
-                        cakeData.put("imageUrl", imageUrl);
+                        cakeData.put("cakeImgUrl", imageUrl);
 
                         // Get the baker's UID (assuming you have the user's ID)
                         String bakerId = FirebaseAuth.getInstance().getCurrentUser().getUid();

@@ -5,14 +5,14 @@
     android:id="@+id/main">
 
     <!-- Scrollable Content -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -45,32 +45,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add New Cake"
+                android:layout_marginTop="24dp"
                 android:background="@drawable/rounded_button_background"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
-                android:layout_marginTop="24dp"
-                android:textAllCaps="false" />
-
-            <!-- Save and Continue Button at the bottom -->
-            <Button
-                android:id="@+id/ckbtnSaveAndContinue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save and Continue"
-                android:background="@drawable/rounded_button_background"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
+                android:text="Add New Cake"
                 android:textAllCaps="false"
-                android:layout_gravity="center"
-                android:layout_marginTop="20dp"/>
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/allmyCakesRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 
