@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.BakerAllCakeAdapter;
 import com.example.bakelink.bakers.models.Cake;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,6 +55,26 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
         addnewCake = findViewById(R.id.allckbtnAddNewCake);
         addnewCake.setOnClickListener(v -> {
             startActivity(new Intent(B_MyAllCakesActivity.this, B_MyCakesActivity.class));
+        });
+
+        // Set up bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(B_MyAllCakesActivity.this, B_MyScheduleActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_schedule) {
+                startActivity(new Intent(B_MyAllCakesActivity.this, B_MyScheduleActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_my_cakes) {
+                startActivity(new Intent(B_MyAllCakesActivity.this, B_MyAllCakesActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                startActivity(new Intent(B_MyAllCakesActivity.this, B_ProfileActivity.class));
+                return true;
+            }
+            return false;
         });
 
     }

@@ -10,17 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.models.QuoteRequest;
+import com.example.bakelink.customers.modal.CustomCakeRequest;
 
 import java.util.List;
 
 public class QuoteRequestAdapter extends RecyclerView.Adapter<QuoteRequestAdapter.ViewHolder> {
 
     private Context context;
-    private List<QuoteRequest> quoteRequestList;
+    private List<CustomCakeRequest> quoteRequestList;
 
-    public QuoteRequestAdapter(Context context, List<QuoteRequest> quoteRequestList) {
+    public QuoteRequestAdapter(Context context, List<CustomCakeRequest> quoteRequestList) {
         this.context = context;
         this.quoteRequestList = quoteRequestList;
     }
@@ -34,13 +36,15 @@ public class QuoteRequestAdapter extends RecyclerView.Adapter<QuoteRequestAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        QuoteRequest quoteRequest = quoteRequestList.get(position);
+        CustomCakeRequest quoteRequest = quoteRequestList.get(position);
 
-        holder.customerName.setText(quoteRequest.getCustomerName());
+        holder.customerName.setText(quoteRequest.getUserEmail());
         holder.cakeType.setText(quoteRequest.getCakeType());
         holder.deliveryDate.setText(quoteRequest.getDeliveryDate());
-        holder.location.setText(quoteRequest.getLocation());
-        holder.cakeImage.setImageResource(quoteRequest.getImageResource());
+       // holder.location.setText(quoteRequest.getLocation());
+        Glide.with(holder.itemView.getContext())
+                .load(quoteRequest.getImageUrl()) // Load from URL
+                .into(holder.cakeImage);
     }
 
     @Override

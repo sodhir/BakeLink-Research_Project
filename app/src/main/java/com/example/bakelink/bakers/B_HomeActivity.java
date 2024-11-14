@@ -3,9 +3,11 @@ package com.example.bakelink.bakers;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,9 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.QuoteRequestAdapter;
 import com.example.bakelink.bakers.adapters.TrackSubmittedQuotesAdapter;
+import com.example.bakelink.bakers.models.Cake;
 import com.example.bakelink.bakers.models.Quote;
 import com.example.bakelink.bakers.models.QuoteRequest;
+import com.example.bakelink.customers.modal.CustomCakeRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +37,12 @@ public class B_HomeActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private QuoteRequestAdapter adapter;
-    private List<QuoteRequest> quoteRequestList;
+    private List<CustomCakeRequest> quoteRequestList;
     private RecyclerView recyclerTrackSubmittedQuotes;
     private TrackSubmittedQuotesAdapter submittedQuotesAdapter;
     List<Quote> quotesSentList;
+
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +64,15 @@ public class B_HomeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         // Initialize data
-        quoteRequestList = new ArrayList<>();
-        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample2));
-        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.themed_cake_image));
-        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample3));
+        loadAllCustomQuotes();
+//        quoteRequestList = new ArrayList<>();
+//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample2));
+//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.themed_cake_image));
+//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample3));
         // Add more items as needed
 
         // Set adapter
-        adapter = new QuoteRequestAdapter(this, quoteRequestList);
-        recyclerView.setAdapter(adapter);
+
 
         //track submitted quote section
         recyclerTrackSubmittedQuotes = findViewById(R.id.recyclerViewTrackSubmittedQuote);
@@ -121,6 +133,77 @@ public class B_HomeActivity extends AppCompatActivity {
             return false;
         });
 
+    }
+
+    private void loadAllCustomQuotes() {
+
+// Reference to the baker's cakes node
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
+
+// Attach a listener to fetch data
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+               quoteRequestList = new ArrayList<>();
+                for (DataSnapshot customCakeSnapshot : snapshot.getChildren()) {
+                    // Assuming you have a Cake model class
+                    String customCakeRequestId = customCakeSnapshot.getKey();
+                    String deliveryDate = customCakeSnapshot.child("deliveryDate").getValue(String.class);
+                    String deliveryTime = customCakeSnapshot.child("deliveryTime").getValue(String.class);
+                    String notes = customCakeSnapshot.child("notes").getValue(String.class);
+                    String imageUrl = customCakeSnapshot.child("imageUrl").getValue(String.class);
+                    String userId = customCakeSnapshot.child("userId").getValue(String.class);
+                    String cakeType = customCakeSnapshot.child("cakeType").getValue(String.class);
+                    String cakeSize = customCakeSnapshot.child("cakeSize").getValue(String.class);
+                    String flavor = customCakeSnapshot.child("flavor").getValue(String.class);
+                    String filling = customCakeSnapshot.child("filling").getValue(String.class);
+
+
+                    CustomCakeRequest cakeRequest = new CustomCakeRequest();
+                    cakeRequest.setCustomCakeRequestId(customCakeRequestId);
+                    cakeRequest.setDeliveryDate(deliveryDate);
+                    cakeRequest.setDeliveryTime(deliveryTime);
+                    cakeRequest.setNotes(notes);
+                    cakeRequest.setImageUrl(imageUrl);
+                    cakeRequest.setUserId(userId);
+                    cakeRequest.setCakeType(cakeType);
+                    cakeRequest.setCakeSize(cakeSize);
+                    cakeRequest.setFlavor(flavor);
+                    cakeRequest.setFilling(filling);
+                    if(userId != null){
+                        cakeRequest.setUserEmail(getUserEmail(userId));
+                    }
+                    quoteRequestList.add(cakeRequest);
+                }
+
+                Log.d("Cakes", "Cakes fetched: " + quoteRequestList.size());
+                // Use the fetched list of cakes (e.g., update your UI)
+                // Implement this method to handle the list of cakes
+                adapter = new QuoteRequestAdapter(B_HomeActivity.this, quoteRequestList);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+    }
+
+    private String getUserEmail(String userId){
+        DatabaseReference userdatabaseReference = FirebaseDatabase.getInstance().getReference("users");
+
+        userdatabaseReference.child(userId).child("email").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                email = task.getResult().getValue(String.class);
+            } else {
+                Log.e("Firebase", "Failed to retrieve email: " + task.getException().getMessage());
+            }
+        });
+        return email;
     }
 
 }

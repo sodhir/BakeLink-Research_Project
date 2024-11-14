@@ -132,7 +132,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
                 //no action
                 return true;
             } else if (item.getItemId() == R.id.nav_my_cakes) {
-                startActivity(new Intent(B_MyScheduleActivity.this, B_MyCakesSetupActivity.class));
+                startActivity(new Intent(B_MyScheduleActivity.this, B_MyAllCakesActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
                 startActivity(new Intent(B_MyScheduleActivity.this, B_ProfileActivity.class));

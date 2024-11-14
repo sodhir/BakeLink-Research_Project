@@ -3,12 +3,32 @@ package com.example.bakelink.customers.modal;
 public class CustomCakeRequest {
 
     private String userId;
+    private String customCakeRequestId;
     private String cakeType;
     private String cakeSize;
     private String flavor;
     private String filling;
     private String deliveryDate;
     private String deliveryTime;
+
+    private String userEmail;
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getCustomCakeRequestId() {
+        return customCakeRequestId;
+    }
+
+    public void setCustomCakeRequestId(String customCakeRequestId) {
+        this.customCakeRequestId = customCakeRequestId;
+    }
+
     private String notes;
     private String imageUrl;
 
