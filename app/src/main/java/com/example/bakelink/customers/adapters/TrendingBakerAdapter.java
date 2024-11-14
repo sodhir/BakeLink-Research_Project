@@ -51,6 +51,7 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(view.getContext(), BakerPage.class);
+                    intent.putExtra("bakerId", bakersList.get(getAdapterPosition()).getId());
                     intent.putExtra("bakerName", bakersList.get(getAdapterPosition()).getName());
                     intent.putExtra("bakerImage", bakersList.get(getAdapterPosition()).getImageUrl());
                     intent.putExtra("bakerRating", bakersList.get(getAdapterPosition()).getRating());
@@ -71,7 +72,12 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         Baker baker = bakersList.get(position);
         holder.bakerName.setText(baker.getName());
-        holder.bakerRating.setText(String.valueOf(baker.getRating()));
+        if(baker.getRating() == 0.0f){
+            //do nothing
+        }else{
+            holder.bakerRating.setText(String.valueOf(baker.getRating()));
+        }
+
 
         Context context = holder.itemView.getContext();
 

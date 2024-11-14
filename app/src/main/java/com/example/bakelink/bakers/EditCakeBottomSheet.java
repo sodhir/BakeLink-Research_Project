@@ -87,7 +87,7 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
 
         // Check if bakerId and cakeId are not null
         if (bakerId == null || cakeId == null) {
-            Toast.makeText(getContext(), "Invalid baker or cake ID", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Invalid baker or cake ID", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -107,7 +107,7 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
                // Toast.makeText(getContext(), "Cake updated successfully", Toast.LENGTH_SHORT).show();
             } else {
                 Log.e("Update Cake", "Update failed: " + task.getException().getMessage());
-                Toast.makeText(getContext(), "Failed to update cake: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+              //  Toast.makeText(getContext(), "Failed to update cake: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

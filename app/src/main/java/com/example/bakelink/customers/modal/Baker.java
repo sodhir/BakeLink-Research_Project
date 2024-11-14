@@ -2,6 +2,7 @@ package com.example.bakelink.customers.modal;
 
 public class Baker {
 
+    String id;
     private String name;
     private String imageUrl;
     private float rating;
@@ -27,5 +28,25 @@ public class Baker {
 
     public float getRating() {
         return rating;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

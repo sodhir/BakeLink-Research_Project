@@ -3,10 +3,12 @@ package com.example.bakelink.bakers;
 import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,6 +27,12 @@ import com.example.bakelink.customers.C_ProfileActivity;
 import com.example.bakelink.customers.adapters.CakeServiceAdapter;
 import com.example.bakelink.customers.adapters.CustomerReviewAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +47,8 @@ public class BakerPage extends AppCompatActivity {
     public ImageView star3;
     public ImageView star4;
     public ImageView star5;
+
+    String currentBakerId;
 
     public TextView bakerRatingString;
 
@@ -63,6 +73,7 @@ public class BakerPage extends AppCompatActivity {
 
         Intent intent = getIntent();
         String strBaker = intent.getStringExtra("bakerName");
+        currentBakerId = intent.getStringExtra("bakerId");
         bakerName = findViewById(R.id.txtBakerTitle);
         bakerName.setText(strBaker);
         bakerImage = findViewById(R.id.bakerImage);
@@ -136,12 +147,61 @@ public class BakerPage extends AppCompatActivity {
     }
 
     private List<Cake> GetCakeList() {
-        List<Cake> cakeList = new ArrayList<>();
-        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample1"));
-        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample2"));
-        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample3"));
-        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample4"));
-        return cakeList;
+        List<Cake> cakesList = new ArrayList<>();
+//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample1"));
+//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample2"));
+//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample3"));
+//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample4"));
+//        return cakeList;
+
+
+
+// Reference to the baker's cakes node
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers")
+                .child(currentBakerId).child("cakes");
+
+// Attach a listener to fetch data
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+               // List<Cake> cakesList = new ArrayList<>();
+                for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
+                    // Assuming you have a Cake model class
+                    String cakeId = cakeSnapshot.getKey();
+                    String name = cakeSnapshot.child("cakeName").getValue(String.class);
+                    String description = cakeSnapshot.child("description").getValue(String.class);
+                    Double price = cakeSnapshot.child("price").getValue(Double.class);
+                    String imageUrl = cakeSnapshot.child("cakeImgUrl").getValue(String.class);
+                    //double price = 0;
+//                    try {
+//                        price = Double.parseDouble(priceString);
+//                    } catch (NumberFormatException e) {
+//                        Log.e("ParsingError", "Failed to parse price to double: " + e.getMessage());
+//                    }
+
+                    Cake cake = new Cake();
+                    cake.setCakeId(cakeId);
+                    cake.setDescription(description);
+                    cake.setCakeName(name);
+                    cake.setCakeImgUrl(imageUrl);
+                    cake.setPrice(price); // Assuming `price` is of type double
+                    cakesList.add(cake);
+                }
+
+                Log.d("Cakes", "Cakes fetched: " + cakesList.size());
+                // Use the fetched list of cakes (e.g., update your UI)
+               // Implement this method to handle the list of cakes
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+        return cakesList;
+
     }
 
     private void SetCustomerRecyclerView() {

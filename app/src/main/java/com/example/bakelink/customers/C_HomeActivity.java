@@ -175,7 +175,18 @@ public class C_HomeActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Baker baker = snapshot.getValue(Baker.class);
                     if (baker != null) {
+                        baker.setId(snapshot.getKey());
+                        baker.setName(snapshot.child("bakeryTitle").getValue(String.class));
+                        baker.setImageUrl(snapshot.child("profilePictureUrl").getValue(String.class));
+                        Float rating = snapshot.child("rating").getValue(Float.class);
+                        if(rating != null){
+                            baker.setRating(snapshot.child("rating").getValue(Float.class));
+                        }else {
+                            baker.setRating(0.0f);
+                        }
+
                         trendingBakersList.add(baker);
+
                     }
                 }
                 trendingBakerAdapter.notifyDataSetChanged(); // Notify adapter of data change
