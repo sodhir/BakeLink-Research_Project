@@ -52,7 +52,7 @@ public class B_MyCakesSetupActivity extends AppCompatActivity {
                 startActivity(new Intent(B_MyCakesSetupActivity.this, B_MyScheduleActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_my_cakes) {
-                startActivity(new Intent(B_MyCakesSetupActivity.this, B_MyCakesActivity.class));
+                startActivity(new Intent(B_MyCakesSetupActivity.this, B_MyCakesSetupActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
                 startActivity(new Intent(B_MyCakesSetupActivity.this, B_ProfileActivity.class));

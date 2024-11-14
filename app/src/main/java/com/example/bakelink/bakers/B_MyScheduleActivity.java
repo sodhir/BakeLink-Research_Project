@@ -3,11 +3,11 @@ package com.example.bakelink.bakers;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.CalendarView;
-//import com.prolificinteractive.materialcalendarview.CalendarDay;
-//import com.prolificinteractive.materialcalendarview.DayViewFacade;
-//import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,19 +16,27 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.adapters.OrderAdapter;
+import com.example.bakelink.bakers.models.Order;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-//import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class B_MyScheduleActivity extends AppCompatActivity {
 
     private CalendarView calendarView;
-    //private MaterialCalendarView calendarView;
     private SwitchCompat blockDaySwitch;
+    private TextView orderDetailsTitle;
+    private RecyclerView ordersRecyclerView;
+    private OrderAdapter orderAdapter;
+    private List<Order> orderList;
+    private TextView noOrdersTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +51,54 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
         calendarView = findViewById(R.id.calendarView);
         blockDaySwitch = findViewById(R.id.blockDaySwitch);
+        orderDetailsTitle = findViewById(R.id.tvOrderDetailsTitle);
+        ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
+        noOrdersTextView = findViewById(R.id.noOrdersTextView);
+
+        // Initialize RecyclerView
+        ordersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        // Initialize order list and adapter
+        orderList = new ArrayList<>();
+        orderAdapter = new OrderAdapter(orderList);
+        ordersRecyclerView.setAdapter(orderAdapter);
+
+        // 1. Get current date
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH); // Note: 0-based month
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        // 2. Set initial order details with current date
+        String currentDate = currentDay + "/" + (currentMonth + 1) + "/" + currentYear;
+        String initialOrderDetails = getString(R.string.order_details_title, currentDate);
+        orderDetailsTitle.setText(initialOrderDetails);
+
+        // Load orders for the current date
+        loadOrdersForDate(currentDate);
+
+        /*// Add sample orders
+        orderList.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.",R.drawable.cakesample2));
+        orderList.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.",R.drawable.themed_cake_image));
+        orderList.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.",R.drawable.cakesample2));*/
+
+
 
         // Handle calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-            Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + date, Toast.LENGTH_SHORT).show();
-            // Add logic to show order details for the selected date
+            String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+            Log.d("OrderList", "Size: " + orderList.size());
+            Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+
+            // Set order details for the selected date
+            String orderDetailsText = getString(R.string.order_details_title, selectedDate);
+            orderDetailsTitle.setText(orderDetailsText);
+
+            // Load orders for the selected date
+            loadOrdersForDate(selectedDate);
         });
 
-        /*calendarView = findViewById(R.id.calendarView);
 
-        // Sample data for orders (dates and types)
-        Set<CalendarDay> regularOrders = new HashSet<>();
-        Set<CalendarDay> customOrders = new HashSet<>();
-
-        // Example: Add some regular and custom orders to the set
-        regularOrders.add(CalendarDay.from(2024, 11, 16)); // Regular Order on Nov 16
-        customOrders.add(CalendarDay.from(2024, 11, 16)); // Custom Order on Nov 16
-        customOrders.add(CalendarDay.from(2024, 11, 18)); // Custom Order on Nov 18
-
-        // Decorate the calendar
-        calendarView.addDecorator(new EventDecorator(Color.parseColor("#5D9B9B"), regularOrders)); // Regular Order Dots
-        calendarView.addDecorator(new EventDecorator(Color.parseColor("#B94553"), customOrders)); // Custom Order Dots*/
 
         // Set an initial checked state
         blockDaySwitch.setChecked(false); // depending on the default state
@@ -83,6 +117,9 @@ public class B_MyScheduleActivity extends AppCompatActivity {
             }
         });
 
+
+
+
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
         bottomNavigationView.setSelectedItemId(R.id.nav_schedule);
@@ -95,7 +132,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
                 //no action
                 return true;
             } else if (item.getItemId() == R.id.nav_my_cakes) {
-                startActivity(new Intent(B_MyScheduleActivity.this, B_MyCakesActivity.class));
+                startActivity(new Intent(B_MyScheduleActivity.this, B_MyCakesSetupActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
                 startActivity(new Intent(B_MyScheduleActivity.this, B_ProfileActivity.class));
@@ -106,26 +143,42 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
     }
 
-    // Decorator class to add colored dots
-    /*public class EventDecorator implements com.prolificinteractive.materialcalendarview.DayViewDecorator {
-        private final int color;
-        private final Set<CalendarDay> dates;
+    // Method to load orders for the given date
+    private void loadOrdersForDate(String selectedDate) {
+        // Clear previous orders
+        List<Order> filteredOrders = new ArrayList<>();
 
-        public EventDecorator(int color, Set<CalendarDay> dates) {
-            this.color = color;
-            this.dates = dates;
+        // Sample orders (normally you will fetch this from a database or API)
+        List<Order> allOrders = getAllSampleOrders();
+
+        // Filter orders based on the selected date
+        for (Order order : allOrders) {
+            if (order.getOrderDate().equals(selectedDate)) {
+                filteredOrders.add(order);
+            }
         }
 
-        @Override
-        public boolean shouldDecorate(CalendarDay day) {
-            // Check if the current day is in the set of dates
-            return dates.contains(day);
+        // If there are no orders, show "No orders for this date"
+        if (filteredOrders.isEmpty()) {
+            noOrdersTextView.setVisibility(View.VISIBLE);  // Show message
+            ordersRecyclerView.setVisibility(View.GONE);   // Hide RecyclerView
+        } else {
+            noOrdersTextView.setVisibility(View.GONE);     // Hide message
+            ordersRecyclerView.setVisibility(View.VISIBLE);  // Show RecyclerView
+            orderAdapter = new OrderAdapter(filteredOrders);
+            ordersRecyclerView.setAdapter(orderAdapter);
+            orderAdapter.notifyDataSetChanged();
         }
+    }
 
-        @Override
-        public void decorate(DayViewFacade view) {
-            // Add a dot to the day
-            view.addSpan(new DotSpan(10, color));  // Adds a dot with the specified color
-        }
-    }*/
+    // Sample orders
+    private List<Order> getAllSampleOrders() {
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.", R.drawable.cakesample2));
+        orders.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.themed_cake_image));
+        orders.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.cakesample2));
+        return orders;
+    }
+
+
 }

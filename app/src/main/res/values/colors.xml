@@ -6,6 +6,11 @@
     <color name="colorPrimary">#721124</color>
     <color name="colorAccent">#88A84F</color>
     <color name="searchBackground">#EFEFEF</color>
+    <!-- Background color for regular orders -->
+    <color name="regular_order_bg">#5D9B9B</color>
+
+    <!-- Background color for custom orders -->
+    <color name="custom_order_bg">#B94553</color>
 </resources>
 
 

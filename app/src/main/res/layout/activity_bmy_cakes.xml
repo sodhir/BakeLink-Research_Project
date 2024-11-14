@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
                 android:text="Manage your cakes"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
@@ -208,12 +209,12 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- Save and Continue Button at the bottom -->
+            <!-- Done Button at the bottom -->
             <Button
                 android:id="@+id/btnSaveAndContinue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save and Continue"
+                android:text="Done"
                 android:background="@drawable/rounded_button_background"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"

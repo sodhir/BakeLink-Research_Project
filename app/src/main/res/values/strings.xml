@@ -11,6 +11,10 @@
     <string name="cakeSampleText">Cake Samples</string>
     <string name="customerReviewsText">Customer Reviews</string>
 
+    <string name="order_details_title">Order details for %1$s</string>
+    <string name="no_orders_for_this_date">No orders for this date</string>
+
+
     <string-array name="cake_types">
         <item>Birthday Cake</item>
         <item>Wedding Cake</item>
