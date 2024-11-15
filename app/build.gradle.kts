@@ -44,6 +44,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-database")
     implementation ("com.google.firebase:firebase-storage")
     implementation("com.github.bumptech.glide:glide:4.11.0")
+    implementation("androidx.core:core-splashscreen:1.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

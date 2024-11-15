@@ -12,6 +12,7 @@
         android:id="@+id/txtTitleSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="320dp"
         android:layout_marginEnd="35dp"
         android:fontFamily="@font/baloo_2"
         android:text="@string/titleText"
@@ -20,19 +21,21 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txtSubtitleSignUp"
         app:layout_constraintEnd_toEndOf="@+id/txtSubtitleSignUp"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/txtSubtitleSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="29dp"
+        android:layout_marginBottom="24dp"
         android:fontFamily="@font/baloo_2"
         android:text="@string/textSubtitle"
         android:textColor="@color/primaryColor"
         app:layout_constraintBottom_toTopOf="@+id/txtEmailSignUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitleSignUp"/>
 
     <EditText
         android:id="@+id/txtEmailSignUp"

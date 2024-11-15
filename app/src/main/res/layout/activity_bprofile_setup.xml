@@ -50,6 +50,7 @@
 
             <!-- Profile Picture Placeholder -->
             <FrameLayout
+                android:id="@+id/ivProfileFrame"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
@@ -60,8 +61,8 @@
 
                 <ImageView
                     android:id="@+id/ivProfilePicture"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_upload" /> <!-- Upload icon placeholder -->
@@ -134,6 +135,7 @@
 
                 <!-- Add Specialities & Services Button -->
                 <FrameLayout
+                    android:id="@+id/add_specialities_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="#EFEFEF"
@@ -147,6 +149,15 @@
                         android:src="@drawable/ic_add" />
                 </FrameLayout>
             </LinearLayout>
+
+            <!-- Services list -->
+
+            <LinearLayout
+                android:id="@+id/services_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
 
             <!-- Save and Continue Button at the bottom -->
             <Button
@@ -166,11 +177,11 @@
     </ScrollView>
 
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation
     <include
         android:id="@+id/bottom_navigation_baker"
         layout="@layout/bottom_navigation_baker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true" /> -->
 </RelativeLayout>
