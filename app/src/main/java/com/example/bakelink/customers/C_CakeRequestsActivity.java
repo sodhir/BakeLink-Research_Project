@@ -87,6 +87,7 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
                     List<CustomCakeRequest> cakeRequests = new ArrayList<>();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         CustomCakeRequest cakeRequest = snapshot.getValue(CustomCakeRequest.class);
+                        cakeRequest.setCustomCakeRequestId(snapshot.getKey());
                         if (cakeRequest != null) {
                             cakeRequests.add(cakeRequest);
                         }
