@@ -11,18 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.models.Quote;
 import com.example.bakelink.bakers.models.QuoteRequest;
+import com.example.bakelink.bakers.models.QuoteResponse;
 
 import java.util.List;
 
 public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmittedQuotesAdapter.ViewHolder> {
 
-    private List<Quote> quotesSent;
+    private List<QuoteResponse> quotesSent;
     private Context context;
 
-    public TrackSubmittedQuotesAdapter(Context context, List<Quote> quotesSent) {
+    public TrackSubmittedQuotesAdapter(Context context, List<QuoteResponse> quotesSent) {
         this.context = context;
         this.quotesSent = quotesSent;
     }
@@ -36,18 +38,21 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Quote quote = quotesSent.get(position);
-        holder.quoteImage.setImageResource(quote.getImageResource());
-        holder.customerName.setText(quote.getCustomerName());
-        holder.quoteAmount.setText("$" + quote.getAmount());
+        QuoteResponse quote = quotesSent.get(position);
+       // holder.quoteImage.setImageResource(quote.get());
+        holder.customerName.setText(quote.getCustomCakeRequestId());
+        holder.quoteAmount.setText("$" + quote.getQuotedPrice());
+        Glide.with(holder.itemView.getContext())
+                .load(quote.getImageUrl())
+                .into(holder.quoteImage);
 
         // Set status and background color based on quote status
         holder.quoteStatus.setText(quote.getStatus());
 
-        if ("Awaiting Approval".equals(quote.getStatus())) {
+        if ("Responded".equals(quote.getStatus())) {
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#FFD700"));
             holder.quoteStatus.setTextColor(Color.parseColor("#B77400"));
-        } else if ("Approved".equals(quote.getStatus())) {
+        } else if ("Accepted".equals(quote.getStatus())) {
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#88A84F"));
             holder.quoteStatus.setTextColor(Color.parseColor("#FFFFFF"));
         } else if ("Rejected".equals(quote.getStatus())) {

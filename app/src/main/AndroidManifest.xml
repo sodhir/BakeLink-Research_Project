@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".bakers.B_GenerateQuoteActivity"
+            android:exported="false" />
+        <activity
             android:name=".bakers.B_ViewQuoteActivity"
             android:exported="false" />
         <activity

@@ -45,7 +45,8 @@ public class QuoteRequestAdapter extends RecyclerView.Adapter<QuoteRequestAdapte
         holder.deliveryDate.setText(quoteRequest.getDeliveryDate());
        // holder.location.setText(quoteRequest.getLocation());
         Glide.with(holder.itemView.getContext())
-                .load(quoteRequest.getImageUrl()) // Load from URL
+                .load(quoteRequest.getImageUrl())
+                .error(R.drawable.cakesample1) // Load from URL
                 .into(holder.cakeImage);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

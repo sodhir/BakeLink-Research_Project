@@ -1,6 +1,7 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -20,7 +21,17 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.models.BasePrice;
+import com.example.bakelink.bakers.models.CakeWeightAndPrice;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
@@ -206,6 +217,37 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
 
     private void saveAndFinish() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("USER_ID", null);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        List<BasePrice> basePrices = new ArrayList<>();
+        basePrices.add(new BasePrice("Chocolate", 100)); // Example data, populate dynamically
+        basePrices.add(new BasePrice("Vanilla", 80)); // Example data, populate dynamically
+
+        List<CakeWeightAndPrice> weightPrices = new ArrayList<>();
+        weightPrices.add(new CakeWeightAndPrice("500g", 150)); // Example data, populate dynamically
+        weightPrices.add(new CakeWeightAndPrice("1kg", 250)); // Example data, populate dynamically
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("quoteDefaults/basePricePerCake", basePrices);
+        userData.put("quoteDefaults/cakeWeightAndPrice", weightPrices);
+
+        mDatabase.child("bakers").child(userId).updateChildren(userData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("hello", "Data saved successfully");
+                        // Data saved successfully
+                        //Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d("hello", "Failed to save data");
+                        // Failed to save data
+                        //Toast.makeText(this, "Failed to save data", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
         startActivity(intent);

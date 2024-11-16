@@ -21,6 +21,7 @@ import com.example.bakelink.bakers.adapters.TrackSubmittedQuotesAdapter;
 import com.example.bakelink.bakers.models.Cake;
 import com.example.bakelink.bakers.models.Quote;
 import com.example.bakelink.bakers.models.QuoteRequest;
+import com.example.bakelink.bakers.models.QuoteResponse;
 import com.example.bakelink.customers.modal.CustomCakeRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class B_HomeActivity extends AppCompatActivity {
 
@@ -40,9 +42,11 @@ public class B_HomeActivity extends AppCompatActivity {
     private List<CustomCakeRequest> quoteRequestList;
     private RecyclerView recyclerTrackSubmittedQuotes;
     private TrackSubmittedQuotesAdapter submittedQuotesAdapter;
-    List<Quote> quotesSentList;
+    List<QuoteResponse> quotesSentList;
 
     String email;
+
+    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +80,14 @@ public class B_HomeActivity extends AppCompatActivity {
 
         //track submitted quote section
         recyclerTrackSubmittedQuotes = findViewById(R.id.recyclerViewTrackSubmittedQuote);
-        quotesSentList = new ArrayList<>();
-        quotesSentList.add(new Quote("[Customer name]", 250.00, "Awaiting Approval",R.drawable.cakesample2));
-        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.themed_cake_image));
-        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.cakesample3));
-        submittedQuotesAdapter = new TrackSubmittedQuotesAdapter(this,quotesSentList);
-        recyclerTrackSubmittedQuotes.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerTrackSubmittedQuotes.setAdapter(submittedQuotesAdapter);
+        loadSubmittedQuotes();
+//        quotesSentList = new ArrayList<>();
+//        quotesSentList.add(new Quote("[Customer name]", 250.00, "Awaiting Approval",R.drawable.cakesample2));
+//        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.themed_cake_image));
+//        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.cakesample3));
+//        submittedQuotesAdapter = new TrackSubmittedQuotesAdapter(this,quotesSentList);
+//        recyclerTrackSubmittedQuotes.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        recyclerTrackSubmittedQuotes.setAdapter(submittedQuotesAdapter);
 
         //weekly and monthly sales section
         TextView chipWeekly = findViewById(R.id.chip_weekly);
@@ -127,7 +132,7 @@ public class B_HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(B_HomeActivity.this, B_MyAllCakesActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
-                startActivity(new Intent(B_HomeActivity.this, B_ProfileActivity.class));
+                startActivity(new Intent(B_HomeActivity.this, B_MyQuoteSetupActivity.class));
                 return true;
             }
             return false;
@@ -135,10 +140,95 @@ public class B_HomeActivity extends AppCompatActivity {
 
     }
 
+    private void loadSubmittedQuotes() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance()
+                .getReference("bakers")
+                .child(currentUserId)
+                .child("quoteResponses");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                quotesSentList = new ArrayList<>();
+                int quoteCount = (int) snapshot.getChildrenCount();
+                AtomicInteger loadedQuotes = new AtomicInteger(0); // Track how many quotes are fully loaded
+
+                for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
+                    String responseId = responseSnapshot.getKey();
+                    String customCakeRequestId = responseSnapshot.child("customCakeRequestId").getValue(String.class);
+                    String userId = responseSnapshot.child("userId").getValue(String.class);
+                    Double quotedPrice = responseSnapshot.child("quotedPrice").getValue(Double.class);
+                    String responseMessage = responseSnapshot.child("responseMessage").getValue(String.class);
+                    String status = responseSnapshot.child("status").getValue(String.class);
+
+                    QuoteResponse cakeResponse = new QuoteResponse();
+                    cakeResponse.setQuoteResponseId(responseId);
+                    cakeResponse.setCustomCakeRequestId(customCakeRequestId);
+                    cakeResponse.setUserID(userId);
+                    cakeResponse.setQuotedPrice(quotedPrice);
+                    cakeResponse.setResponseMessage(responseMessage);
+                    cakeResponse.setStatus(status);
+
+                    // Fetch additional details from customCakeRequests
+                    DatabaseReference customCakeRef = FirebaseDatabase.getInstance()
+                            .getReference("customCakeRequests")
+                            .child(customCakeRequestId);
+
+                    customCakeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot customCakeSnapshot) {
+                            String customerId = customCakeSnapshot.child("userId").getValue(String.class);
+                            String imageUrl = customCakeSnapshot.child("imageUrl").getValue(String.class);
+
+                            cakeResponse.setCustomerId(customerId);
+                            cakeResponse.setImageUrl(imageUrl);
+
+                            quotesSentList.add(cakeResponse);
+
+                            // Increment loadedQuotes and update adapter when all quotes are loaded
+                            if (loadedQuotes.incrementAndGet() == quoteCount) {
+                                updateAdapter();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("CustomCakeFetch", "Failed to fetch custom cake details: " + error.getMessage());
+                        }
+                    });
+                }
+
+                // If no quotes found, update adapter to show empty list
+                if (quoteCount == 0) {
+                    updateAdapter();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("LoadQuotes", "Failed to fetch quotes: " + error.getMessage());
+            }
+        });
+    }
+
+    // Helper method to update adapter and setup RecyclerView
+    private void updateAdapter() {
+        Log.d("Responses", "submitted quotes fetched: " + quotesSentList.size());
+        if (submittedQuotesAdapter == null) {
+            submittedQuotesAdapter = new TrackSubmittedQuotesAdapter(B_HomeActivity.this, quotesSentList);
+            recyclerTrackSubmittedQuotes.setLayoutManager(new LinearLayoutManager(B_HomeActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            recyclerTrackSubmittedQuotes.setAdapter(submittedQuotesAdapter);
+        } else {
+            submittedQuotesAdapter.notifyDataSetChanged();
+        }
+    }
+
+
     private void loadAllCustomQuotes() {
 
 // Reference to the baker's cakes node
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
+
 
 // Attach a listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {

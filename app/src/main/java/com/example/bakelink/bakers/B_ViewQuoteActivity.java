@@ -1,7 +1,10 @@
 package com.example.bakelink.bakers;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,11 +18,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
+import com.example.bakelink.common.models.Message;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class B_ViewQuoteActivity extends AppCompatActivity {
     ImageView cakeImg;
@@ -35,7 +43,11 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
     TextView deliveryTime;
     TextView deliveryAddress;
 
+    Button generateQuote, sendMessage;
+
     String quoteId;
+
+    String currentUser, receiverId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +71,28 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
          quoteId = getIntent().getStringExtra("quoteId");
          loadQuoteDetails(quoteId);
 
+         generateQuote = findViewById(R.id.btnGenerateQuote);
+         sendMessage = findViewById(R.id.btnMsgCustomer);
+
+         generateQuote.setOnClickListener(view -> {
+             Intent intent = new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class);
+             intent.putExtra("customCakeRequestId", quoteId);
+             startActivity(intent);
+             //startActivity(new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class));
+         });
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        currentUser = sharedPreferences.getString("USER_ID", null);
+
+
+         sendMessage.setOnClickListener(view -> {
+             sendmessage();
+         });
+
+
+
     }
+
+
 
 
     private void loadQuoteDetails(String quoteId){
@@ -72,6 +105,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                 Log.d("QuoteDetails", "Snapshot: " + snapshot.toString());
 
                 String customer =  snapshot.child("userId").exists() ? snapshot.child("userId").getValue(String.class) : "Not specified";
+                receiverId = customer;
                 String type = snapshot.child("cakeType").exists()? snapshot.child("cakeType").getValue(String.class) : "Not specified";
                 String size = snapshot.child("cakeSize").exists() ? snapshot.child("cakeSize").getValue(String.class): "Not specified";
                 String layers = snapshot.child("cakeLayers").exists() ? snapshot.child("cakeLayers").getValue(String.class) : "Not specified";
@@ -110,6 +144,78 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
             }
         });
     }
+    private void sendmessage() {
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Generate a unique message ID
+        String messageID = mDatabase.child("messages").push().getKey();
+        String senderID = currentUser;
+        String receiverID = receiverId;
+        String messageContent = "Test message";
+
+        if (messageID != null) {
+            // Create the message object
+            Message message = new Message(senderID, receiverID, messageContent, ServerValue.TIMESTAMP, "unread");
+
+            // Save the message in the messages node
+            mDatabase.child("messages").child(messageID).setValue(message)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Save message reference for both the sender and receiver
+                            mDatabase.child("bakers").child(senderID).child("messages").child(messageID).setValue(true);
+                            mDatabase.child("users").child(receiverID).child("messages").child(messageID).setValue(true);
+
+                            // Optionally, send a push notification to the receiver
+                            sendPushNotification(receiverID, messageContent);
+
+                            Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to send message", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+    private void sendPushNotification(String receiverID, String messageContent) {
+        // Fetch the receiver's FCM token
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(receiverID).child("fcmToken")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String fcmToken = dataSnapshot.getValue(String.class);
+                        if (fcmToken != null) {
+                            sendFCMRequest(fcmToken, messageContent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Handle any error
+                    }
+                });
+    }
+
+    private void sendFCMRequest(String fcmToken, String message) {
+        // Construct a simple FCM payload
+        JSONObject notification = new JSONObject();
+        try {
+            notification.put("to", fcmToken);
+            notification.put("priority", "high");
+
+            JSONObject notificationBody = new JSONObject();
+            notificationBody.put("title", "New Message");
+            notificationBody.put("body", message);
+
+            notification.put("notification", notificationBody);
+
+            // You would send this FCM request here (via Retrofit, OkHttp, etc.)
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

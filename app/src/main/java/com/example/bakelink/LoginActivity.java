@@ -1,6 +1,7 @@
 package com.example.bakelink;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -95,6 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                         if (currentUser != null) {
                             String userId = currentUser.getUid();
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("USER_ID", userId);  // Save the user ID with a key
+                            editor.apply();
 
                             // Retrieve user type from Firebase
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users").child(userId);
