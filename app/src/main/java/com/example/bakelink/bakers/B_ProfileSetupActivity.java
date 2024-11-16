@@ -3,9 +3,13 @@ package com.example.bakelink.bakers;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -31,11 +35,15 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
 
     private EditText etBakeryTitle, etDescription;
     private ImageView ivProfilePicture;
+    private FrameLayout ivProfileFrame;
     private Button btnSaveAndContinue;
     //add for specialities and services section
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private Uri ivProfilePictureUri;
+    private LinearLayout servicesListLayout;
+    private SpecialitiesBottomSheetFragment bottomSheetFragment;
+    private FrameLayout addServiceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +60,23 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
         etBakeryTitle = findViewById(R.id.etBakeryTitle);
         etDescription = findViewById(R.id.etDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
+        ivProfileFrame = findViewById(R.id.ivProfileFrame);
         btnSaveAndContinue = findViewById(R.id.btnSaveAndContinue);
-        //add for specialities and services section
+        servicesListLayout = findViewById(R.id.services_list_layout);
+        addServiceButton = findViewById(R.id.add_specialities_button);
 
         // Set listener for profile picture upload
-        ivProfilePicture.setOnClickListener(v -> {
+        ivProfileFrame.setOnClickListener(v -> {
             //functionality for upload picture
             //Toast.makeText(this, "Upload Profile Picture", Toast.LENGTH_SHORT).show();
             openImagePicker();
         });
 
+        //Set listener for adding specialities
+        addServiceButton.setOnClickListener(v -> {
+            bottomSheetFragment = new SpecialitiesBottomSheetFragment();
+            bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+        });
 
         // Save and Continue button click listener
         btnSaveAndContinue.setOnClickListener(v -> saveProfileAndContinue());
@@ -109,13 +124,43 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
         }
     }
 
+    public void addSpecialityToList(String speciality) {
+        TextView textView = new TextView(this);
+        // Set the text for the TextView
+        textView.setText(speciality);
+        // Set the text color
+        textView.setTextColor(getResources().getColor(android.R.color.black));
+        // Set the text size
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        // Set padding
+        textView.setPadding(0, 8, 0, 8);
+        // Set the layout parameters (margin top)
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.topMargin = 8; // 8dp margin top
+        // Apply the layout parameters to the TextView
+        textView.setLayoutParams(layoutParams);
+        // Add the TextView to the layout
+        servicesListLayout.addView(textView);
+    }
+
     private void saveProfileAndContinue() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Check if the user is authenticated
+        if (currentUser == null) {
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            return; // Stop further execution if the user is not authenticated
+        }
+
         String bakeryTitle = etBakeryTitle.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
         Uri imageUri = ivProfilePictureUri;
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
+       if (currentUser != null) {
+           Toast.makeText(this, "User authenticated.", Toast.LENGTH_SHORT).show();
             String userId = currentUser.getUid();
 
             // Reference to Firebase Storage
@@ -138,7 +183,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
                         databaseReference.child(userId).setValue(bakerProfile)
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(B_ProfileSetupActivity.this, B_MyCakesSetupActivity.class));
+                                    startActivity(new Intent(B_ProfileSetupActivity.this, B_MyQuoteSetupActivity.class));
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(this, "Failed to save profile.", Toast.LENGTH_SHORT).show();
@@ -154,7 +199,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
         }
 
-
+        //startActivity(new Intent(B_ProfileSetupActivity.this, B_MyQuoteSetupActivity.class));
 
     }
 }

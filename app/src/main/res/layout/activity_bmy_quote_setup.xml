@@ -143,11 +143,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Navigation
     <include
         android:id="@+id/bottom_navigation_baker"
         layout="@layout/bottom_navigation_baker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true" /> -->
 </RelativeLayout>

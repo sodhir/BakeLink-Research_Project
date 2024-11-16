@@ -50,6 +50,7 @@
 
             <!-- Cake Image Placeholder -->
             <FrameLayout
+                android:id="@+id/ivCakeFrame"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
@@ -60,8 +61,8 @@
 
                 <ImageView
                     android:id="@+id/ivCakeImage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_upload" /> <!-- Upload icon placeholder -->
@@ -154,13 +155,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Available sizes &amp; weights:"
+                    android:text="Available weights:"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <!-- Add Sizes and weights Button -->
                 <FrameLayout
+                    android:id="@+id/add_weight_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="#EFEFEF"
@@ -174,6 +176,25 @@
                         android:src="@drawable/ic_add" />
                 </FrameLayout>
             </LinearLayout>
+
+            <!-- Available Sizes and weights list -->
+
+            <LinearLayout
+                android:id="@+id/sizes_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+
+            <!-- Flavor and fillings Heading -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Flavor &amp; Fillings:"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -181,18 +202,19 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="16dp">
 
-                <!-- Flavor and fillings Heading -->
+                <!-- Flavor Heading -->
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Flavor &amp; Fillings:"
+                    android:text="Flavors:"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <!-- Add Flavor and fillings Button -->
+                <!-- Add Flavor Button -->
                 <FrameLayout
+                    android:id="@+id/add_flavor_button"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="#EFEFEF"
@@ -202,10 +224,61 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_gravity="center"
-                        android:contentDescription="Add Specialities"
+                        android:contentDescription="Add flavors"
                         android:src="@drawable/ic_add" />
                 </FrameLayout>
             </LinearLayout>
+
+            <!-- Flavor list -->
+
+            <LinearLayout
+                android:id="@+id/flavor_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <!-- Filling Heading -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fillings:"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Add Filling Button -->
+                <FrameLayout
+                    android:id="@+id/add_filling_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#EFEFEF"
+                    android:elevation="2dp">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Add filling"
+                        android:src="@drawable/ic_add" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Filling list -->
+
+            <LinearLayout
+                android:id="@+id/filling_list_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
 
             <!-- Done Button -->
             <Button

@@ -54,15 +54,16 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
 
         addnewCake = findViewById(R.id.allckbtnAddNewCake);
         addnewCake.setOnClickListener(v -> {
-            startActivity(new Intent(B_MyAllCakesActivity.this, B_MyCakesActivity.class));
+            startActivity(new Intent(B_MyAllCakesActivity.this, B_AddNewCakeActivity.class));
         });
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
+        bottomNavigationView.setSelectedItemId(R.id.nav_my_cakes);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
-                startActivity(new Intent(B_MyAllCakesActivity.this, B_MyScheduleActivity.class));
+                startActivity(new Intent(B_MyAllCakesActivity.this, B_HomeActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_schedule) {
                 startActivity(new Intent(B_MyAllCakesActivity.this, B_MyScheduleActivity.class));

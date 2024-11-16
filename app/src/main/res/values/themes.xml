@@ -17,5 +17,10 @@
     <!-- Customize toolbar background color -->
     <item name="colorPrimarySurface">@color/colorPrimary</item>
 </style>
+
+    <style name="Theme.BakeLink.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
+    </style>
+
 </resources>
 

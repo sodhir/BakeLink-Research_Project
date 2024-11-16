@@ -85,6 +85,7 @@
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
+            android:theme="@style/Theme.BakeLink.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

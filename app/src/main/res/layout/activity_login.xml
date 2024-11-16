@@ -12,7 +12,7 @@
         android:id="@+id/txtTitleLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="360dp"
+        android:layout_marginTop="320dp"
         android:fontFamily="@font/baloo_2"
         android:text="@string/titleText"
         android:textColor="@color/primaryColor"
@@ -87,27 +87,12 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="1dp"
         android:backgroundTint="@color/primaryColor"
         android:text="@string/loginText"
-        app:layout_constraintBottom_toTopOf="@+id/google_sign_in_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPasswordLogin" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_sign_in_button"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtSignUp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin">
-
-    </com.google.android.gms.common.SignInButton>
 
     <TextView
         android:id="@+id/txtSignUp"
@@ -115,7 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="34dp"
+        android:layout_marginBottom="28dp"
         android:clickable="true"
         android:focusable="auto"
         android:minHeight="48dp"
@@ -123,8 +108,7 @@
         android:textColor="@color/primaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google_sign_in_button" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
