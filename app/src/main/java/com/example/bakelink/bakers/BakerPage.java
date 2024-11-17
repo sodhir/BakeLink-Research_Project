@@ -148,19 +148,9 @@ public class BakerPage extends AppCompatActivity {
 
     private List<Cake> GetCakeList() {
         List<Cake> cakesList = new ArrayList<>();
-//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample1"));
-//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample2"));
-//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample3"));
-//        cakeList.add(new Cake(12.99, "Birthday Cake", "drawable/cakesample4"));
-//        return cakeList;
-
-
-
-// Reference to the baker's cakes node
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers")
                 .child(currentBakerId).child("cakes");
 
-// Attach a listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -172,12 +162,6 @@ public class BakerPage extends AppCompatActivity {
                     String description = cakeSnapshot.child("description").getValue(String.class);
                     Double price = cakeSnapshot.child("price").getValue(Double.class);
                     String imageUrl = cakeSnapshot.child("cakeImgUrl").getValue(String.class);
-                    //double price = 0;
-//                    try {
-//                        price = Double.parseDouble(priceString);
-//                    } catch (NumberFormatException e) {
-//                        Log.e("ParsingError", "Failed to parse price to double: " + e.getMessage());
-//                    }
 
                     Cake cake = new Cake();
                     cake.setCakeId(cakeId);
@@ -189,8 +173,6 @@ public class BakerPage extends AppCompatActivity {
                 }
 
                 Log.d("Cakes", "Cakes fetched: " + cakesList.size());
-                // Use the fetched list of cakes (e.g., update your UI)
-               // Implement this method to handle the list of cakes
             }
 
             @Override

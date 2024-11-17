@@ -8,11 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.models.Cake;
+import com.example.bakelink.customers.CakeAddToCartBottomSheet;
 import com.example.bakelink.customers.adapters.CakeServiceAdapter;
 
 import java.util.List;
@@ -58,6 +60,17 @@ public class BakerCakeAdapter extends RecyclerView.Adapter<BakerCakeAdapter.Bake
                     .load(imageUrl) // Load from URL
                     .into(holder.cakeImg);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            CakeAddToCartBottomSheet bottomSheet = CakeAddToCartBottomSheet.newInstance(
+                    cake.getCakeId(),
+                    cake.getCakeName(),
+                    cake.getDescription(),
+                    cake.getPrice(),
+                    cake.getCakeImgUrl()
+            );
+            bottomSheet.show(((AppCompatActivity) context).getSupportFragmentManager(), "CakeAddToCartBottomSheet");
+        });
 
     }
 

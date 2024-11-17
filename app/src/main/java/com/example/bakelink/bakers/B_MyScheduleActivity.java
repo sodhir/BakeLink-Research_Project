@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
@@ -22,11 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.OrderAdapter;
 import com.example.bakelink.bakers.models.Order;
+import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class B_MyScheduleActivity extends AppCompatActivity {
 
@@ -37,6 +47,8 @@ public class B_MyScheduleActivity extends AppCompatActivity {
     private OrderAdapter orderAdapter;
     private List<Order> orderList;
     private TextView noOrdersTextView;
+    String selectedDate;
+    String dbStructureDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +98,9 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
         // Handle calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+             selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+             dbStructureDate = year + "/" + (month + 1) + "/" + dayOfMonth;
+            loadBlockStatusFromDB(dbStructureDate);
             Log.d("OrderList", "Size: " + orderList.size());
             Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
 
@@ -109,15 +123,15 @@ public class B_MyScheduleActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Code to execute when switch is turned ON
-                    Toast.makeText(getApplicationContext(), "Day blocked", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "Day blocked", Toast.LENGTH_SHORT).show();
+                    blockDate(dbStructureDate, isChecked);
                 } else {
+                    blockDate(dbStructureDate, isChecked);
                     // Code to execute when switch is turned OFF
                     Toast.makeText(getApplicationContext(), "Day unblocked", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
 
 
         // Set up bottom navigation
@@ -140,6 +154,67 @@ public class B_MyScheduleActivity extends AppCompatActivity {
             }
             return false;
         });
+
+    }
+
+    private void loadBlockStatusFromDB(String dbStructureDate) {
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Assumes user is signed in
+        DatabaseReference calendarRef = FirebaseDatabase.getInstance()
+                .getReference("bakers")
+                .child(userId)
+                .child("calendar")
+                .child(dbStructureDate);
+
+        // Fetch data for the selected date
+        calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                SwitchCompat blockDaySwitch = findViewById(R.id.blockDaySwitch);
+                if (snapshot.exists()) {
+                    Boolean isBlocked = snapshot.child("blocked").getValue(Boolean.class);
+                    if (isBlocked != null) {
+                        blockDaySwitch.setChecked(isBlocked); // Update the switch state
+                    } else {
+                        blockDaySwitch.setChecked(false); // Default to unblocked if no data found
+                    }
+                } else {
+                    // If no data exists for this date, set default state
+                    blockDaySwitch.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle possible errors (optional)
+                Log.e("Firebase", "Error fetching block status", error.toException());
+            }
+        });
+    }
+
+    private void blockDate(String selectedDate, Boolean isChecked) {
+
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("bakers");
+        String bakerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Map<String, Object> calendarData = new HashMap<>();
+        if(isChecked){
+            calendarData.put("blocked", true);
+        }else{
+            calendarData.put("blocked", false);
+        }
+
+
+        databaseRef.child(bakerId).child("calendar").child(selectedDate).setValue(calendarData)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Data saved successfully
+                        Log.d("Firebase", "Calendar data saved successfully.");
+                    } else {
+                        // Handle the error
+                        Log.e("Firebase", "Error saving calendar data", task.getException());
+                    }
+                });
 
     }
 
