@@ -40,8 +40,7 @@ public class CakeRequestAdapter extends RecyclerView.Adapter<CakeRequestAdapter.
     public void onBindViewHolder(@NonNull CakeRequestAdapter.CakeRequestViewHolder holder, int position) {
         CustomCakeRequest request = cakeRequests.get(position);
 
-        String cakeDetails = "Event date : " + request.getDeliveryTime() + "\n"
-                            + "Requested date : 11/11/2023\n" + "Quotes : 2 received";
+        String cakeDetails = "Event date : " + request.getDeliveryDate();
 
         holder.cakeType.setText(request.getCakeType());
         holder.cakeDetails.setText(cakeDetails);
