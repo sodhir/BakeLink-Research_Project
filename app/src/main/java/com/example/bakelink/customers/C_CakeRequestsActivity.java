@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +35,7 @@ import java.util.List;
 public class C_CakeRequestsActivity extends AppCompatActivity {
 
     RecyclerView requestsRecyclerView;
+    ImageButton cartIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,18 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
         });
 
         getAllCakeRequests();
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_CakeRequestsActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_cake_request);

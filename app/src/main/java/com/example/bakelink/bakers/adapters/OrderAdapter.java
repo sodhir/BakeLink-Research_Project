@@ -33,7 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         Order order = orderList.get(position);
 
         // Set the values for customer name, cake type, location, and delivery date
-        holder.cakeImage.setImageResource(order.getImageResource());
+        //holder.cakeImage.setImageResource(order.getImageResource());
         holder.customerName.setText(order.getCustomerName());
         holder.cakeType.setText(order.getCakeType());
         holder.deliveryDate.setText(order.getOrderDate());

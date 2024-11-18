@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,6 +27,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
 
     ImageView cakeImg;
     Button uploadButton;
+    ImageButton cartIcon;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -39,6 +41,19 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_RequestQuoteActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
         setupBottomNavigation();
 
         cakeImg = findViewById(R.id.uploadedImg);

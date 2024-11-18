@@ -10,27 +10,21 @@ public class Order {
     private String customerName;  // Name of the customer
     private String cakeType;  // Type of the cake
     private String deliveryAddress;  // Delivery address for the order
-    private int imageResource; // Assuming drawable resource ID for now
+    private String imageResource; // Assuming drawable resource ID for now
 
-    private double orderTotal;
+    private Double orderTotal;
 
     private List<OrderItem> orderItems;
-
-    public List<OrderItem> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(List<OrderItem> orderItems) {
-        this.orderItems = orderItems;
-    }
 
     public Order() {
 
     }
 
     // Constructor with all fields
-    public Order(String orderType, String orderDate, String orderDetails,
-                 String customerName, String cakeType, String deliveryAddress, int imageResource) {
+
+
+    public Order(String orderId, String orderType, String orderDate, String orderDetails, String customerName, String cakeType, String deliveryAddress, String imageResource, Double orderTotal, List<OrderItem> orderItems) {
+        this.orderId = orderId;
         this.orderType = orderType;
         this.orderDate = orderDate;
         this.orderDetails = orderDetails;
@@ -38,9 +32,18 @@ public class Order {
         this.cakeType = cakeType;
         this.deliveryAddress = deliveryAddress;
         this.imageResource = imageResource;
+        this.orderTotal = orderTotal;
+        this.orderItems = orderItems;
     }
 
-    // Getters and Setters for all fields
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
     public String getOrderType() {
         return orderType;
     }
@@ -89,27 +92,27 @@ public class Order {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public int getImageResource() {
+    public String getImageResource() {
         return imageResource;
     }
 
-    public void setImageResource(int imageResource) {
+    public void setImageResource(String imageResource) {
         this.imageResource = imageResource;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public double getOrderTotal() {
+    public Double getOrderTotal() {
         return orderTotal;
     }
 
-    public void setOrderTotal(double orderTotal) {
+    public void setOrderTotal(Double orderTotal) {
         this.orderTotal = orderTotal;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }
