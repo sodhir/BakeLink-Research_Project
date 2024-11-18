@@ -116,7 +116,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <Button
+            <!--<Button
                 android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,25 +129,26 @@
                 android:text="Upload image"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="16sp" />-->
 
 
 
-            <RelativeLayout
+            <FrameLayout
+                android:id="@+id/reqimageFrame"
                 android:layout_width="280dp"
                 android:layout_height="280dp"
                 android:layout_gravity="center"
                 android:clipToPadding="false"
-                android:padding="8dp"
-                android:background="@drawable/rounded_upload_background">
+                android:background="#EFEFEF">
 
                 <ImageView
                     android:id="@+id/uploadedImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_upload" />
-            </RelativeLayout>
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_upload_desc"
@@ -168,8 +169,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_button_background"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp"
                 android:text="Customize Your Cake"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"

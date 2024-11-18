@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -15,6 +16,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,9 +28,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class C_RequestQuoteActivity extends AppCompatActivity {
 
     ImageView cakeImg;
-    Button uploadButton;
+    FrameLayout uploadFrame;
     ImageButton cartIcon;
+    ImageView uploadImage;
 
+    private Uri cakeImgUri;
     private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
@@ -57,51 +61,41 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
         setupBottomNavigation();
 
         cakeImg = findViewById(R.id.uploadedImg);
-        uploadButton = findViewById(R.id.btnUpload);
+        uploadFrame = findViewById(R.id.reqimageFrame);
 
-       uploadButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               openImagePicker();
-           }
-       });
+        uploadFrame.setOnClickListener(v -> {
+            openImagePicker();
+        });
 
 
 
     }
 
-    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        if (imageUri != null) {
-                            cakeImg.setImageURI(imageUri); // Display the selected image
-
-                            Button requestQuoteButton = findViewById(R.id.button_request_quote);
-                            requestQuoteButton.setOnClickListener(v -> {
-
-                                Intent intent = new Intent(C_RequestQuoteActivity.this, C_CustomCakeRequestActivity.class);
-                                intent.putExtra("imageUri", imageUri.toString());
-                                startActivity(intent);
-
-                            });
-                        }
-
-                    }
-                }
-            });
 
     private void openImagePicker() {
-        //Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-       // imagePickerLauncher.launch(intent);
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-        imagePickerLauncher.launch(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData(); // This is the URI of the selected image
+            cakeImg.setImageURI(imageUri); // Display image in ImageView (if needed)
+            // Save this URI to use it for uploading later
+            cakeImgUri = imageUri;
+            Button requestQuoteButton = findViewById(R.id.button_request_quote);
+            requestQuoteButton.setOnClickListener(v -> {
+
+                Intent intent = new Intent(C_RequestQuoteActivity.this, C_CustomCakeRequestActivity.class);
+                intent.putExtra("imageUri", imageUri.toString());
+                startActivity(intent);
+
+            });
+        }
     }
 
 //    private void analyzeImageColors(Uri imageUri) {
@@ -133,7 +127,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
+        bottomNav.setSelectedItemId(R.id.none);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
                 startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));

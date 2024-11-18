@@ -114,22 +114,21 @@
                 android:textSize="20sp"
                 android:textStyle="bold"/>
 
-            <RelativeLayout
+           <FrameLayout
                 android:layout_width="280dp"
                 android:layout_height="280dp"
                 android:layout_gravity="center"
                 android:clipToPadding="false"
-                android:padding="8dp"
-                android:background="@drawable/rounded_upload_background">
+                android:background="#EFEFEF">
 
                 <ImageView
                     android:id="@+id/img_custom_cake_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_upload" />
-
-            </RelativeLayout>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -137,7 +136,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Choose Your Cake Type"
                 android:textStyle="bold"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
 
             <RadioGroup
                 android:id="@+id/rdbCakeTypeGroup"
@@ -150,44 +150,56 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Birthday Cake" />
+                    android:text="Birthday Cake"
+                    android:textColor="@android:color/black"
+                    />
 
                 <RadioButton
                     android:id="@+id/rdbWedding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Wedding Cake" />
+                    android:text="Wedding Cake"
+                    android:textColor="@android:color/black"
+                    />
 
                 <RadioButton
                     android:id="@+id/rdbVegan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Vegan Cake" />
+                    android:text="Vegan Cake"
+                    android:textColor="@android:color/black"
+                    />
 
                 <RadioButton
                     android:id="@+id/rdbAnni"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Anniversary Cake" />
+                    android:text="Anniversary Cake"
+                    android:textColor="@android:color/black"
+                    />
 
             </RadioGroup>
 
 
-            <!-- Cake Size & Details -->
+            <!-- Cake Size & Details-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Cake Size and Details"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Cake Size:" />
+                android:text="Select Cake Size:"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
 
             <RadioGroup
                 android:id="@+id/rdbCakeSizeGroup"
@@ -199,26 +211,30 @@
                     android:id="@+id/rdb6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="6 inches" />
+                    android:text="6 inches"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/rdb8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8 inches" />
+                    android:text="8 inches"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/rdb10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10 inches" />
+                    android:text="10 inches"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Number of Layers:" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of Layers:"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"/>
             <RadioGroup
                 android:id="@+id/rdbLayerGroup"
                 android:layout_width="match_parent"
@@ -229,19 +245,56 @@
                     android:id="@+id/rdb1Lay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1 Layer" />
+                    android:text="1 Layer"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/rdb2Lay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 Layers" />
+                    android:text="2 Layers"
+                    android:textColor="@android:color/black"/>
 
                 <RadioButton
                     android:id="@+id/rdb3Lay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3 Layers" />
+                    android:text="3 Layers"
+                    android:textColor="@android:color/black"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Cake Weight:"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
+            <RadioGroup
+                android:id="@+id/rdbWeightGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rdb1lbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 lbs"
+                    android:textColor="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/rdb2lbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 lbs"
+                    android:textColor="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/rdb3lbs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 lbs"
+                    android:textColor="@android:color/black"/>
             </RadioGroup>
 
 
@@ -250,13 +303,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Choose Cake Flavor and Fillings"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
-            <!-- Cake Flavor Chips -->
+            <!-- Cake Flavor Chips-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cake Flavor:" />
+                android:text="Cake Flavor:"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/cakeFlavorChipGroup"
@@ -288,14 +345,16 @@
                     android:layout_height="wrap_content"
                     android:text="Coffee" />
 
-                <!-- Add more chips as needed -->
+                <!-- Add more chips as needed-->
             </com.google.android.material.chip.ChipGroup>
 
-            <!-- Cake Fillings Chips -->
+            <!-- Cake Fillings Chips-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cake Fillings:" />
+                android:text="Cake Fillings:"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/fillingChipGroup"
@@ -326,16 +385,18 @@
                     android:layout_height="wrap_content"
                     android:text="Custard" />
 
-                <!-- Add more chips as needed -->
+                <!-- Add more chips as needed-->
             </com.google.android.material.chip.ChipGroup>
 
-            <!-- Delivery Date & Time -->
+            <!-- Delivery Date & Time-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Choose Delivery Date and Time"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -367,40 +428,110 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:text="Delivery address"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
 
             <EditText
                 android:id="@+id/txtDeliveryAddress"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@android:color/darker_gray"
-                android:hint="Enter your delivery address here" />
+                android:layout_height="80dp"
+                android:background="#efefef"
+                android:gravity="start"
+                android:hint="Enter your delivery address here"
+                android:paddingStart="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp"
+                android:textSize="14sp" />
 
             <!-- Additional Notes -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:text="Additional Notes"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
 
             <EditText
                 android:id="@+id/txtAdditionalNotes"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@android:color/darker_gray"
+                android:background="#EFEFEF"
+                android:gravity="start"
+                android:paddingStart="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp"
+                android:textSize="14sp"
                 android:hint="Enter any specific requests or instructions here..." />
+
+            <!-- Select Cake Colors -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Select Cake Colors"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
+
+            <!-- Cake colors (assuming a list of colored views) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <!-- Placeholder for color swatches -->
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#F4A623" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#E07A5F" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#A7C957" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#6A994E" />
+
+                <View
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="#8B5E3C" />
+            </LinearLayout>
 
             <!-- Request Quote Button -->
             <Button
                 android:id="@+id/btnRequestQuotes"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/colorPrimary"
+                android:background="@drawable/rounded_button_background"
                 android:text="Request Quote"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_gravity="center"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp"
+                android:textAllCaps="false"
+                android:textSize="16sp"/>
 
 
 
@@ -411,7 +542,18 @@
     </androidx.core.widget.NestedScrollView>
 
 
-
+    <!-- Floating Action Button for Request a Quote -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_request_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="75dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_quote"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="12dp"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
