@@ -133,6 +133,8 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         Map<String, Object> orderData = new HashMap<>();
         orderData.put("orderId", databaseReference.push().getKey());
         orderData.put("cakeId", cakeId);
+        orderData.put("orderType", "Regular");
+        orderData.put("customerName", "Customer Name");
 
         databaseReference.push().setValue(orderData);
         //orderData.put("quantity", cakeItem.getQuantity());

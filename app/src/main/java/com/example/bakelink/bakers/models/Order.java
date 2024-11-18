@@ -1,6 +1,9 @@
 package com.example.bakelink.bakers.models;
 
+import java.util.List;
+
 public class Order {
+    private String orderId;
     private String orderType;  // Regular or Custom
     private String orderDate;  // The date of the order
     private String orderDetails; // Details of the order
@@ -8,6 +11,22 @@ public class Order {
     private String cakeType;  // Type of the cake
     private String deliveryAddress;  // Delivery address for the order
     private int imageResource; // Assuming drawable resource ID for now
+
+    private double orderTotal;
+
+    private List<OrderItem> orderItems;
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public Order() {
+
+    }
 
     // Constructor with all fields
     public Order(String orderType, String orderDate, String orderDetails,
@@ -76,5 +95,21 @@ public class Order {
 
     public void setImageResource(int imageResource) {
         this.imageResource = imageResource;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public double getOrderTotal() {
+        return orderTotal;
+    }
+
+    public void setOrderTotal(double orderTotal) {
+        this.orderTotal = orderTotal;
     }
 }
