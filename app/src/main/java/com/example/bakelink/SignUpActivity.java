@@ -2,6 +2,7 @@ package com.example.bakelink;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -99,6 +100,10 @@ public class SignUpActivity extends AppCompatActivity {
                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                         if (currentUser != null) {
                             String userId = currentUser.getUid();
+                            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("USER_ID", userId);  // Save the user ID with a key
+                            editor.apply();
 
                             // Create a user object with additional info
                             User user = new User(email, userType);
