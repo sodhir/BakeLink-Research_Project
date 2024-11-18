@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,10 +71,14 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         });
 
         // Save and Finish button click listener
-        btnSaveAndFinish.setOnClickListener(v -> saveAndFinish());
+        //btnSaveAndFinish.setOnClickListener(v -> saveAndFinish());
+        btnSaveAndFinish.setOnClickListener(v -> {
+            captureData();
+        });
 
 
-        // Set up bottom navigation
+
+        /*// Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
         // Deselect the item (no item should be highlighted)
         bottomNavigationView.setSelectedItemId(-1);
@@ -94,7 +99,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
                 return true;
             }
             return false;
-        });
+        });*/
 
     }
 
@@ -109,6 +114,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
         // Create the Spinner for Cake Type (Dropdown)
         Spinner priceTypeSpinner = new Spinner(this);
+        priceTypeSpinner.setId(View.generateViewId()); // Assign unique ID
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.cake_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -138,6 +144,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
         // Create the EditText for entering the price
         EditText priceEditText = new EditText(this);
+        priceEditText.setId(View.generateViewId()); // Assign unique ID
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         priceEditText.setLayoutParams(new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));  // Set weight to 40% for the EditText
@@ -164,6 +171,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
         // Create the Spinner for Weight selection
         Spinner weightSpinner = new Spinner(this);
+        weightSpinner.setId(View.generateViewId()); // Assign unique ID
         ArrayAdapter<CharSequence> weightAdapter = ArrayAdapter.createFromResource(this,
                 R.array.weight_types, android.R.layout.simple_spinner_item);
         weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -187,6 +195,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
         // Create the EditText for entering additional price
         EditText extraPriceEditText = new EditText(this);
+        extraPriceEditText.setId(View.generateViewId()); // Assign unique ID
         extraPriceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         LinearLayout.LayoutParams priceEditTextParams = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f);  // Set width to 30%
@@ -216,22 +225,72 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
     }
 
 
-    private void saveAndFinish() {
+    /*private void saveAndFinish() {
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userId = sharedPreferences.getString("USER_ID", null);
+        Log.d("USER_ID", "Retrieved userId in quotesetup: " + userId);
+        if (userId == null) {
+            Log.e("Error", "User ID is null. Cannot save data.");
+            Toast.makeText(this, "Error: Unable to save data. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        // Populate data dynamically from UI components
         List<BasePrice> basePrices = new ArrayList<>();
-        basePrices.add(new BasePrice("Chocolate", 100)); // Example data, populate dynamically
-        basePrices.add(new BasePrice("Vanilla", 80)); // Example data, populate dynamically
+        for (int i = 0; i < priceTypeTemplateLayout.getChildCount(); i++) {
+            View sectionView = priceTypeTemplateLayout.getChildAt(i);
+
+            // Get the Spinner and EditText directly from the dynamically created section
+            Spinner priceTypeSpinner = sectionView.findViewById(View.generateViewId());  // Dynamically added spinner
+            EditText priceEditText = sectionView.findViewById(View.generateViewId());  // Dynamically added EditText
+
+            if (priceTypeSpinner != null && priceEditText != null) {
+                String selectedType = priceTypeSpinner.getSelectedItem().toString();
+                String priceText = priceEditText.getText().toString().trim();
+
+                if (!selectedType.isEmpty() && !priceText.isEmpty()) {
+                    try {
+                        int price = Integer.parseInt(priceText);
+                        basePrices.add(new BasePrice(selectedType, price));
+                    } catch (NumberFormatException e) {
+                        Log.e("Error", "Invalid price input: " + priceText);
+                    }
+                }
+            }
+        }
 
         List<CakeWeightAndPrice> weightPrices = new ArrayList<>();
-        weightPrices.add(new CakeWeightAndPrice("500g", 150)); // Example data, populate dynamically
-        weightPrices.add(new CakeWeightAndPrice("1kg", 250)); // Example data, populate dynamically
 
+        for (int i = 0; i < priceWeightTemplateLayout.getChildCount(); i++) {
+            View sectionView = priceWeightTemplateLayout.getChildAt(i);
+
+            // Get the Spinner and EditText directly from the dynamically created section
+            Spinner weightSpinner = sectionView.findViewById(View.generateViewId());  // Dynamically added spinner
+            EditText extraPriceEditText = sectionView.findViewById(View.generateViewId());  // Dynamically added EditText
+
+            if (weightSpinner != null && extraPriceEditText != null) {
+                String selectedWeight = weightSpinner.getSelectedItem().toString();
+                String extraPriceText = extraPriceEditText.getText().toString().trim();
+
+                if (!selectedWeight.isEmpty() && !extraPriceText.isEmpty()) {
+                    try {
+                        int extraPrice = Integer.parseInt(extraPriceText);
+                        weightPrices.add(new CakeWeightAndPrice(selectedWeight, extraPrice));
+                    } catch (NumberFormatException e) {
+                        Log.e("Error", "Invalid price input: " + extraPriceText);
+                    }
+                }
+            }
+        }
+
+        Log.d("Firebase", "basePrices: " + basePrices);
+        Log.d("Firebase", "weightPrices: " + weightPrices);
+
+        // Prepare data map for Firebase
         Map<String, Object> userData = new HashMap<>();
         userData.put("quoteDefaults/basePricePerCake", basePrices);
         userData.put("quoteDefaults/cakeWeightAndPrice", weightPrices);
@@ -239,19 +298,121 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         mDatabase.child("bakers").child(userId).updateChildren(userData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d("hello", "Data saved successfully");
-                        // Data saved successfully
-                        //Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+                        Log.d("Firebase", "Data saved successfully.");
+                        Toast.makeText(this, "Data saved successfully", Toast.LENGTH_SHORT).show();
+
+                        // Navigate to Home Activity
+                        Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        Log.d("hello", "Failed to save data");
-                        // Failed to save data
-                        //Toast.makeText(this, "Failed to save data", Toast.LENGTH_SHORT).show();
+                        Log.e("Firebase", "Failed to save data", task.getException());
+                        Toast.makeText(this, "Failed to save data. Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }*/
+    private void captureData() {
+        List<String> basePrices = new ArrayList<>();
+        List<String> weightPrices = new ArrayList<>();
 
-        Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
-        startActivity(intent);
-        finish();
+        // Iterate through the layout to get Spinner and EditText values
+        for (int i = 0; i < priceTypeTemplateLayout.getChildCount(); i++) {
+            View view = priceTypeTemplateLayout.getChildAt(i);
+
+            if (view instanceof LinearLayout) {
+                LinearLayout linearLayout = (LinearLayout) view;
+
+                // Look for the Spinner and EditText in this LinearLayout
+                Spinner priceTypeSpinner = (Spinner) linearLayout.getChildAt(0); // Spinner is the first child
+                EditText priceEditText = (EditText) linearLayout.getChildAt(2); // EditText is the third child
+
+                // Get values from the Spinner and EditText
+                String priceType = priceTypeSpinner.getSelectedItem().toString();
+                String priceValue = priceEditText.getText().toString().trim();
+
+                // Add to the lists
+                basePrices.add(priceType + ": $" + priceValue);
+            }
+        }
+
+        // Repeat for the weight sections
+        for (int i = 0; i < priceWeightTemplateLayout.getChildCount(); i++) {
+            View view = priceWeightTemplateLayout.getChildAt(i);
+
+            if (view instanceof LinearLayout) {
+                LinearLayout linearLayout = (LinearLayout) view;
+
+                // Look for the Spinner and EditText in this LinearLayout
+                Spinner weightSpinner = (Spinner) linearLayout.getChildAt(0); // Spinner is the first child
+                EditText extraPriceEditText = (EditText) linearLayout.getChildAt(2); // EditText is the third child
+
+                // Get values from the Spinner and EditText
+                String weightType = weightSpinner.getSelectedItem().toString();
+                String extraPrice = extraPriceEditText.getText().toString().trim();
+
+                // Add to the list
+                weightPrices.add(weightType + ": $" + extraPrice);
+            }
+        }
+
+        // Log the values for debugging
+        Log.d("Captured Data", "Base Prices: " + basePrices);
+        Log.d("Captured Data", "Weight Prices: " + weightPrices);
+
+        // Proceed to save the data
+        saveDataToFirebase(basePrices, weightPrices);
     }
+
+    private void saveDataToFirebase(List<String> basePrices, List<String> weightPrices) {
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Reference to the correct path
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(userId).child("quoteDefaults");
+
+        // Prepare the data to save to Firebase
+        Map<String, Object> quoteDefaults = new HashMap<>();
+        // Base Price Data
+        List<Map<String, String>> basePriceList = new ArrayList<>();
+        for (String basePrice : basePrices) {
+            // Split the basePrice string like "Birthday Cake: $70" into a map
+            String[] parts = basePrice.split(": ");
+            Map<String, String> basePriceData = new HashMap<>();
+            basePriceData.put("cakeType", parts[0]);
+            basePriceData.put("price", parts[1].replace("$", "").trim());
+            basePriceList.add(basePriceData);
+        }
+        quoteDefaults.put("basePricePerCake", basePriceList);
+        // Weight and Price Data
+        List<Map<String, String>> weightPriceList = new ArrayList<>();
+        for (String weightPrice : weightPrices) {
+            // Split the weightPrice string like "1 lbs: $5" into a map
+            String[] parts = weightPrice.split(": ");
+            String weight = parts[0].split(" ")[0];  // Get the numeric weight (e.g., "1" from "1 lbs")
+            String priceExtra = parts[1].replace("$", "").trim();  // Get the price (e.g., "5")
+
+            Map<String, String> weightPriceData = new HashMap<>();
+            weightPriceData.put("weight", weight);
+            weightPriceData.put("priceExtra", priceExtra);
+            weightPriceList.add(weightPriceData);
+        }
+        quoteDefaults.put("cakeWeightAndPrice", weightPriceList);
+
+        // Save to Firebase
+
+        databaseReference.setValue(quoteDefaults)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                        // Navigate to Home Activity
+                        Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Failed to save data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 
 }

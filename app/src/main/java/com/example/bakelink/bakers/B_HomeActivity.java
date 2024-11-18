@@ -1,10 +1,11 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -20,8 +21,6 @@ import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.QuoteRequestAdapter;
 import com.example.bakelink.bakers.adapters.TrackSubmittedQuotesAdapter;
 import com.example.bakelink.bakers.models.Cake;
-import com.example.bakelink.bakers.models.Order;
-import com.example.bakelink.bakers.models.OrderItem;
 import com.example.bakelink.bakers.models.Quote;
 import com.example.bakelink.bakers.models.QuoteRequest;
 import com.example.bakelink.bakers.models.QuoteResponse;
@@ -34,11 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,7 +45,6 @@ public class B_HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerTrackSubmittedQuotes;
     private TrackSubmittedQuotesAdapter submittedQuotesAdapter;
     List<QuoteResponse> quotesSentList;
-    TextView welcomeText;
 
     String email;
 
@@ -68,9 +62,10 @@ public class B_HomeActivity extends AppCompatActivity {
         });
 
         // Set welcome text
-         welcomeText = findViewById(R.id.welcomeText);
-        String username = getUserEmail(FirebaseAuth.getInstance().getCurrentUser().getUid());  // Retrieve actual username from intent or shared preferences
-
+        TextView welcomeText = findViewById(R.id.welcomeText);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        welcomeText.setText("Welcome back, " + bakeryName + "!");
 
         recyclerView = findViewById(R.id.recyclerViewNewQuoteRequests);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -128,7 +123,7 @@ public class B_HomeActivity extends AppCompatActivity {
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
                 //no action
@@ -140,17 +135,13 @@ public class B_HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(B_HomeActivity.this, B_MyAllCakesActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
-                startActivity(new Intent(B_HomeActivity.this, B_MyQuoteSetupActivity.class));
+                startActivity(new Intent(B_HomeActivity.this, B_ProfileActivity.class));
                 return true;
             }
             return false;
         });
 
-        calculateWeeklySales();
-        calculateMonthlySales();
-
     }
-
 
     private void loadSubmittedQuotes() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance()
@@ -165,6 +156,19 @@ public class B_HomeActivity extends AppCompatActivity {
                 int quoteCount = (int) snapshot.getChildrenCount();
                 AtomicInteger loadedQuotes = new AtomicInteger(0); // Track how many quotes are fully loaded
 
+                // Get the reference to the UI elements
+                TextView noQuotesMessage = findViewById(R.id.noQuotesMessage);
+                RecyclerView quotesRecyclerView = findViewById(R.id.recyclerViewTrackSubmittedQuote); // Assuming you have a RecyclerView
+
+                // If no quotes found, show the "no quotes" message and hide the RecyclerView
+                if (quoteCount == 0) {
+                    noQuotesMessage.setVisibility(View.VISIBLE); // Show the "No quotes yet" message
+                    quotesRecyclerView.setVisibility(View.GONE); // Hide the RecyclerView
+                } else {
+                    noQuotesMessage.setVisibility(View.GONE); // Hide the "No quotes" message
+                    quotesRecyclerView.setVisibility(View.VISIBLE); // Show the RecyclerView
+                }
+
                 for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
                     String responseId = responseSnapshot.getKey();
                     String customCakeRequestId = responseSnapshot.child("customCakeRequestId").getValue(String.class);
@@ -176,7 +180,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     QuoteResponse cakeResponse = new QuoteResponse();
                     cakeResponse.setQuoteResponseId(responseId);
                     cakeResponse.setCustomCakeRequestId(customCakeRequestId);
-                    cakeResponse.setUserID(userId);
+                    cakeResponse.setBakerId(userId);
                     cakeResponse.setQuotedPrice(quotedPrice);
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
@@ -238,11 +242,11 @@ public class B_HomeActivity extends AppCompatActivity {
 
     private void loadAllCustomQuotes() {
 
-// Reference to the baker's cakes node
+        // Reference to the baker's cakes node
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
 
 
-// Attach a listener to fetch data
+        // Attach a listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -305,162 +309,7 @@ public class B_HomeActivity extends AppCompatActivity {
                 Log.e("Firebase", "Failed to retrieve email: " + task.getException().getMessage());
             }
         });
-        welcomeText.setText("Welcome back, " + email + "!");
         return email;
     }
-
-//    private void getSalesData() {
-//        String year = "2024";
-//        String month = "11";
-//        String day = "17";
-//
-//        DatabaseReference ordersRef = FirebaseDatabase.getInstance()
-//                .getReference("bakers")
-//                .child(currentUserId) // Replace with the actual baker ID
-//                .child("calendar")
-//                .child(year)
-//                .child(month)
-//                .child(day)
-//                .child("orders");
-//
-//        ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                List<Order> ordersList = new ArrayList<>();
-//
-//                for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-//                    String orderId = orderSnapshot.child("orderId").getValue(String.class);
-//                    String cakeId = orderSnapshot.child("cakeId").getValue(String.class);
-//                    Double orderTotal = orderSnapshot.child("orderTotal").getValue(Double.class);
-//
-//                    // Create and populate an Order object (assuming you have an Order class)
-//                    Order order = new Order();
-//                    order.setOrderId(orderId);
-//                   // order.setCakeId(cakeId);
-//                    order.setOrderTotal(orderTotal != null ? orderTotal : 0.0);
-//
-//                    ordersList.add(order);
-//                }
-//
-//                // Handle the fetched orders (e.g., display them in a RecyclerView)
-//                Log.d("OrdersFetch", "Fetched " + ordersList.size() + " orders for date: " + day + "/" + month + "/" + year);
-//                for (Order order : ordersList) {
-//                    Log.d("OrdersFetch", "Order ID: " + order.getOrderId() + ", Total: " + order.getOrderTotal());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("OrdersFetch", "Failed to fetch orders: " + error.getMessage());
-//            }
-//        });
-//    }
-
-    double weeklySales;
-
-    private void calculateWeeklySales() {
-        String year = "2024";
-        String month = "11";
-        String day = "17"; // Current day, can be dynamically set
-
-        // Calculate the dates for the past week (7 days)
-        List<String> pastWeekDates = getPastWeekDates(year, month, day);
-
-         weeklySales = 0.0;
-
-        for (String date : pastWeekDates) {
-            DatabaseReference ordersRef = FirebaseDatabase.getInstance()
-                    .getReference("bakers")
-                    .child(currentUserId)
-                    .child("calendar")
-                    .child(year)
-                    .child(month)
-                    .child(date)
-                    .child("orders");
-
-            ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                        Double orderTotal = orderSnapshot.child("orderTotal").getValue(Double.class);
-                        if (orderTotal != null) {
-                            weeklySales += orderTotal;
-                        }
-                    }
-                    // Log the weekly sales after all orders are fetched
-                    Log.d("SalesFetch", "Weekly Sales: " + weeklySales);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("SalesFetch", "Failed to fetch orders: " + error.getMessage());
-                }
-            });
-        }
-    }
-
-    private List<String> getPastWeekDates(String year, String month, String day) {
-        List<String> pastWeekDates = new ArrayList<>();
-        // You can use a date manipulation library like Java's LocalDate to calculate the last 7 days
-        LocalDate currentDate = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            currentDate = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
-        }
-
-        for (int i = 0; i < 7; i++) {
-            LocalDate pastDate = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                pastDate = currentDate.minusDays(i);
-            }
-            String pastDay = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                pastDay = String.format("%02d", pastDate.getDayOfMonth());
-            }
-            pastWeekDates.add(pastDay);
-        }
-        return pastWeekDates;
-    }
-    double monthlySales;
-    private void calculateMonthlySales() {
-        String year = "2024";
-        String month = "11"; // Current month, can be dynamically set
-
-         monthlySales = 0.0;
-
-        // Assuming the month has 30 days (this may vary, use the actual number of days for the month)
-        for (int day = 1; day <= 30; day++) {
-            String dayString = String.format("%02d", day);
-
-            DatabaseReference ordersRef = FirebaseDatabase.getInstance()
-                    .getReference("bakers")
-                    .child(currentUserId)
-                    .child("calendar")
-                    .child(year)
-                    .child(month)
-                    .child(dayString)
-                    .child("orders");
-
-            ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
-                        Double orderTotal = orderSnapshot.child("orderTotal").getValue(Double.class);
-                        if (orderTotal != null) {
-                            monthlySales += orderTotal;
-                        }
-                    }
-                    // Log the monthly sales after all orders are fetched
-                    Log.d("SalesFetch", "Monthly Sales: " + monthlySales);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("SalesFetch", "Failed to fetch orders: " + error.getMessage());
-                }
-            });
-        }
-    }
-
-
 
 }

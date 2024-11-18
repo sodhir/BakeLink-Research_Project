@@ -70,7 +70,7 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
                     QuoteResponse cakeResponse = new QuoteResponse();
                     cakeResponse.setQuoteResponseId(responseId);
                     cakeResponse.setCustomCakeRequestId(customcakeRequestId);
-                    cakeResponse.setUserID(userId);
+                    cakeResponse.setBakerId(userId);
                     cakeResponse.setQuotedPrice(quotedPrice);
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);

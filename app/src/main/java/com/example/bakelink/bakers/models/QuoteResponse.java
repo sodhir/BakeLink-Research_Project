@@ -2,71 +2,57 @@ package com.example.bakelink.bakers.models;
 
 public class QuoteResponse {
     private String quoteResponseId;
-    private String userID;
-    String CustomCakeRequestId;
+    private String bakerId;
+    private String customCakeRequestId;
     private Double quotedPrice;
     private String responseMessage;
-
     private String status;
-
     private String customerId;
     private String imageUrl;
 
-    public QuoteResponse(String userID, Double quotedPrice, String responseMessage) {
-        this.userID = userID;
-        this.quotedPrice = quotedPrice;
-        this.responseMessage = responseMessage;
-    }
 
+
+    // Constructor for Firebase
     public QuoteResponse() {
+        // Firebase requires an empty constructor
     }
 
-    public QuoteResponse(String userID, Double quotedPrice, String responseMessage, String customCakeRequestId) {
-        this.userID = userID;
+    // Constructor with data
+    public QuoteResponse(String quoteResponseId, String bakerId, String customCakeRequestId, Double quotedPrice, String responseMessage, String status, String customerId, String imageUrl) {
+        this.quoteResponseId = quoteResponseId;
+        this.bakerId = bakerId;
+        this.customCakeRequestId = customCakeRequestId;
         this.quotedPrice = quotedPrice;
         this.responseMessage = responseMessage;
-        this.CustomCakeRequestId = customCakeRequestId;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
+        this.status = status;
+        this.customerId = customerId;
         this.imageUrl = imageUrl;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    //getter and setter
+
+    public String getQuoteResponseId() {
+        return quoteResponseId;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setQuoteResponseId(String quoteResponseId) {
+        this.quoteResponseId = quoteResponseId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getBakerId() {
+        return bakerId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setBakerId(String bakerId) {
+        this.bakerId = bakerId;
     }
 
     public String getCustomCakeRequestId() {
-        return CustomCakeRequestId;
+        return customCakeRequestId;
     }
 
     public void setCustomCakeRequestId(String customCakeRequestId) {
-        CustomCakeRequestId = customCakeRequestId;
-    }
-
-    // Getters and Setters
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
+        this.customCakeRequestId = customCakeRequestId;
     }
 
     public Double getQuotedPrice() {
@@ -85,11 +71,27 @@ public class QuoteResponse {
         this.responseMessage = responseMessage;
     }
 
-    public String getQuoteResponseId() {
-        return quoteResponseId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setQuoteResponseId(String quoteResponseId) {
-        this.quoteResponseId = quoteResponseId;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -4,6 +4,10 @@ public class BasePrice {
     private String cakeType;
     private int price;
 
+    public BasePrice() {
+        // Required for Firebase
+    }
+
     // Constructor, getters, and setters
     public BasePrice(String cakeType, int price) {
         this.cakeType = cakeType;
