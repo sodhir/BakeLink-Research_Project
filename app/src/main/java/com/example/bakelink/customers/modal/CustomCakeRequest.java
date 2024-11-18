@@ -11,7 +11,14 @@ public class CustomCakeRequest {
     private String deliveryDate;
     private String deliveryTime;
 
+    private String noOfLayers;
+    private String cakeWeight;
+
+    private String deliveryAddress;
+
     private String userEmail;
+
+    private String cakeRequestStatus;
 
     public String getUserEmail() {
         return userEmail;
@@ -49,6 +56,8 @@ public class CustomCakeRequest {
     }
 
     // Getter and setter methods for the fields
+
+
 
     public String getCakeSize() {
         return cakeSize;
@@ -120,5 +129,37 @@ public class CustomCakeRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCakeWeight() {
+        return cakeWeight;
+    }
+
+    public void setCakeWeight(String cakeWeight) {
+        this.cakeWeight = cakeWeight;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getNoOfLayers() {
+        return noOfLayers;
+    }
+
+    public void setNoOfLayers(String noOfLayers) {
+        this.noOfLayers = noOfLayers;
+    }
+
+    public String getCakeRequestStatus() {
+        return cakeRequestStatus;
+    }
+
+    public void setCakeRequestStatus(String cakeRequestStatus) {
+        this.cakeRequestStatus = cakeRequestStatus;
     }
 }

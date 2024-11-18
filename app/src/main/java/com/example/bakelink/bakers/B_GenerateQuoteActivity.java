@@ -258,8 +258,9 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         quoteResponse.setCustomCakeRequestId(currentCustomCakeRequestId);  // Custom cake request ID
         quoteResponse.setQuotedPrice(quotedPrice);
         quoteResponse.setResponseMessage("");  // Add the response message if needed
-        quoteResponse.setStatus("Responded");
+        quoteResponse.setStatus("Awaiting Approval");
         quoteResponse.setCustomerId(customerId);  // Set the customer's ID
+        quoteResponse.setImageUrl(imageUrl);
         //quoteResponse.setImageUrl("");  // Set image URL if available
         Log.d("generatequote",quoteResponse.toString());
 
