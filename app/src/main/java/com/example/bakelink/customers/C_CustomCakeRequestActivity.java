@@ -31,8 +31,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
@@ -43,6 +46,10 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
     EditText deliveryDateEditText;
     EditText deliveryTimeEditText;
     EditText additionalNotesEditText;
+
+    EditText deliveryAddress;
+
+    private Uri myImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             imageView.setImageURI(imageUri);
+            myImageUri = imageUri;
 
         }
 
@@ -95,6 +103,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         deliveryDateEditText = findViewById(R.id.txtDeliveryDate);
         deliveryTimeEditText = findViewById(R.id.txtDeliveryTime);
         additionalNotesEditText = findViewById(R.id.txtAdditionalNotes);
+        deliveryAddress = findViewById(R.id.txtDeliveryAddress);
 
         deliveryDateEditText.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
@@ -123,7 +132,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         requestQuote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCustomCakeRequestToDatabase();
+                addCustomCakeRequestToDatabase(myImageUri);
             }
 
         });
@@ -155,40 +164,64 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
     }
 
-    private void addCustomCakeRequestToDatabase() {
+    private void addCustomCakeRequestToDatabase(Uri imageUri) {
         RadioGroup rdbCakeTypeGroup = findViewById(R.id.rdbCakeTypeGroup);
         RadioGroup cakeSizeRadioGroup = findViewById(R.id.rdbCakeSizeGroup);
+        RadioGroup layerRadioGroup = findViewById(R.id.rdbLayerGroup);
 
         String cakeType = ((RadioButton) findViewById(rdbCakeTypeGroup.getCheckedRadioButtonId())).getText().toString();
         String cakeSize = ((RadioButton) findViewById(cakeSizeRadioGroup.getCheckedRadioButtonId())).getText().toString();
+        String cakeLayers = ((RadioButton) findViewById(layerRadioGroup.getCheckedRadioButtonId())).getText().toString();
+
         String deliveryDate = deliveryDateEditText.getText().toString();
         String deliveryTime = deliveryTimeEditText.getText().toString();
         String notes = additionalNotesEditText.getText().toString();
+        String deliveryAddress = this.deliveryAddress.getText().toString();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String userId = currentUser.getUid();
 
-            CustomCakeRequest cakeRequest = new CustomCakeRequest(cakeSize, cakeType, deliveryDate, deliveryTime, selectedFilling, selectedFlavor, imageUriString, notes, userId);
+           // CustomCakeRequest cakeRequest = new CustomCakeRequest(cakeSize, cakeType, deliveryDate, deliveryTime, selectedFilling, selectedFlavor, imageUriString, notes, userId);
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
-            String requestId = databaseReference.push().getKey();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference().child("custom_cake_images/" + UUID.randomUUID().toString());
 
-            if (requestId != null) {
-                databaseReference.child(requestId).setValue(cakeRequest)
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(C_CustomCakeRequestActivity.this, "Request saved successfully!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(C_CustomCakeRequestActivity.this, "Failed to save request", Toast.LENGTH_SHORT).show();
+            // Upload the image
+            storageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Get the image URL after a successful upload
+                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                            String imageUrl = uri.toString();
+                            CustomCakeRequest cakeRequest = new CustomCakeRequest(cakeSize, cakeType, deliveryDate, deliveryTime, selectedFilling, selectedFlavor, imageUrl, notes, userId);
+                            cakeRequest.setDeliveryAddress(deliveryAddress);
+                            cakeRequest.setNoOfLayers(cakeLayers);
+                            cakeRequest.setCakeRequestStatus("Pending");
+
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
+                            String requestId = databaseReference.push().getKey();
+
+                            if (requestId != null) {
+                                databaseReference.child(requestId).setValue(cakeRequest)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Toast.makeText(C_CustomCakeRequestActivity.this, "Request saved successfully!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(C_CustomCakeRequestActivity.this, "Failed to save request", Toast.LENGTH_SHORT).show();
+                                        });
+                            } else {
+                                Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+                            }
+
                         });
-            }
-        } else {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        // progressBar.setVisibility(View.GONE); // Hide loading indicator
+                    });
         }
-
-
     }
 
 

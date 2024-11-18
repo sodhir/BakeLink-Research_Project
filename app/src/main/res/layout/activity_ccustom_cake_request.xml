@@ -363,6 +363,20 @@
                     android:clickable="true"/>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Delivery address"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/txtDeliveryAddress"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@android:color/darker_gray"
+                android:hint="Enter your delivery address here" />
+
             <!-- Additional Notes -->
             <TextView
                 android:layout_width="wrap_content"

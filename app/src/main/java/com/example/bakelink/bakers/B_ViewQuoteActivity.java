@@ -95,7 +95,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
              intent.putExtra("additionalNotes", additionalNotes.getText().toString());
              intent.putExtra("bakerId", currentUser);
              intent.putExtra("customerId", customerName.getText().toString());
-             //intent.putExtra("imageUrl", imageUrl); // Pass imageUrl to the next activity
+             intent.putExtra("imageUrl", imageUrl); // Pass imageUrl to the next activity
              startActivity(intent);
 
          });
@@ -147,7 +147,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                 receiverId = customer;
                 String type = snapshot.child("cakeType").exists()? snapshot.child("cakeType").getValue(String.class) : "Not specified";
                 String size = snapshot.child("cakeSize").exists() ? snapshot.child("cakeSize").getValue(String.class): "Not specified";
-                String layers = snapshot.child("cakeLayers").exists() ? snapshot.child("cakeLayers").getValue(String.class) : "Not specified";
+                String layers = snapshot.child("noOfLayers").exists() ? snapshot.child("noOfLayers").getValue(String.class) : "Not specified";
 
                 String weight = snapshot.child("cakeWeight").exists() ? snapshot.child("cakeWeight").getValue(String.class): "Not specified";
                 String flavor = snapshot.child("flavor").exists()? snapshot.child("flavor").getValue(String.class): "Not specified";

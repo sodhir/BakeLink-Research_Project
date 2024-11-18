@@ -176,6 +176,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     Double quotedPrice = responseSnapshot.child("quotedPrice").getValue(Double.class);
                     String responseMessage = responseSnapshot.child("responseMessage").getValue(String.class);
                     String status = responseSnapshot.child("status").getValue(String.class);
+                    String imageUrl = responseSnapshot.child("imageUrl").getValue(String.class);
 
                     QuoteResponse cakeResponse = new QuoteResponse();
                     cakeResponse.setQuoteResponseId(responseId);
@@ -184,6 +185,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     cakeResponse.setQuotedPrice(quotedPrice);
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
+                    cakeResponse.setImageUrl(imageUrl);
 
                     // Fetch additional details from customCakeRequests
                     DatabaseReference customCakeRef = FirebaseDatabase.getInstance()
@@ -197,7 +199,7 @@ public class B_HomeActivity extends AppCompatActivity {
                             String imageUrl = customCakeSnapshot.child("imageUrl").getValue(String.class);
 
                             cakeResponse.setCustomerId(customerId);
-                            cakeResponse.setImageUrl(imageUrl);
+                           cakeResponse.setImageUrl(imageUrl);
 
                             quotesSentList.add(cakeResponse);
 
@@ -263,6 +265,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     String cakeSize = customCakeSnapshot.child("cakeSize").getValue(String.class);
                     String flavor = customCakeSnapshot.child("flavor").getValue(String.class);
                     String filling = customCakeSnapshot.child("filling").getValue(String.class);
+                    String cakeRequestStatus = customCakeSnapshot.child("cakeRequestStatus").exists() ? customCakeSnapshot.child("cakeRequestStatus").getValue(String.class) : "";
 
 
                     CustomCakeRequest cakeRequest = new CustomCakeRequest();
@@ -279,7 +282,10 @@ public class B_HomeActivity extends AppCompatActivity {
                     if(userId != null){
                         cakeRequest.setUserEmail(getUserEmail(userId));
                     }
-                    quoteRequestList.add(cakeRequest);
+                    if(cakeRequestStatus.equals("Pending")){
+                        quoteRequestList.add(cakeRequest);
+                    }
+
                 }
 
                 Log.d("Cakes", "Cakes fetched: " + quoteRequestList.size());

@@ -40,7 +40,7 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         QuoteResponse quote = quotesSent.get(position);
        // holder.quoteImage.setImageResource(quote.get());
-        holder.customerName.setText(quote.getCustomCakeRequestId());
+      //  holder.customerName.setText(quote.getCustomCakeRequestId());
         holder.quoteAmount.setText("$" + quote.getQuotedPrice());
         Glide.with(holder.itemView.getContext())
                 .load(quote.getImageUrl())
@@ -49,7 +49,7 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
         // Set status and background color based on quote status
         holder.quoteStatus.setText(quote.getStatus());
 
-        if ("Responded".equals(quote.getStatus())) {
+        if ("Awaiting Approval".equals(quote.getStatus())) {
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#FFD700"));
             holder.quoteStatus.setTextColor(Color.parseColor("#B77400"));
         } else if ("Accepted".equals(quote.getStatus())) {
