@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".customers.C_CartActivity"
+            android:exported="false" />
+        <activity
             android:name=".customers.C_ViewQuoteDetails"
             android:exported="false" />
         <activity
@@ -85,8 +88,8 @@
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.BakeLink.Splash"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.BakeLink.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

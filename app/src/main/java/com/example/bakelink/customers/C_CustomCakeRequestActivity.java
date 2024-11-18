@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,10 +40,10 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
     String selectedFlavor;
     String selectedFilling;
     String imageUriString;
-
     EditText deliveryDateEditText;
     EditText deliveryTimeEditText;
     EditText additionalNotesEditText;
+    ImageButton cartIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,18 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_CustomCakeRequestActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
         });
 
         ImageView imageView = findViewById(R.id.img_custom_cake_img);

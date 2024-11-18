@@ -256,9 +256,9 @@ public class B_MyScheduleActivity extends AppCompatActivity {
     // Sample orders
     private List<Order> getAllSampleOrders() {
         List<Order> orders = new ArrayList<>();
-        orders.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.", R.drawable.cakesample2));
-        orders.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.themed_cake_image));
-        orders.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.cakesample2));
+       // orders.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.", R.drawable.cakesample2));
+        //orders.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.themed_cake_image));
+        //orders.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.cakesample2));
         return orders;
     }
 

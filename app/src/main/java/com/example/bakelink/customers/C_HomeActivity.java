@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ public class C_HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerViewCategories;
     private List<CakeCategory> cakeCategoriesList;
     private TopCakeCategoryAdapter topCakeCategoryAdapter;
-
+    private ImageButton cartIcon;
     TextView welcomeText;
 
     @Override
@@ -119,8 +120,23 @@ public class C_HomeActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
         });
 
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_HomeActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
         //Bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    android:showDividers="middle">
+
+    <!-- Image Section -->
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Order item image"
+        android:background="@drawable/rounded_upload_background"
+        android:clipToOutline="true" />
+
+    <!-- Details Section -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elegant Wedding Bliss"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Flavor -->
+        <TextView
+            android:id="@+id/item_flavor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flavor: Classic Vanilla and Almond"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <!-- Weight -->
+        <TextView
+            android:id="@+id/item_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weight: 2 lbs"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="2dp" />
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price: $180.00"
+            android:textSize="14sp"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <!-- Quantity and Actions Section -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Quantity Controls -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/button_decrease"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="-"
+                android:backgroundTint="#efefef"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/item_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="8dp"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/button_increase"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="+"
+                android:backgroundTint="#efefef"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- Delete Button -->
+        <ImageButton
+            android:id="@+id/button_delete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="@android:color/transparent"
+            android:contentDescription="Delete item"
+            android:layout_marginTop="8dp"
+            app:tint="@color/colorPrimary"/>
+
+    </LinearLayout>
+</LinearLayout>
+
