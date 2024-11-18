@@ -1,6 +1,7 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -28,7 +29,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class B_ProfileSetupActivity extends AppCompatActivity {
@@ -44,6 +47,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
     private LinearLayout servicesListLayout;
     private SpecialitiesBottomSheetFragment bottomSheetFragment;
     private FrameLayout addServiceButton;
+    private List<String> specialtiesList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +86,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
         btnSaveAndContinue.setOnClickListener(v -> saveProfileAndContinue());
 
 
-        // Set up bottom navigation
+        /*// Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
         // Deselect the item (no item should be highlighted)
         bottomNavigationView.setSelectedItemId(-1);
@@ -103,7 +107,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
                 return true;
             }
             return false;
-        });
+        });*/
     }
 
     private void openImagePicker() {
@@ -125,6 +129,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
     }
 
     public void addSpecialityToList(String speciality) {
+        specialtiesList.add(speciality);
         TextView textView = new TextView(this);
         // Set the text for the TextView
         textView.setText(speciality);
@@ -151,7 +156,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
 
         // Check if the user is authenticated
         if (currentUser == null) {
-            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
             return; // Stop further execution if the user is not authenticated
         }
 
@@ -159,8 +164,13 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         Uri imageUri = ivProfilePictureUri;
 
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("bakery_name", bakeryTitle); // Save bakery name
+        editor.apply();
+
        if (currentUser != null) {
-           Toast.makeText(this, "User authenticated.", Toast.LENGTH_SHORT).show();
+           //Toast.makeText(this, "User authenticated.", Toast.LENGTH_SHORT).show();
             String userId = currentUser.getUid();
 
             // Reference to Firebase Storage
@@ -176,13 +186,14 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
                         bakerProfile.put("bakeryTitle", bakeryTitle);
                         bakerProfile.put("description", description);
                         bakerProfile.put("profilePictureUrl", imageUrl); // Save image URL
+                        bakerProfile.put("specialtiesAndServices", specialtiesList);
                         // Add other fields as necessary
 
                         // Save to "bakers" collection
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
                         databaseReference.child(userId).setValue(bakerProfile)
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(this, "Profile saved successfully!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(B_ProfileSetupActivity.this, B_MyQuoteSetupActivity.class));
                                 })
                                 .addOnFailureListener(e -> {

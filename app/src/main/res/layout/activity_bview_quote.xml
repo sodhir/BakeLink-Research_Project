@@ -4,11 +4,21 @@
     android:layout_height="match_parent"
     android:id="@+id/main">
 
+    <!-- Include Top Bar -->
+    <include
+        layout="@layout/top_bar_baker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"/>
+
     <!-- Scrollable Content -->
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp">
+        android:paddingBottom="80dp"
+        android:paddingTop="50dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,9 +46,10 @@
                 android:text="Review the request details for customized cake before generating your quote"
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"/>
 
-            <!-- Add new cake Button -->
+            <!-- cake image -->
 
             <ImageView
                 android:id="@+id/cakeImage"
@@ -47,85 +58,260 @@
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:contentDescription="Cake Image"
-                android:paddingBottom="12dp" />
+                android:layout_marginBottom="16dp" />
 
             <!-- Request details -->
-            <TextView
-                android:id="@+id/vqCustomerName"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Customer Name: Tim"
-                android:paddingBottom="4dp" />
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCustomerNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customer Name:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+                <TextView
+                    android:id="@+id/vqCustomerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tim"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeTypeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Type:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Birthday Cake"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeSizeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Size:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8 inches"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeLayersTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Number of layers:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeLayers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeWeightTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Weight:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 lbs"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeFlavorTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Flavor:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeFlavor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chocolate"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqCakeFillingTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cake Fillings:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqCakeFilling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Chocolate chips"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqAdditionalNotesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Additional Notes:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqAdditionalNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Include a topper"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqDeliveryDateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Date:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqDeliveryDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11/11/2024"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqDeliveryTimeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Time:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqDeliveryTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:00pm"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+                <TextView
+                    android:id="@+id/vqDeliveryAddressTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Address:"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+                <TextView
+                    android:id="@+id/vqDeliveryAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="#304, Richmond, BC"
+                    android:paddingStart="4dp"
+                    android:textColor="@android:color/black"  />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/vqCakeType"
+                android:id="@+id/vqCakeColorsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cake Type: Birthday Cake"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqCakeSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cake Size: 8 inches"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqCakeLayers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Number of layers: 1"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqCakeWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cake Weight: 1 lbs"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqCakeFlavor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cake Flavor: Chocolate"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqCakeFilling"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cake Fillings: Chocolate chips"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqAdditionalNotes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Additional Notes: Include a topper"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqDeliveryDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery Date: 11/11/2024"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqDeliveryTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery Time: 12:00pm"
-                android:paddingBottom="4dp" />
-
-            <TextView
-                android:id="@+id/vqDeliveryAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delivery Address: #304, Richmond, BC"
-                android:paddingBottom="4dp" />
+                android:text="Cake Colors:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:paddingBottom="8dp"/>
 
             <!-- Cake colors (assuming a list of colored views) -->
             <LinearLayout
@@ -180,14 +366,12 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button_background"
-                    android:gravity="top"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="Message Customer"
-                    android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <!-- Save and Continue Button at the bottom -->
                 <Button
@@ -197,18 +381,19 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button_background"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:text="Generate Quote"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+                    android:textSize="14sp"
+                    android:layout_marginStart="4dp"/>
 
             </LinearLayout>
 
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
 

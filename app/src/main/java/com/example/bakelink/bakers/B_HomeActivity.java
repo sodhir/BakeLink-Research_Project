@@ -1,9 +1,11 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -61,8 +63,9 @@ public class B_HomeActivity extends AppCompatActivity {
 
         // Set welcome text
         TextView welcomeText = findViewById(R.id.welcomeText);
-        String username = "username";  // Retrieve actual username from intent or shared preferences
-        welcomeText.setText("Welcome back, " + username + "!");
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        welcomeText.setText("Welcome back, " + bakeryName + "!");
 
         recyclerView = findViewById(R.id.recyclerViewNewQuoteRequests);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -120,7 +123,7 @@ public class B_HomeActivity extends AppCompatActivity {
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
-
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
                 //no action
@@ -132,7 +135,7 @@ public class B_HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(B_HomeActivity.this, B_MyAllCakesActivity.class));
                 return true;
             } else if (item.getItemId() == R.id.nav_profile) {
-                startActivity(new Intent(B_HomeActivity.this, B_MyQuoteSetupActivity.class));
+                startActivity(new Intent(B_HomeActivity.this, B_ProfileActivity.class));
                 return true;
             }
             return false;
@@ -153,6 +156,19 @@ public class B_HomeActivity extends AppCompatActivity {
                 int quoteCount = (int) snapshot.getChildrenCount();
                 AtomicInteger loadedQuotes = new AtomicInteger(0); // Track how many quotes are fully loaded
 
+                // Get the reference to the UI elements
+                TextView noQuotesMessage = findViewById(R.id.noQuotesMessage);
+                RecyclerView quotesRecyclerView = findViewById(R.id.recyclerViewTrackSubmittedQuote); // Assuming you have a RecyclerView
+
+                // If no quotes found, show the "no quotes" message and hide the RecyclerView
+                if (quoteCount == 0) {
+                    noQuotesMessage.setVisibility(View.VISIBLE); // Show the "No quotes yet" message
+                    quotesRecyclerView.setVisibility(View.GONE); // Hide the RecyclerView
+                } else {
+                    noQuotesMessage.setVisibility(View.GONE); // Hide the "No quotes" message
+                    quotesRecyclerView.setVisibility(View.VISIBLE); // Show the RecyclerView
+                }
+
                 for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
                     String responseId = responseSnapshot.getKey();
                     String customCakeRequestId = responseSnapshot.child("customCakeRequestId").getValue(String.class);
@@ -164,7 +180,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     QuoteResponse cakeResponse = new QuoteResponse();
                     cakeResponse.setQuoteResponseId(responseId);
                     cakeResponse.setCustomCakeRequestId(customCakeRequestId);
-                    cakeResponse.setUserID(userId);
+                    cakeResponse.setBakerId(userId);
                     cakeResponse.setQuotedPrice(quotedPrice);
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
@@ -226,11 +242,11 @@ public class B_HomeActivity extends AppCompatActivity {
 
     private void loadAllCustomQuotes() {
 
-// Reference to the baker's cakes node
+        // Reference to the baker's cakes node
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
 
 
-// Attach a listener to fetch data
+        // Attach a listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

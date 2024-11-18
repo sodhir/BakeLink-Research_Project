@@ -39,7 +39,7 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
     public void onBindViewHolder(@NonNull CakeQuoteResponseAdapter.ViewHolder holder, int position) {
 
         QuoteResponse quoteResponse = cakeQuoteResponses.get(position);
-        holder.bakerName.setText(quoteResponse.getUserID());
+        holder.bakerName.setText(quoteResponse.getBakerId());
         holder.quoteAmount.setText("$" + quoteResponse.getQuotedPrice());
         Glide.with(holder.itemView.getContext())
                 .load(quoteResponse.getImageUrl())

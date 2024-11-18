@@ -6,9 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.bakelink.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SpecialitiesBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -28,11 +32,13 @@ public class SpecialitiesBottomSheetFragment extends BottomSheetDialogFragment {
             if (!speciality.isEmpty()) {
                 // Pass data back to activity or fragment
                 ((B_ProfileSetupActivity) getActivity()).addSpecialityToList(speciality);
+
                 dismiss(); // Dismiss bottom sheet
             }
         });
 
         return view;
     }
+
 }
 

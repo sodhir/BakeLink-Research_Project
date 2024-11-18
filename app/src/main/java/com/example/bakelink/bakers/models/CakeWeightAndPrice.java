@@ -4,6 +4,9 @@ public class CakeWeightAndPrice {
     private String weight;
     private int price;
 
+    public CakeWeightAndPrice() {
+        // Required for Firebase
+    }
     // Constructor, getters, and setters
     public CakeWeightAndPrice(String weight, int price) {
         this.weight = weight;

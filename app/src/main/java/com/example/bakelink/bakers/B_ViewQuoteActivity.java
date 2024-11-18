@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.common.models.Message;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,12 +49,19 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
     String quoteId;
 
     String currentUser, receiverId;
+    private String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bview_quote);
+
+        // Set welcome text
+        TextView welcomeText = findViewById(R.id.welcomeText);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        welcomeText.setText("Welcome back, " + bakeryName + "!");
 
          cakeImg = findViewById(R.id.cakeImage);
          customerName = findViewById(R.id.vqCustomerName);
@@ -77,10 +85,22 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
          generateQuote.setOnClickListener(view -> {
              Intent intent = new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class);
              intent.putExtra("customCakeRequestId", quoteId);
+             // Pass the values fetched from Firebase
+             intent.putExtra("cakeType", cakeType.getText().toString());
+             intent.putExtra("cakeSize", cakeSize.getText().toString());
+             intent.putExtra("cakeLayers", cakeLayers.getText().toString());
+             intent.putExtra("cakeWeight", cakeWeight.getText().toString());
+             intent.putExtra("cakeFlavor", cakeFlavor.getText().toString());
+             intent.putExtra("cakeFilling", cakeFilling.getText().toString());
+             intent.putExtra("additionalNotes", additionalNotes.getText().toString());
+             intent.putExtra("bakerId", currentUser);
+             intent.putExtra("customerId", customerName.getText().toString());
+             //intent.putExtra("imageUrl", imageUrl); // Pass imageUrl to the next activity
              startActivity(intent);
-             //startActivity(new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class));
+
          });
-        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         currentUser = sharedPreferences.getString("USER_ID", null);
 
 
@@ -88,7 +108,26 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
              sendmessage();
          });
 
+        // Set up bottom navigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
+        bottomNavigationView.setSelectedItemId(R.id.none);
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_home) {
+                startActivity(new Intent(B_ViewQuoteActivity.this, B_HomeActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_schedule) {
+                startActivity(new Intent(B_ViewQuoteActivity.this, B_MyScheduleActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_my_cakes) {
+                startActivity(new Intent(B_ViewQuoteActivity.this, B_MyAllCakesActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.nav_profile) {
+                startActivity(new Intent(B_ViewQuoteActivity.this, B_ProfileActivity.class));
+                return true;
+            }
+            return false;
+        });
 
     }
 
@@ -118,20 +157,22 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                 String time = snapshot.child("deliveryTime").exists()? snapshot.child("deliveryTime").getValue(String.class): "Not specified";
                 String strDeliveryAddress = snapshot.child("deliveryAddress").exists()? snapshot.child("deliveryAddress").getValue(String.class): "Not specified";
 
-                customerName.setText("Customer Name : " + customer);
-                cakeSize.setText("Cake Size : " + size);
-                cakeType.setText("Cake Type : " + type);
-                cakeLayers.setText("Number of Layers : " + layers);
-                cakeWeight.setText("Cake Weight : " + weight);
-                cakeFlavor.setText("Cake Flavor : " + flavor);
-                cakeFilling.setText("Cake Fillings : " + filling);
-                additionalNotes.setText("Additional Notes : " + notes);
-                deliveryDate.setText("Delivery Date : " + date);
-                deliveryTime.setText("Delivery Time : " + time);
-                deliveryAddress.setText("Delivery Address : " + strDeliveryAddress);
+                imageUrl = snapshot.child("imageUrl").getValue(String.class);
+
+                customerName.setText(customer);
+                cakeSize.setText(size);
+                cakeType.setText(type);
+                cakeLayers.setText(layers);
+                cakeWeight.setText(weight);
+                cakeFlavor.setText(flavor);
+                cakeFilling.setText(filling);
+                additionalNotes.setText(notes);
+                deliveryDate.setText(date);
+                deliveryTime.setText(time);
+                deliveryAddress.setText(strDeliveryAddress);
 
                 Glide.with(B_ViewQuoteActivity.this)
-                        .load(snapshot.child("imageUrl").getValue(String.class))
+                        .load(imageUrl)  // Use the imageUrl directly here
                         .error(R.drawable.cakesample1)
                         .into(cakeImg);
 
@@ -144,6 +185,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
             }
         });
     }
+
     private void sendmessage() {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
