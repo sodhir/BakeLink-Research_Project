@@ -177,6 +177,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     String responseMessage = responseSnapshot.child("responseMessage").getValue(String.class);
                     String status = responseSnapshot.child("status").getValue(String.class);
                     String imageUrl = responseSnapshot.child("imageUrl").getValue(String.class);
+                    String cakeType = responseSnapshot.child("cakeType").getValue(String.class);
 
                     QuoteResponse cakeResponse = new QuoteResponse();
                     cakeResponse.setQuoteResponseId(responseId);
@@ -186,6 +187,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
                     cakeResponse.setImageUrl(imageUrl);
+                    cakeResponse.setCakeType(cakeType);
 
                     // Fetch additional details from customCakeRequests
                     DatabaseReference customCakeRef = FirebaseDatabase.getInstance()

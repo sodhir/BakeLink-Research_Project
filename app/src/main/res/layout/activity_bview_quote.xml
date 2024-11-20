@@ -65,7 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="8dp">
+                android:paddingBottom="8dp"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/vqCustomerNameTitle"
                     android:layout_width="wrap_content"
@@ -353,7 +354,7 @@
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
@@ -366,12 +367,13 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button_background"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
                     android:text="Message Customer"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
 
                 <!-- Save and Continue Button at the bottom -->
                 <Button
@@ -381,8 +383,8 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button_background"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
                     android:text="Generate Quote"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"

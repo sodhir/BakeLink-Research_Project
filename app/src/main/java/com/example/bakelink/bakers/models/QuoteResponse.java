@@ -3,6 +3,7 @@ package com.example.bakelink.bakers.models;
 public class QuoteResponse {
     private String quoteResponseId;
     private String bakerId;
+    private String cakeType;
     private String customCakeRequestId;
     private Double quotedPrice;
     private String responseMessage;
@@ -18,7 +19,7 @@ public class QuoteResponse {
     }
 
     // Constructor with data
-    public QuoteResponse(String quoteResponseId, String bakerId, String customCakeRequestId, Double quotedPrice, String responseMessage, String status, String customerId, String imageUrl) {
+    public QuoteResponse(String quoteResponseId, String bakerId, String customCakeRequestId, Double quotedPrice, String responseMessage, String status, String customerId, String imageUrl,String cakeType) {
         this.quoteResponseId = quoteResponseId;
         this.bakerId = bakerId;
         this.customCakeRequestId = customCakeRequestId;
@@ -27,6 +28,7 @@ public class QuoteResponse {
         this.status = status;
         this.customerId = customerId;
         this.imageUrl = imageUrl;
+        this.cakeType = cakeType;
     }
 
     //getter and setter
@@ -93,5 +95,13 @@ public class QuoteResponse {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCakeType() {
+        return cakeType;
+    }
+
+    public void setCakeType(String cakeType) {
+        this.cakeType = cakeType;
     }
 }

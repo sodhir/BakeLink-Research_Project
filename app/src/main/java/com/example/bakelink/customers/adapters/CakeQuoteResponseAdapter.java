@@ -89,7 +89,7 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             quoteImage = itemView.findViewById(R.id.img_quote);
-            bakerName = itemView.findViewById(R.id.tv_customer_name);
+            bakerName = itemView.findViewById(R.id.tv_cake_type);
             quoteAmount = itemView.findViewById(R.id.tv_quote_amount);
             quoteStatus = itemView.findViewById(R.id.tv_quote_status);
         }

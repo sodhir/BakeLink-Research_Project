@@ -2,6 +2,7 @@ package com.example.bakelink.bakers.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,8 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         QuoteResponse quote = quotesSent.get(position);
        // holder.quoteImage.setImageResource(quote.get());
-      //  holder.customerName.setText(quote.getCustomCakeRequestId());
+        holder.cakeType.setText(quote.getCakeType());
+        Log.d("TrackQuotesAdapter", "Cake Type: " + quote.getCakeType());
         holder.quoteAmount.setText("$" + quote.getQuotedPrice());
         Glide.with(holder.itemView.getContext())
                 .load(quote.getImageUrl())
@@ -73,12 +75,12 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView quoteImage;
-        TextView customerName, quoteAmount, quoteStatus;
+        TextView cakeType, quoteAmount, quoteStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             quoteImage = itemView.findViewById(R.id.img_quote);
-            customerName = itemView.findViewById(R.id.tv_customer_name);
+            cakeType = itemView.findViewById(R.id.tv_cake_type);
             quoteAmount = itemView.findViewById(R.id.tv_quote_amount);
             quoteStatus = itemView.findViewById(R.id.tv_quote_status);
         }

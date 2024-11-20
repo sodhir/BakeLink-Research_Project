@@ -1,9 +1,11 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -47,6 +49,12 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
 //        });
+
+        // Set welcome text
+        TextView welcomeText = findViewById(R.id.welcomeText);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        welcomeText.setText("Welcome back, " + bakeryName + "!");
 
         allCakeRecycler = findViewById(R.id.allmyCakesRecycler);
 

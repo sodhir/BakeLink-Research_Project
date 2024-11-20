@@ -32,13 +32,14 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/cake_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="12sp"

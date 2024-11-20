@@ -1,6 +1,7 @@
 package com.example.bakelink.customers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -63,10 +64,10 @@ public class C_HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        String currentUserEmail = getIntent().getStringExtra("email");
-
-        welcomeText = findViewById(R.id.tv_welcome_back);
-        welcomeText.setText("Welcome Back, " + currentUserEmail+"!");
+        TextView welcomeText = findViewById(R.id.tv_welcome_back);
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+        String customerEmail = sharedPreferences.getString("customer_email", null); // Get bakery name
+        welcomeText.setText("Welcome back, " + customerEmail + "!");
 
         // Set up the top toolbar
         Toolbar toolbar = findViewById(R.id.top_toolbar);

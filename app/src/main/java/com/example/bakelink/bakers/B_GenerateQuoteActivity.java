@@ -43,7 +43,7 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
     private String userId;
     private String currentCustomCakeRequestId;
 
-    String customerId, imageUrl;
+    String customerId, imageUrl, cakeTypeName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +82,7 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String cakeType = intent.getStringExtra("cakeType");
+        cakeTypeName = cakeType;
         String cakeSize = intent.getStringExtra("cakeSize");
         String cakeLayers = intent.getStringExtra("cakeLayers");
         String cakeWeight = intent.getStringExtra("cakeWeight");
@@ -261,6 +262,7 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         quoteResponse.setStatus("Awaiting Approval");
         quoteResponse.setCustomerId(customerId);  // Set the customer's ID
         quoteResponse.setImageUrl(imageUrl);
+        quoteResponse.setCakeType(cakeTypeName);
         //quoteResponse.setImageUrl("");  // Set image URL if available
         Log.d("generatequote",quoteResponse.toString());
 

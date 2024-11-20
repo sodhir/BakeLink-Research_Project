@@ -114,9 +114,37 @@ public class LoginActivity extends AppCompatActivity {
                                             String userType = user.getUserType();
                                             // Route user based on their type
                                             if ("Baker".equals(userType)) {
-                                               Intent intent = new Intent(LoginActivity.this, B_HomeActivity.class);
-                                               startActivity(intent);
+                                                // Fetch bakery name from 'bakers' collection
+                                                DatabaseReference bakerRef = FirebaseDatabase.getInstance().getReference("bakers").child(userId);
+                                                bakerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot bakerSnapshot) {
+                                                        if (bakerSnapshot.exists()) {
+                                                            String bakeryName = bakerSnapshot.child("bakeryTitle").getValue(String.class);
+                                                            Log.d("bakername",bakeryName);
+                                                            if (bakeryName != null) {
+                                                                SharedPreferences b_sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+                                                                SharedPreferences.Editor b_editor = b_sharedPreferences.edit();
+                                                                b_editor.putString("bakery_name", bakeryName);
+                                                                b_editor.apply();
+                                                            }
+                                                            Intent intent = new Intent(LoginActivity.this, B_HomeActivity.class);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            Toast.makeText(LoginActivity.this, "Baker data not found.", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError error) {
+                                                        Toast.makeText(LoginActivity.this, "Error fetching baker data.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             } else if ("Customer".equals(userType)) {
+                                                SharedPreferences c_sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+                                                SharedPreferences.Editor c_editor = c_sharedPreferences.edit();
+                                                c_editor.putString("customer_email", email); // Save customer email
+                                                c_editor.apply();
                                                Intent intent = new Intent(LoginActivity.this, C_HomeActivity.class);
                                                startActivity(intent);
                                             }

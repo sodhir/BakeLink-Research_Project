@@ -101,7 +101,7 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(-1);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            bottomNavigationView.setSelectedItemId(-1);
+            bottomNavigationView.setSelectedItemId(R.id.none);
             if (item.getItemId() == R.id.nav_home) {
                 startActivity(new Intent(B_AddNewCakeActivity.this, B_HomeActivity.class));
                 return true;

@@ -123,6 +123,11 @@ public class SignUpActivity extends AppCompatActivity {
                                                 Intent intent = new Intent(SignUpActivity.this, B_ProfileSetupActivity.class);
                                                 startActivity(intent);
                                             } else {
+                                                SharedPreferences c_sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+                                                SharedPreferences.Editor c_editor = c_sharedPreferences.edit();
+                                                c_editor.putString("customer_email", email); // Save customer email
+                                                c_editor.apply();
+
                                                 Intent intent = new Intent(SignUpActivity.this, C_HomeActivity.class);
                                                 startActivity(intent);
                                             }
