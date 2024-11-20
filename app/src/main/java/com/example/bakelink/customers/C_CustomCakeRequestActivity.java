@@ -182,10 +182,12 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         RadioGroup rdbCakeTypeGroup = findViewById(R.id.rdbCakeTypeGroup);
         RadioGroup cakeSizeRadioGroup = findViewById(R.id.rdbCakeSizeGroup);
         RadioGroup layerRadioGroup = findViewById(R.id.rdbLayerGroup);
+        RadioGroup weightRadioGroup = findViewById(R.id.rdbWeightGroup);
 
         String cakeType = ((RadioButton) findViewById(rdbCakeTypeGroup.getCheckedRadioButtonId())).getText().toString();
         String cakeSize = ((RadioButton) findViewById(cakeSizeRadioGroup.getCheckedRadioButtonId())).getText().toString();
         String cakeLayers = ((RadioButton) findViewById(layerRadioGroup.getCheckedRadioButtonId())).getText().toString();
+        String cakeWeight = ((RadioButton) findViewById(weightRadioGroup.getCheckedRadioButtonId())).getText().toString();
 
         String deliveryDate = deliveryDateEditText.getText().toString();
         String deliveryTime = deliveryTimeEditText.getText().toString();
@@ -211,6 +213,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                             CustomCakeRequest cakeRequest = new CustomCakeRequest(cakeSize, cakeType, deliveryDate, deliveryTime, selectedFilling, selectedFlavor, imageUrl, notes, userId);
                             cakeRequest.setDeliveryAddress(deliveryAddress);
                             cakeRequest.setNoOfLayers(cakeLayers);
+                            cakeRequest.setCakeWeight(cakeWeight);
                             cakeRequest.setCakeRequestStatus("Pending");
 
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
