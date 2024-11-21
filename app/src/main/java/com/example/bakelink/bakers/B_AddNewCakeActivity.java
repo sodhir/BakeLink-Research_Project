@@ -97,11 +97,10 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
-        // Deselect the item (no item should be highlighted)
-        bottomNavigationView.setSelectedItemId(-1);
+        bottomNavigationView.setSelectedItemId(R.id.none);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            bottomNavigationView.setSelectedItemId(R.id.none);
+
             if (item.getItemId() == R.id.nav_home) {
                 startActivity(new Intent(B_AddNewCakeActivity.this, B_HomeActivity.class));
                 return true;

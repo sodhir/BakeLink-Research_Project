@@ -1,36 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    android:showDividers="middle">
 
+    <!-- Image Section -->
+    <ImageView
+        android:id="@+id/allCakeImg"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Order item image"
+        android:background="@drawable/rounded_upload_background"
+        android:clipToOutline="true" />
+
+    <!-- Details Section -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="64dp">
 
-        <ImageView
-            android:id="@+id/allCakeImg"
+        <!-- Title -->
+        <TextView
+            android:id="@+id/item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_marginBottom="4dp"
+            android:text="Elegant Wedding Bliss"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price: $180.00"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Edit and delete Section -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/allCakeEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_marginEnd="16dp"
             tools:srcCompat="@drawable/edit" />
 
         <ImageView
             android:id="@+id/allCakeDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
             tools:srcCompat="@drawable/delete" />
+
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>
+

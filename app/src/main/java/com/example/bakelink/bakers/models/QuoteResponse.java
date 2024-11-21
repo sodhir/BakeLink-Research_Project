@@ -10,6 +10,15 @@ public class QuoteResponse {
     private String status;
     private String customerId;
     private String imageUrl;
+    private Double cakeTypePrice;
+    private Double cakeSizePrice;
+    private Double cakeLayersPrice;
+    private Double cakeWeightPrice;
+    private Double cakeFlavorPrice;
+    private Double cakeFillingPrice;
+    private Double additionalNotesPrice;
+    private Double deliveryChargesPrice;
+    private Double discountsPrice;
 
 
 
@@ -29,6 +38,27 @@ public class QuoteResponse {
         this.customerId = customerId;
         this.imageUrl = imageUrl;
         this.cakeType = cakeType;
+    }
+
+    public QuoteResponse(Double discountsPrice, Double deliveryChargesPrice, Double additionalNotesPrice, Double cakeFillingPrice, Double cakeFlavorPrice, Double cakeWeightPrice, Double cakeLayersPrice, Double cakeSizePrice, Double cakeTypePrice, String imageUrl, String customerId, String status, String responseMessage, Double quotedPrice, String customCakeRequestId, String cakeType, String bakerId, String quoteResponseId) {
+        this.discountsPrice = discountsPrice;
+        this.deliveryChargesPrice = deliveryChargesPrice;
+        this.additionalNotesPrice = additionalNotesPrice;
+        this.cakeFillingPrice = cakeFillingPrice;
+        this.cakeFlavorPrice = cakeFlavorPrice;
+        this.cakeWeightPrice = cakeWeightPrice;
+        this.cakeLayersPrice = cakeLayersPrice;
+        this.cakeSizePrice = cakeSizePrice;
+        this.cakeTypePrice = cakeTypePrice;
+        this.imageUrl = imageUrl;
+        this.customerId = customerId;
+        this.status = status;
+        this.responseMessage = responseMessage;
+        this.quotedPrice = quotedPrice;
+        this.customCakeRequestId = customCakeRequestId;
+        this.cakeType = cakeType;
+        this.bakerId = bakerId;
+        this.quoteResponseId = quoteResponseId;
     }
 
     //getter and setter
@@ -103,5 +133,77 @@ public class QuoteResponse {
 
     public void setCakeType(String cakeType) {
         this.cakeType = cakeType;
+    }
+
+    public Double getCakeTypePrice() {
+        return cakeTypePrice;
+    }
+
+    public void setCakeTypePrice(Double cakeTypePrice) {
+        this.cakeTypePrice = cakeTypePrice;
+    }
+
+    public Double getCakeSizePrice() {
+        return cakeSizePrice;
+    }
+
+    public void setCakeSizePrice(Double cakeSizePrice) {
+        this.cakeSizePrice = cakeSizePrice;
+    }
+
+    public Double getCakeLayersPrice() {
+        return cakeLayersPrice;
+    }
+
+    public void setCakeLayersPrice(Double cakeLayersPrice) {
+        this.cakeLayersPrice = cakeLayersPrice;
+    }
+
+    public Double getCakeWeightPrice() {
+        return cakeWeightPrice;
+    }
+
+    public void setCakeWeightPrice(Double cakeWeightPrice) {
+        this.cakeWeightPrice = cakeWeightPrice;
+    }
+
+    public Double getCakeFlavorPrice() {
+        return cakeFlavorPrice;
+    }
+
+    public void setCakeFlavorPrice(Double cakeFlavorPrice) {
+        this.cakeFlavorPrice = cakeFlavorPrice;
+    }
+
+    public Double getCakeFillingPrice() {
+        return cakeFillingPrice;
+    }
+
+    public void setCakeFillingPrice(Double cakeFillingPrice) {
+        this.cakeFillingPrice = cakeFillingPrice;
+    }
+
+    public Double getAdditionalNotesPrice() {
+        return additionalNotesPrice;
+    }
+
+    public void setAdditionalNotesPrice(Double additionalNotesPrice) {
+        this.additionalNotesPrice = additionalNotesPrice;
+    }
+
+    public Double getDeliveryChargesPrice() {
+        return deliveryChargesPrice;
+    }
+
+    public void setDeliveryChargesPrice(Double deliveryChargesPrice) {
+        this.deliveryChargesPrice = deliveryChargesPrice;
+    }
+
+    public Double getDiscountsPrice() {
+        return discountsPrice;
+    }
+
+    public void setDiscountsPrice(Double discountsPrice) {
+        this.discountsPrice = discountsPrice;
     }
 }

@@ -15,6 +15,9 @@
         android:theme="@style/Theme.BakeLink"
         tools:targetApi="31">
         <activity
+            android:name=".bakers.B_SubmittedQuotesDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".customers.C_CartActivity"
             android:exported="false" />
         <activity
