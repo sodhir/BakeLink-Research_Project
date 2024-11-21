@@ -1,10 +1,15 @@
 package com.example.bakelink.customers;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,13 +25,38 @@ import com.example.bakelink.bakers.models.Order;
 import com.example.bakelink.bakers.models.OrderItem;
 import com.example.bakelink.customers.adapters.OrderItemsAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class C_CartActivity extends AppCompatActivity {
 
-    private ImageButton cartIcon;
+    String currentUserId;
+
+    List<OrderItem> orderItems = new ArrayList<>();
+
+    RecyclerView recyclerView;
+
+    OrderItemsAdapter adapter;
+
+    TextView total;
+
+    EditText deliveryDate;
+    EditText deliveryAdd;
+
+    Button checkoutbtn;
+
+    String bakerId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,39 +68,31 @@ public class C_CartActivity extends AppCompatActivity {
             return insets;
         });
 
-        cartIcon = findViewById(R.id.cart_icon);
+        total = findViewById(R.id.total_value);
+        deliveryDate = findViewById(R.id.deliveryDate);
+        deliveryAdd = findViewById(R.id.deliveryAdd);
+        checkoutbtn = findViewById(R.id.checkout_button);
 
-        // Set OnClickListener for the cart icon
-        cartIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigate to C_CartActivity
-                Intent intent = new Intent(C_CartActivity.this, C_CartActivity.class);
-                startActivity(intent);
-            }
+        deliveryDate.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, selectedYear, selectedMonth, selectedDay) -> {
+                deliveryDate.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+            }, year, month, day);
+            datePickerDialog.show();
         });
 
-        // Dummy data for OrderItem
-        OrderItem item1 = new OrderItem("orderItemId","cakeId", "orderType", "Elegant Wedding Bliss", "Classic Vanilla and almond", "2 lbs", 1, 180.00, "");
-        OrderItem item2 = new OrderItem("orderItemId","cakeId", "orderType", "Chocolate Delight", "Chocolate", "1 lbs", 2, 70.00, "");
+        // Get the current user ID
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        loadOrderItems();
 
 
-        // Add items to the order
-        List<OrderItem> orderItems = new ArrayList<>();
-        orderItems.add(item1);
-        orderItems.add(item2);
-
-        // Create the order
-        Order order = new Order("orderId", "orderType", "orderDate", "orderDetails", "customerName", "cakeType", "deliveryAddress", "imageResource", 0.0, orderItems);
-
-        // Calculate the total price
-        for (OrderItem item : order.getOrderItems()) {
-            order.setOrderTotal(order.getOrderTotal() + (item.getPrice() * item.getQuantity()));
-        }
-
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_order_items);
-        OrderItemsAdapter adapter = new OrderItemsAdapter(order.getOrderItems());
+        recyclerView = findViewById(R.id.recycler_view_order_items);
+        adapter = new OrderItemsAdapter(orderItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -82,8 +104,9 @@ public class C_CartActivity extends AppCompatActivity {
 
 
 
-        //Bottom navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+                //Bottom navigation
+                BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.none);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -107,5 +130,111 @@ public class C_CartActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+        checkoutbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveOrderData();
+            }
+        });
+    }
+
+    private void saveOrderData() {
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        String dateInput = deliveryDate.getText().toString().trim();
+        String formattedDate;
+
+        try {
+            if (!dateInput.isEmpty()) {
+                // Parse the input date string and format it
+                Date parsedDate = new SimpleDateFormat("dd/MM/yyyy").parse(dateInput);
+                formattedDate = df.format(parsedDate);
+            } else {
+                // Use the current date as fallback
+                formattedDate = df.format(new Date());
+            }
+        } catch (Exception e) {
+            Log.e("DateError", "Invalid date format: " + dateInput, e);
+            formattedDate = df.format(new Date()); // Fallback to current date
+        }
+
+        String deliveryAdd = this.deliveryAdd.getText().toString();
+        String currentUserid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String orderType = "Regular";
+        Double orderTotal = Double.parseDouble(total.getText().toString());
+
+           String bakerID = orderItems.get(0).getBakerId().trim();
+
+        // Firebase reference
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("bakers")
+                .child(bakerID)
+                .child("calendar")
+                .child(formattedDate)
+                .child("orders");
+
+        // Create order object
+        Order order = new Order();
+        order.setOrderId(orderRef.push().getKey());
+        order.setDeliveryAddress(deliveryAdd);
+        order.setOrderDate(formattedDate);
+        order.setOrderType(orderType);
+        order.setOrderTotal(orderTotal);
+        order.setCustomerName(currentUserid);
+        order.setOrderItems(orderItems);
+
+        // Save order to Firebase
+        orderRef.child(order.getOrderId()).setValue(order).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d("Firebase", "Order added successfully");
+                startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
+            } else {
+                Log.e("Firebase", "Failed to add order", task.getException());
+            }
+        });
+
+        clearCartItems();
+
+    }
+
+    private void clearCartItems() {
+        DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems");
+        cartRef.removeValue();
+    }
+
+    public void loadOrderItems(){
+      orderItems.clear();
+       DatabaseReference orderItemRef = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems");
+       orderItemRef.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot snapshot) {
+               Log.d("order", "onDataChange:" + snapshot.toString());
+                for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
+                    OrderItem orderItem = itemSnapshot.getValue(OrderItem.class);
+                    Log.d("order", "OrderItem: " + orderItem.getOrderItemId());
+                    if(orderItem.getStatus().equals("Pending")){
+                        orderItem.setOrderItemId(itemSnapshot.getKey());
+                        orderItems.add(orderItem);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                calculateTotal();
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+               Log.d("order", "Failed to load order items");
+           }
+       });
+
+    }
+
+    public void calculateTotal(){
+        Double myCartTotal = 0.0;
+        for(OrderItem item : orderItems){
+            myCartTotal = myCartTotal + item.getPrice();
+        }
+        total.setText(myCartTotal.toString());
     }
 }

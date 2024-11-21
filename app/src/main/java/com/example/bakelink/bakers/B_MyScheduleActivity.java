@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.adapters.OrderAdapter;
 import com.example.bakelink.bakers.models.Order;
+import com.example.bakelink.bakers.models.OrderItem;
 import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
     private TextView noOrdersTextView;
     String selectedDate;
     String dbStructureDate;
+    String bakerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
         welcomeText.setText("Welcome back, " + bakeryName + "!");
 
+        bakerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         calendarView = findViewById(R.id.calendarView);
         blockDaySwitch = findViewById(R.id.blockDaySwitch);
         orderDetailsTitle = findViewById(R.id.tvOrderDetailsTitle);
@@ -116,7 +119,10 @@ public class B_MyScheduleActivity extends AppCompatActivity {
             orderDetailsTitle.setText(orderDetailsText);
 
             // Load orders for the selected date
-            loadOrdersForDate(selectedDate);
+           // loadOrdersForDate(selectedDate);
+            loadOrdersFromFirebase(dbStructureDate);
+
+
         });
 
 
@@ -161,6 +167,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
             }
             return false;
         });
+
 
     }
 
@@ -227,27 +234,27 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
     // Method to load orders for the given date
     private void loadOrdersForDate(String selectedDate) {
-        // Clear previous orders
-        List<Order> filteredOrders = new ArrayList<>();
-
-        // Sample orders (normally you will fetch this from a database or API)
-        List<Order> allOrders = getAllSampleOrders();
-
-        // Filter orders based on the selected date
-        for (Order order : allOrders) {
-            if (order.getOrderDate().equals(selectedDate)) {
-                filteredOrders.add(order);
-            }
-        }
+//        // Clear previous orders
+//        List<Order> filteredOrders = new ArrayList<>();
+//
+//        // Sample orders (normally you will fetch this from a database or API)
+//        List<Order> allOrders = getAllSampleOrders();
+//
+//        // Filter orders based on the selected date
+//        for (Order order : allOrders) {
+//            if (order.getOrderDate().equals(selectedDate)) {
+//                filteredOrders.add(order);
+//            }
+//        }
 
         // If there are no orders, show "No orders for this date"
-        if (filteredOrders.isEmpty()) {
+        if (orderList.isEmpty()) {
             noOrdersTextView.setVisibility(View.VISIBLE);  // Show message
             ordersRecyclerView.setVisibility(View.GONE);   // Hide RecyclerView
         } else {
             noOrdersTextView.setVisibility(View.GONE);     // Hide message
             ordersRecyclerView.setVisibility(View.VISIBLE);  // Show RecyclerView
-            orderAdapter = new OrderAdapter(filteredOrders);
+            orderAdapter = new OrderAdapter(orderList);
             ordersRecyclerView.setAdapter(orderAdapter);
             orderAdapter.notifyDataSetChanged();
         }
@@ -260,6 +267,60 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         //orders.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.themed_cake_image));
         //orders.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.", R.drawable.cakesample2));
         return orders;
+    }
+
+    private void loadOrdersFromFirebase(String selectedDate){
+        orderList.clear();
+        orderAdapter.notifyDataSetChanged();
+
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("calendar")
+                .child(dbStructureDate).child("orders");
+
+        orderRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                orderList.clear(); // Clear the existing orders before adding new ones.
+
+                if (snapshot.exists()) {
+                    Log.d("orderDate", "Data exists for this date.");
+
+                    // Iterate through each order under the selected date.
+                    for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
+                        Order order = new Order();
+                        order.setOrderId(orderSnapshot.getKey());
+                        order.setOrderType(orderSnapshot.child("orderType").exists()
+                                ? orderSnapshot.child("orderType").getValue(String.class)
+                                : "Regular");
+                        order.setOrderDate(selectedDate);
+                        order.setOrderDetails(orderSnapshot.child("cakeId").getValue(String.class));
+                        order.setCustomerName(orderSnapshot.child("customerName").getValue(String.class));
+                        order.setCakeType(orderSnapshot.child("cakeType").getValue(String.class));
+                        order.setDeliveryAddress(orderSnapshot.child("deliveryAddress").getValue(String.class));
+                        List<OrderItem> orderItems = new ArrayList<>();
+                        for (DataSnapshot itemSnapshot : orderSnapshot.child("orderItems").getChildren()) {
+                            OrderItem orderItem = itemSnapshot.getValue(OrderItem.class);
+                            if (orderItem != null) {
+                                orderItems.add(orderItem);
+                            }
+                        }
+                        order.setOrderItems(orderItems);
+                        orderList.add(order); // Add to the list.
+                    }
+
+                    loadOrdersForDate(selectedDate); // Optional callback for UI or logic.
+                    orderAdapter.notifyDataSetChanged(); // Notify RecyclerView adapter.
+                } else {
+                    Log.d("orderDate", "No data for this date.");
+                    // Handle UI state for empty data (optional).
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle possible errors (optional)
+                Log.e("Firebase", "Error fetching orders", error.toException());
+            }
+        });
     }
 
 

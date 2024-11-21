@@ -12,6 +12,10 @@ public class OrderItem {
     private Double price;
     private String imageUrl;
 
+    private String status;
+
+    private String bakerId;
+
     public OrderItem() {
     }
 
@@ -97,5 +101,21 @@ public class OrderItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getBakerId() {
+        return bakerId;
+    }
+
+    public void setBakerId(String bakerId) {
+        this.bakerId = bakerId;
     }
 }
