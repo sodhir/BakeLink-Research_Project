@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import com.example.bakelink.bakers.adapters.BakerCakeAdapter;
 import com.example.bakelink.bakers.models.Cake;
 import com.example.bakelink.customers.C_AllBakersActivity;
 import com.example.bakelink.customers.C_CakeRequestsActivity;
+import com.example.bakelink.customers.C_CartActivity;
 import com.example.bakelink.customers.C_HomeActivity;
 import com.example.bakelink.customers.C_ProfileActivity;
 import com.example.bakelink.customers.adapters.CakeServiceAdapter;
@@ -57,6 +60,7 @@ public class BakerPage extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private TextView aboutBaker;
+    private ImageButton cartIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,18 @@ public class BakerPage extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(BakerPage.this, C_CartActivity.class);
+                startActivity(intent);
+            }
         });
 
         setupBottomNavigation();

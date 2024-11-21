@@ -26,6 +26,7 @@ import java.util.List;
 
 public class C_CartActivity extends AppCompatActivity {
 
+    private ImageButton cartIcon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +36,18 @@ public class C_CartActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_CartActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
         });
 
         // Dummy data for OrderItem
