@@ -1,5 +1,6 @@
 package com.example.bakelink.customers.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bakelink.bakers.models.OrderItem;
 import com.example.bakelink.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.OrderItemViewHolder> {
     private final List<OrderItem> orderItems;
+    private String currentUserId;
 
     public OrderItemsAdapter(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
@@ -31,13 +37,17 @@ public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.Or
     @Override
     public void onBindViewHolder(@NonNull OrderItemViewHolder holder, int position) {
         OrderItem orderItem = orderItems.get(position);
-
-        holder.itemImage.setImageResource(0);
+        // Log.d("OrderItem", "OrderItem: " + orderItem.getOrderItemId());
+        //holder.itemImage.setImageResource(0);
         holder.itemTitle.setText(orderItem.getItemTitle());
         holder.itemFlavor.setText("Flavor: " + orderItem.getFlavor());
         holder.itemWeight.setText("Weight: " + orderItem.getWeight());
         holder.itemPrice.setText("Price: $" + orderItem.getPrice());
         holder.itemQuantity.setText(String.valueOf(orderItem.getQuantity()));
+
+        Glide.with(holder.itemImage.getContext())
+                .load(orderItem.getImageUrl())
+                .into(holder.itemImage);
 
         // Handle increase/decrease and delete actions
         holder.buttonIncrease.setOnClickListener(v -> {
@@ -57,6 +67,8 @@ public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.Or
         holder.buttonDelete.setOnClickListener(v -> {
             orderItems.remove(position);
             notifyItemRemoved(position);
+            deleteOrderItem(orderItem.getOrderItemId());
+            //notifyDataSetChanged();
         });
     }
 
@@ -83,5 +95,18 @@ public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.Or
             buttonIncrease = itemView.findViewById(R.id.button_increase);
             buttonDelete = itemView.findViewById(R.id.button_delete);
         }
+    }
+
+    public void deleteOrderItem(String orderItemId) {
+        currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems").child(orderItemId);
+        dbRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d("Firebase", "Record deleted successfully");
+            } else {
+                Log.e("Firebase", "Failed to delete record", task.getException());
+            }
+        });
+
     }
 }

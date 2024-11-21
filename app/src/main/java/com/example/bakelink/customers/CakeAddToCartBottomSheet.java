@@ -15,7 +15,9 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.models.OrderItem;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -128,16 +130,33 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
 
     private void addCakeToCart(String bakerId, String cakeId) {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("calendar").child(formattedDate).child("orders");
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems");
 
         Map<String, Object> orderData = new HashMap<>();
-        orderData.put("orderId", databaseReference.push().getKey());
+       // orderData.put("orderId", databaseReference.push().getKey());
         orderData.put("cakeId", cakeId);
+        orderData.put("bakerId", bakerId);
+        orderData.put("deliveryDate", formattedDate);
         orderData.put("orderType", "Regular");
-        orderData.put("customerName", "Customer Name");
+        orderData.put("status", "Pending");
 
-        databaseReference.push().setValue(orderData);
-        //orderData.put("quantity", cakeItem.getQuantity());
-        //orderData.put("price", cakeItem.getPrice());
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrderItemId(databaseReference.push().getKey());
+        orderItem.setCakeId(cakeId);
+        orderItem.setOrderType("Regular");
+        orderItem.setStatus("Pending");
+        orderItem.setItemTitle(getArguments().getString(ARG_CAKE_NAME));
+        orderItem.setFlavor(getArguments().getString(ARG_CAKE_DESC));
+        orderItem.setWeight(getArguments().getString(ARG_CAKE_PRICE));
+        orderItem.setQuantity(1);
+        orderItem.setPrice(getArguments().getDouble(ARG_CAKE_PRICE));
+        orderItem.setImageUrl(getArguments().getString(ARG_CAKE_IMAGE));
+        orderItem.setBakerId(bakerId);
+
+
+        databaseReference.push().setValue(orderItem);
+
     }
 }

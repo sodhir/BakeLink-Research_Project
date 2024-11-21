@@ -27,7 +27,7 @@
             android:id="@+id/or_customer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="12sp"
@@ -41,7 +41,8 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/or_delivery_date"
@@ -58,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="12sp"

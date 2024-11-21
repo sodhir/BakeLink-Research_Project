@@ -8,8 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.models.Order;
+import com.example.bakelink.bakers.models.OrderItem;
 
 import java.util.List;
 
@@ -31,10 +33,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         Order order = orderList.get(position);
+        List<OrderItem> orderItems = order.getOrderItems();
 
         // Set the values for customer name, cake type, location, and delivery date
         //holder.cakeImage.setImageResource(order.getImageResource());
-        holder.customerName.setText(order.getCustomerName());
+       // holder.customerName.setText(order.getCustomerName());
         holder.cakeType.setText(order.getCakeType());
         holder.deliveryDate.setText(order.getOrderDate());
         holder.location.setText(order.getDeliveryAddress());
@@ -45,6 +48,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         } else {
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.custom_order_bg));
         }
+
+        String imageUrl = orderItems.get(0).getImageUrl();
+        holder.customerName.setText(orderItems.get(0).getItemTitle());
+        Glide.with(holder.cakeImage.getContext())
+                .load(imageUrl)
+                .placeholder(R.drawable.cakesample2)
+                .error(R.drawable.cakesample2)
+                .into(holder.cakeImage);
 
 
     }
