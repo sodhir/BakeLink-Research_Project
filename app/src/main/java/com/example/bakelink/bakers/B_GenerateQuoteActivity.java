@@ -250,6 +250,7 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         Double quotedPrice = Double.parseDouble(quotedPriceString);
         //Log.d("generatequote", Double.toString(quotedPrice) + "12");
 
+
         String responseID = mDatabase.child("customCakeRequests").child(currentCustomCakeRequestId).child("responses").push().getKey();
         Log.d("generatequote",responseID);
         // Create a new QuoteResponse object
@@ -263,6 +264,16 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         quoteResponse.setCustomerId(customerId);  // Set the customer's ID
         quoteResponse.setImageUrl(imageUrl);
         quoteResponse.setCakeType(cakeTypeName);
+        quoteResponse.setCakeTypePrice(Double.parseDouble(cakeTypePrice.getText().toString()));
+        quoteResponse.setCakeSizePrice(Double.parseDouble(cakeSizePrice.getText().toString()));
+        quoteResponse.setCakeLayersPrice(Double.parseDouble(cakeLayersPrice.getText().toString()));
+        quoteResponse.setCakeWeightPrice(Double.parseDouble(cakeWeightPrice.getText().toString()));
+        quoteResponse.setCakeFlavorPrice(Double.parseDouble(cakeFlavorPrice.getText().toString()));
+        quoteResponse.setCakeFillingPrice(Double.parseDouble(cakeFillingPrice.getText().toString()));
+        quoteResponse.setAdditionalNotesPrice(Double.parseDouble(additionalNotesPrice.getText().toString()));
+        quoteResponse.setDeliveryChargesPrice(Double.parseDouble(deliveryChargesPrice.getText().toString()));
+        quoteResponse.setDiscountsPrice(Double.parseDouble(discountsPrice.getText().toString()));
+
         //quoteResponse.setImageUrl("");  // Set image URL if available
         Log.d("generatequote",quoteResponse.toString());
 

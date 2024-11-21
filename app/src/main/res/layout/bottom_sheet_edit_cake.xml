@@ -11,29 +11,79 @@
         android:text="Edit Cake"
         android:textSize="18sp"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="12dp"/>
+        android:paddingBottom="12dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
 
-    <EditText
-        android:id="@+id/etCakeName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Cake Name"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/etCakeDescription"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cake Name: "
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etCakeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cake Name"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description"
-        android:inputType="textMultiLine"
-        android:lines="3"
-        android:gravity="top"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/etCakePrice"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description: "
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etCakeDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:gravity="top"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Price"
-        android:inputType="numberDecimal"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price: $"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etCakePrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Price"
+            android:inputType="numberDecimal"/>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnSaveChanges"

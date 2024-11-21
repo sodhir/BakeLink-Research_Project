@@ -1,6 +1,9 @@
 package com.example.bakelink.customers;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -19,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class C_ViewQuoteDetails extends AppCompatActivity {
 
+    private ImageButton cartIcon;
     TextView txtrespondedId, txtrespondedbaker, txtrespondedPrice;
 
     @Override
@@ -26,6 +30,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cview_quote_details);
+
 
         txtrespondedId = findViewById(R.id.txtrespondedId);
         txtrespondedbaker = findViewById(R.id.txtrespondedbaker);
