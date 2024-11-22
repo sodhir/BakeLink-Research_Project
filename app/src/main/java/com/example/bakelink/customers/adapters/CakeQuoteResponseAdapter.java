@@ -31,7 +31,7 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
     @NonNull
     @Override
     public CakeQuoteResponseAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_submitted_quote, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_quote_per_cake_request, parent, false);
         return new CakeQuoteResponseAdapter.ViewHolder(view);
     }
 

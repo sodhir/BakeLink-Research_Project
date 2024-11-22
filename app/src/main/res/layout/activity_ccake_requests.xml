@@ -122,6 +122,18 @@
 
 
     </androidx.core.widget.NestedScrollView>
+    <!-- Floating Action Button for Request a Quote -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_request_quote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="75dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_quote"
+        app:fabSize="normal"
+        app:tint="@android:color/white"
+        app:elevation="12dp"/>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

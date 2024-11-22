@@ -62,6 +62,12 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
             }
         });
 
+        //fab
+        ImageButton fab = findViewById(R.id.fab_request_quote);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
+        });
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.nav_cake_request);
 

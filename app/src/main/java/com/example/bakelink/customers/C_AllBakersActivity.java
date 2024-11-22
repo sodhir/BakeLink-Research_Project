@@ -27,6 +27,12 @@ public class C_AllBakersActivity extends AppCompatActivity {
             return insets;
         });
 
+        //fab
+        //ImageButton fab = findViewById(R.id.fab_request_quote);
+        //fab.setOnClickListener(v -> {
+            //startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
+        //});
+
         //cartIcon = findViewById(R.id.cart_icon);
 
         // Set OnClickListener for the cart icon

@@ -1,7 +1,11 @@
 package com.example.bakelink.customers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.models.QuoteResponse;
 import com.example.bakelink.customers.adapters.CakeQuoteResponseAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +33,7 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
 
     RecyclerView quoteResponsesRecyclerView;
     String customcakeRequestId;
-
+    ImageButton cartIcon;
     CakeQuoteResponseAdapter adapter;
     ArrayList<QuoteResponse> responseList;
 
@@ -47,6 +52,51 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
         adapter = new CakeQuoteResponseAdapter(responseList);
         quoteResponsesRecyclerView.setAdapter(adapter);
         quoteResponsesRecyclerView.setLayoutManager(new LinearLayoutManager(C_ViewQuotesPerCakeRequestActivity.this));
+
+        cartIcon = findViewById(R.id.cart_icon);
+
+        // Set OnClickListener for the cart icon
+        cartIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to C_CartActivity
+                Intent intent = new Intent(C_ViewQuotesPerCakeRequestActivity.this, C_CartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //fab
+        ImageButton fab = findViewById(R.id.fab_request_quote);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.none);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId() == R.id.nav_home) {
+                    startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_bakers) {
+                    startActivity(new Intent(getApplicationContext(), C_AllBakersActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_cake_request) {
+                    startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (item.getItemId() == R.id.nav_profile) {
+                    startActivity(new Intent(getApplicationContext(), C_ProfileActivity.class));
+                    overridePendingTransition(0, 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 
