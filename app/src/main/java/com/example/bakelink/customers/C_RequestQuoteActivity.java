@@ -2,9 +2,14 @@ package com.example.bakelink.customers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -23,7 +28,28 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.example.bakelink.common.models.VisionRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.annotations.NotNull;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class C_RequestQuoteActivity extends AppCompatActivity {
 
@@ -93,7 +119,21 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             cakeImg.setImageURI(imageUri); // Display image in ImageView (if needed)
             // Save this URI to use it for uploading later
             cakeImgUri = imageUri;
-            Button requestQuoteButton = findViewById(R.id.button_request_quote);
+            Log.d("JSON Request", "Selected image URI: " + imageUri);
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] imageBytes = baos.toByteArray();
+                String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                sendImageToVisionAPI(base64Image);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+                Button requestQuoteButton = findViewById(R.id.button_request_quote);
             requestQuoteButton.setOnClickListener(v -> {
 
                 Intent intent = new Intent(C_RequestQuoteActivity.this, C_CustomCakeRequestActivity.class);
@@ -103,6 +143,88 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             });
         }
     }
+
+    private void sendImageToVisionAPI(String base64Image) {
+        String apiKey = "AIzaSyCTUCTGGSKa9H_LIVNMFFLPoUnyVUiY7T4";
+        String apiUrl = "https://vision.googleapis.com/v1/images:annotate?key=" + apiKey;
+
+        VisionRequest visionRequest = new VisionRequest(base64Image);
+        String jsonRequest = new Gson().toJson(visionRequest);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(jsonRequest, MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("VisionAPI", "Request failed", e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String jsonResponse = response.body().string();
+                    Log.d("JSON Response", jsonResponse);
+                    parseColorDetails(jsonResponse);
+                } else {
+                    Log.e("VisionAPI", "Request failed: " + response.code() + " - " + response.message());
+                    Log.e("VisionAPI", "Response body: " + response.body().string());
+                }
+            }
+        });
+    }
+
+
+    private void parseColorDetails(String jsonResponse) {
+        Log.d("JSON Response Parse", jsonResponse);
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            JSONArray colors = jsonObject.getJSONArray("responses")
+                    .getJSONObject(0)
+                    .getJSONObject("imagePropertiesAnnotation")
+                    .getJSONObject("dominantColors")
+                    .getJSONArray("colors");
+
+            List<int[]> rgbColors = new ArrayList<>();
+
+            for (int i = 0; i < colors.length(); i++) {
+                JSONObject color = colors.getJSONObject(i).getJSONObject("color");
+                int red = color.getInt("red");
+                int green = color.getInt("green");
+                int blue = color.getInt("blue");
+                rgbColors.add(new int[]{red, green, blue});
+            }
+
+            // Update the color swatches on the UI
+            runOnUiThread(() -> updateColorSwatches(rgbColors));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateColorSwatches(List<int[]> colors) {
+        if (colors.size() >= 5) { // Ensure at least 5 colors are available
+            // Get the View references
+            View swatch1 = findViewById(R.id.colorSwatch1);
+            View swatch2 = findViewById(R.id.colorSwatch2);
+            View swatch3 = findViewById(R.id.colorSwatch3);
+            View swatch4 = findViewById(R.id.colorSwatch4);
+            View swatch5 = findViewById(R.id.colorSwatch5);
+
+            // Convert RGB values to Color and set the backgrounds
+            swatch1.setBackgroundColor(Color.rgb(colors.get(0)[0], colors.get(0)[1], colors.get(0)[2]));
+            swatch2.setBackgroundColor(Color.rgb(colors.get(1)[0], colors.get(1)[1], colors.get(1)[2]));
+            swatch3.setBackgroundColor(Color.rgb(colors.get(2)[0], colors.get(2)[1], colors.get(2)[2]));
+            swatch4.setBackgroundColor(Color.rgb(colors.get(3)[0], colors.get(3)[1], colors.get(3)[2]));
+            swatch5.setBackgroundColor(Color.rgb(colors.get(4)[0], colors.get(4)[1], colors.get(4)[2]));
+        }
+    }
+
+
 
 //    private void analyzeImageColors(Uri imageUri) {
 //        try (ImageAnnotatorClient visionClient = ImageAnnotatorClient.create()) {
