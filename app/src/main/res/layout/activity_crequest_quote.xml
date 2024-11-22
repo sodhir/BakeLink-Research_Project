@@ -162,6 +162,48 @@
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp">
+
+                <View
+                    android:id="@+id/colorSwatch1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#F4A623" />
+
+                <View
+                    android:id="@+id/colorSwatch2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#E07A5F" />
+
+                <View
+                    android:id="@+id/colorSwatch3"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#A7C957" />
+
+                <View
+                    android:id="@+id/colorSwatch4"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="#6A994E" />
+
+                <View
+                    android:id="@+id/colorSwatch5"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="#8B5E3C" />
+            </LinearLayout>
+
+
             <Button
                 android:id="@+id/button_request_quote"
                 android:layout_width="wrap_content"
@@ -178,6 +220,10 @@
 
 
         </LinearLayout>
+
+        <!-- Cake colors (assuming a list of colored views) -->
+
+
     </androidx.core.widget.NestedScrollView>
 
     <!-- Floating Action Button for Request a Quote -->
