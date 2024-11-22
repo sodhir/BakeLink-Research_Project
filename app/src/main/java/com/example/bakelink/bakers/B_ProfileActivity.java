@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
+import com.example.bakelink.LoginActivity;
 import com.example.bakelink.R;
 import com.example.bakelink.customers.modal.Baker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -62,7 +63,6 @@ public class B_ProfileActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
 
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // Firebase Database Reference (assuming you're using Firebase Realtime Database)
         databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(currentUserId);
 
         // Fetch baker data
@@ -71,12 +71,29 @@ public class B_ProfileActivity extends AppCompatActivity {
 
         // Set button click listeners
         editProfileButton.setOnClickListener(v -> {
-            BakerProfileBottomSheetFragment bottomSheetFragment = new BakerProfileBottomSheetFragment();
-            bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+            String bakeryTitleText = bakerName.getText().toString();
+            String descriptionText = bakerDescription.getText().toString();
+
+            // Open Bottom Sheet
+            BakerProfileBottomSheetFragment bottomSheet = new BakerProfileBottomSheetFragment(currentUserId, bakeryTitleText, descriptionText);
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         });
 
         logoutButton.setOnClickListener(v -> {
-            // Handle logout logic here
+            // Clear SharedPreferences
+            SharedPreferences sharePreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharePreferences.edit();
+            editor.clear(); // Clear all saved data
+            editor.apply();
+
+            // Firebase sign out
+            FirebaseAuth.getInstance().signOut();
+
+            // Redirect to Login Activity
+            Intent intent = new Intent(B_ProfileActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+            startActivity(intent);
+            finish(); // End the current activity
         });
 
         // Set up bottom navigation
