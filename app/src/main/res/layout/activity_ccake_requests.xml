@@ -98,7 +98,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingBottom="16dp"
             android:layout_marginTop="?attr/actionBarSize">
 
             <TextView
@@ -107,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="Your Custom Cake Requests"
+                android:text="My Custom Cake Requests"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
