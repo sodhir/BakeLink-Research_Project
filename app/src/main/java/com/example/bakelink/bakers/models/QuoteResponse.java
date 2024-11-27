@@ -20,6 +20,7 @@ public class QuoteResponse {
     private Double deliveryChargesPrice;
     private Double discountsPrice;
 
+    private String bakeryTitle;
 
 
     // Constructor for Firebase
@@ -205,5 +206,13 @@ public class QuoteResponse {
 
     public void setDiscountsPrice(Double discountsPrice) {
         this.discountsPrice = discountsPrice;
+    }
+
+    public String getBakeryTitle() {
+        return bakeryTitle;
+    }
+
+    public void setBakeryTitle(String bakeryTitle) {
+        this.bakeryTitle = bakeryTitle;
     }
 }

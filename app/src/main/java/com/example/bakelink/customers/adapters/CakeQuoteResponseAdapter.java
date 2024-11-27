@@ -2,9 +2,11 @@ package com.example.bakelink.customers.adapters;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,11 +41,9 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
     public void onBindViewHolder(@NonNull CakeQuoteResponseAdapter.ViewHolder holder, int position) {
 
         QuoteResponse quoteResponse = cakeQuoteResponses.get(position);
-        holder.bakerName.setText(quoteResponse.getBakerId());
-        holder.quoteAmount.setText("$" + quoteResponse.getQuotedPrice());
-        Glide.with(holder.itemView.getContext())
-                .load(quoteResponse.getImageUrl())
-                .into(holder.quoteImage);
+        holder.bakeryName.setText(quoteResponse.getBakeryTitle());
+        holder.cakePrice.setText("$" + quoteResponse.getQuotedPrice());
+
 
         // Set status and background color based on quote status
         holder.quoteStatus.setText(quoteResponse.getStatus());
@@ -63,11 +63,12 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.viewQuoteDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext().getApplicationContext(), C_ViewQuoteDetails.class);
                 intent.putExtra("responseId", quoteResponse.getQuoteResponseId());
+                Log.d("quoteResponseId", quoteResponse.getQuoteResponseId());
                 intent.putExtra("customCakeRequestId", quoteResponse.getCustomCakeRequestId());
                 holder.itemView.getContext().startActivity(intent);
             }
@@ -83,15 +84,18 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView quoteImage;
-        TextView bakerName, quoteAmount, quoteStatus;
+       // ImageView quoteImage;
+        TextView bakeryName, quoteStatus, cakeDetails, cakePrice, cakeFlavor;
+        Button viewQuoteDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            quoteImage = itemView.findViewById(R.id.img_quote);
-            bakerName = itemView.findViewById(R.id.tv_cake_type);
-            quoteAmount = itemView.findViewById(R.id.tv_quote_amount);
-            quoteStatus = itemView.findViewById(R.id.tv_quote_status);
+            bakeryName = itemView.findViewById(R.id.bakery_name);
+            quoteStatus = itemView.findViewById(R.id.quote_status);
+            cakeDetails = itemView.findViewById(R.id.cake_details);
+            cakePrice = itemView.findViewById(R.id.cake_price);
+            cakeFlavor = itemView.findViewById(R.id.cake_flavor);
+            viewQuoteDetails = itemView.findViewById(R.id.view_quote_details);
         }
     }
 }
