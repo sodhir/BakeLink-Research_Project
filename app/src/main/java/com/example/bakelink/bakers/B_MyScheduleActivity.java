@@ -219,7 +219,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         }
 
 
-        databaseRef.child(bakerId).child("calendar").child(selectedDate).setValue(calendarData)
+        databaseRef.child(bakerId).child("calendar").child(selectedDate).updateChildren(calendarData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Data saved successfully

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.interfaces.BakeryTitleCallBack;
 import com.example.bakelink.bakers.models.QuoteResponse;
 import com.example.bakelink.customers.adapters.CakeQuoteResponseAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,6 +37,8 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
     ImageButton cartIcon;
     CakeQuoteResponseAdapter adapter;
     ArrayList<QuoteResponse> responseList;
+
+    String bakeryTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,18 +104,14 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
     }
 
     private void loadAllResponses() {
-
         DatabaseReference responseRef = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customcakeRequestId).child("responses");
         responseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               // responseList = new ArrayList<>();
-
+                responseList.clear(); // Clear list before adding new data to avoid duplicates
                 for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
                     String responseId = responseSnapshot.getKey();
-                    Log.d("CustomCakeFetch", "response ID: " + responseId );
-                   // String customCakeRequestId = responseSnapshot.child("customCakeRequestId").getValue(String.class);
-                    String userId = responseSnapshot.child("userId").getValue(String.class);
+                    String userId = responseSnapshot.child("bakerId").getValue(String.class);
                     Double quotedPrice = responseSnapshot.child("quotedPrice").getValue(Double.class);
                     String responseMessage = responseSnapshot.child("responseMessage").getValue(String.class);
                     String status = responseSnapshot.child("status").getValue(String.class);
@@ -125,22 +124,44 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
 
-                    responseList.add(cakeResponse);
-                    Log.d("CustomCakeFetch", "Custom Cake Response: " + responseList.size() );
-
-
-
+                    // Fetch bakery title asynchronously
+                    getBakeryTitle(userId, bakeryTitle -> {
+                        cakeResponse.setBakeryTitle(bakeryTitle);
+                        responseList.add(cakeResponse);
+                        adapter.notifyDataSetChanged();
+                    });
                 }
-                //Log.d("CustomCakeFetch", "Custom Cake Response: " + responseList.size() );
-                adapter.notifyDataSetChanged();
-
             }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                          //  Log.e("CustomCakeFetch", "Failed to fetch custom cake details: " + error.getMessage());
-                        }
-                    });
-
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("CustomCakeFetch", "Failed to fetch custom cake details: " + error.getMessage());
+            }
+        });
     }
+
+
+    public void getBakeryTitle(String bakerId, BakeryTitleCallBack callback) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
+        databaseReference.child(bakerId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String bakeryTitle = dataSnapshot.child("bakeryTitle").getValue(String.class);
+                    Log.d("Firebase", "Bakery Title: " + bakeryTitle);
+                    callback.onBakeryTitleFetched(bakeryTitle);
+                } else {
+                    Log.d("Firebase", "Baker not found!");
+                    callback.onBakeryTitleFetched(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("Firebase", "Error: " + databaseError.getMessage());
+                callback.onBakeryTitleFetched(null);
+            }
+        });
+    }
+
 }

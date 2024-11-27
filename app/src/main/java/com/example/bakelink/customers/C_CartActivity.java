@@ -162,7 +162,7 @@ public class C_CartActivity extends AppCompatActivity {
 
         String deliveryAdd = this.deliveryAdd.getText().toString();
         String currentUserid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String orderType = "Regular";
+        String orderType = orderItems.get(0).getOrderType();
         Double orderTotal = Double.parseDouble(total.getText().toString());
 
            String bakerID = orderItems.get(0).getBakerId().trim();
