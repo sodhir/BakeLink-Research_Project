@@ -11,8 +11,7 @@
         android:id="@+id/cakeImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/sample_cake_image" />
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/cakeNameTextView"
@@ -21,28 +20,33 @@
         android:text="Cake Name"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/cakeDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cake description goes here"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/cakePriceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Price: $0.00"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/edDateOfDelivery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="date" />
+        android:hint="Enter delivery date"
+        android:inputType="date"
+        android:textColor="@color/black"/>
 
     <Button
         android:id="@+id/addToCartButton"

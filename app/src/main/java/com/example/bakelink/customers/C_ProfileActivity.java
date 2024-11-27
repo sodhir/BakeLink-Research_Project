@@ -1,6 +1,7 @@
 package com.example.bakelink.customers;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.bakelink.LoginActivity;
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.B_ProfileActivity;
 import com.example.bakelink.customers.modal.CustomerProfile;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,8 +39,7 @@ public class C_ProfileActivity extends AppCompatActivity {
 
     private ImageButton cartIcon;
     private TextView emailTextView, fullNameTextView, addressTextView, dobTextView;
-    private ImageView profileImageView;
-    private Button editProfileButton;
+    private Button editProfileButton, logoutButton;
     private DatabaseReference customersReference;
     private FirebaseAuth auth;
     private StorageReference storageReference;
@@ -69,12 +71,13 @@ public class C_ProfileActivity extends AppCompatActivity {
         // Initialize Firebase and UI components
         auth = FirebaseAuth.getInstance();
         customersReference = FirebaseDatabase.getInstance().getReference("Customers");
-        //profileImageView = findViewById(R.id.profile_image);
+
         emailTextView = findViewById(R.id.tv_email);
         fullNameTextView = findViewById(R.id.tv_full_name);
         addressTextView = findViewById(R.id.tv_address);
         dobTextView = findViewById(R.id.tv_dob);
         editProfileButton = findViewById(R.id.btn_edit_profile);
+        logoutButton = findViewById(R.id.logout_button);
         storageReference = FirebaseStorage.getInstance().getReference("profile_images"); // Reference for profile images in Firebase Storage
 
         // Load user data
@@ -84,8 +87,32 @@ public class C_ProfileActivity extends AppCompatActivity {
 
         // Edit Profile button
         editProfileButton.setOnClickListener(v -> {
-            BottomSheetEditProfile editProfileSheet = new BottomSheetEditProfile();
+            String fullNameText = fullNameTextView.getText().toString();
+            String addressText = addressTextView.getText().toString();
+            String dobText = dobTextView.getText().toString();
+            BottomSheetEditProfile editProfileSheet = new BottomSheetEditProfile(userId,fullNameText,addressText,dobText);
+            editProfileSheet.setProfileUpdateListener(() -> {
+                // Reload data when profile is updated
+                loadCustomerData(userId);
+            });
             editProfileSheet.show(getSupportFragmentManager(), "EditProfileBottomSheet");
+        });
+
+        logoutButton.setOnClickListener(v -> {
+            // Clear SharedPreferences
+            SharedPreferences sharePreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharePreferences.edit();
+            editor.clear(); // Clear all saved data
+            editor.apply();
+
+            // Firebase sign out
+            FirebaseAuth.getInstance().signOut();
+
+            // Redirect to Login Activity
+            Intent intent = new Intent(C_ProfileActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+            startActivity(intent);
+            finish(); // End the current activity
         });
 
         //fab
@@ -125,7 +152,7 @@ public class C_ProfileActivity extends AppCompatActivity {
         Log.d("customerProfile", "useridinsidefnc:" + userId);
 
         // Fetch email from Users collection
-        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
         usersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -153,20 +180,12 @@ public class C_ProfileActivity extends AppCompatActivity {
                     String fullName = snapshot.child("fullName").getValue(String.class);
                     String address = snapshot.child("address").getValue(String.class);
                     String dob = snapshot.child("dob").getValue(String.class);
-                    String profileImageUrl = snapshot.child("profileImageUrl").getValue(String.class);
+
 
                     fullNameTextView.setText(fullName != null ? fullName : "N/A");
                     addressTextView.setText(address != null ? address : "N/A");
                     dobTextView.setText(dob != null ? dob : "N/A");
 
-                    // Load profile image using a library like Glide or Picasso
-                    if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                        Glide.with(C_ProfileActivity.this)
-                                .load(profileImageUrl)// Placeholder image
-                                .into(profileImageView);
-                    } else {
-                        profileImageView.setImageResource(R.drawable.cakesample1);
-                    }
                 } else {
                     Log.d("customerProfile", "Customer node not found. Creating default data...");
                     createDefaultCustomerData(userId);
@@ -186,45 +205,26 @@ public class C_ProfileActivity extends AppCompatActivity {
 
         // Example default data with placeholder profile image URL
         CustomerProfile defaultProfile = new CustomerProfile(
-                "Default Name",
-                "Default Address",
-                "01/01/2000"
+                "N/A",
+                "N/A",
+                "N/A"
         );
 
         defaultCustomerRef.setValue(defaultProfile).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d("customerProfile", "Default customer data created successfully.");
-                Toast.makeText(C_ProfileActivity.this, "Default profile created. Please edit your details.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(C_ProfileActivity.this, "Default profile created. Please edit your details.", Toast.LENGTH_SHORT).show();
 
                 // Update UI with default values
                 fullNameTextView.setText(defaultProfile.getFullName());
                 addressTextView.setText(defaultProfile.getAddress());
                 dobTextView.setText(defaultProfile.getDob());
-                profileImageView.setImageResource(R.drawable.cakesample1);
             } else {
                 Log.d("customerProfile", "Failed to create default customer data.");
-                Toast.makeText(C_ProfileActivity.this, "Failed to create default profile.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(C_ProfileActivity.this, "Failed to create default profile.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void uploadProfileImage(Uri imageUri, String userId) {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference("ProfileImages").child(userId + ".jpg");
 
-        storageReference.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
-                storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Save the image URL to the database
-                    customersReference.child(userId).child("profileImageUrl").setValue(uri.toString())
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(C_ProfileActivity.this, "Profile image updated successfully!", Toast.LENGTH_SHORT).show();
-
-                                // Update the profile image in the UI
-                                Glide.with(C_ProfileActivity.this)
-                                        .load(uri)
-                                        .into(profileImageView);
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(C_ProfileActivity.this, "Failed to update profile image.", Toast.LENGTH_SHORT).show());
-                })
-        ).addOnFailureListener(e -> Toast.makeText(C_ProfileActivity.this, "Failed to upload image.", Toast.LENGTH_SHORT).show());
-    }
 }
