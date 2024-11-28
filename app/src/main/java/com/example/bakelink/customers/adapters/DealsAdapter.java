@@ -73,11 +73,11 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.DealViewHold
 
         DealViewHolder(@NonNull View itemView) {
             super(itemView);
-            dealImage = itemView.findViewById(R.id.deal_image);
+            dealImage = itemView.findViewById(R.id.rImage);
             dealTag = itemView.findViewById(R.id.deal_tag);
             dealName = itemView.findViewById(R.id.deal_name);
             dealValidTill = itemView.findViewById(R.id.deal_valid_till);
-            dealTopTag = itemView.findViewById(R.id.deal_top_tag);
+            dealTopTag = itemView.findViewById(R.id.rBakerName);
         }
     }
 }

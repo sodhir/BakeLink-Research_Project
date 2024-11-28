@@ -3,6 +3,7 @@ package com.example.bakelink.customers;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.models.RecommendationCake;
 import com.example.bakelink.customers.modal.CustomCakeRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
@@ -35,7 +37,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 public class C_CustomCakeRequestActivity extends AppCompatActivity {
@@ -51,6 +55,8 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
     EditText deliveryAddress;
 
     private Uri myImageUri;
+
+    ArrayList<int[]> receivedRgbColors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,9 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
         // Get the image URI from the intent
         imageUriString = getIntent().getStringExtra("imageUri");
+        receivedRgbColors = (ArrayList<int[]>) getIntent().getSerializableExtra("rgbColors");
+
+        loadRgbColors(receivedRgbColors);
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             imageView.setImageURI(imageUri);
@@ -184,6 +193,25 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
     }
 
+    private void loadRgbColors(ArrayList<int[]> receivedRgbColors) {
+        if (receivedRgbColors.size() >= 5) { // Ensure at least 5 colors are available
+            // Get the View references
+            View swatch1 = findViewById(R.id.colorSwatch1);
+            View swatch2 = findViewById(R.id.colorSwatch2);
+            View swatch3 = findViewById(R.id.colorSwatch3);
+            View swatch4 = findViewById(R.id.colorSwatch4);
+            View swatch5 = findViewById(R.id.colorSwatch5);
+
+            // Convert RGB values to Color and set the backgrounds
+            swatch1.setBackgroundColor(Color.rgb(receivedRgbColors.get(0)[0], receivedRgbColors.get(0)[1], receivedRgbColors.get(0)[2]));
+            swatch2.setBackgroundColor(Color.rgb(receivedRgbColors.get(1)[0], receivedRgbColors.get(1)[1], receivedRgbColors.get(1)[2]));
+            swatch3.setBackgroundColor(Color.rgb(receivedRgbColors.get(2)[0], receivedRgbColors.get(2)[1], receivedRgbColors.get(2)[2]));
+            swatch4.setBackgroundColor(Color.rgb(receivedRgbColors.get(3)[0], receivedRgbColors.get(3)[1], receivedRgbColors.get(3)[2]));
+            swatch5.setBackgroundColor(Color.rgb(receivedRgbColors.get(4)[0], receivedRgbColors.get(4)[1], receivedRgbColors.get(4)[2]));
+        }
+
+    }
+
     private void addCustomCakeRequestToDatabase(Uri imageUri) {
         RadioGroup rdbCakeTypeGroup = findViewById(R.id.rdbCakeTypeGroup);
         RadioGroup cakeSizeRadioGroup = findViewById(R.id.rdbCakeSizeGroup);
@@ -220,6 +248,17 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                             cakeRequest.setDeliveryAddress(deliveryAddress);
                             cakeRequest.setNoOfLayers(cakeLayers);
                             cakeRequest.setCakeWeight(cakeWeight);
+
+                                    List<List<Integer>> rgbColorsList = new ArrayList<>();
+                                    for (int[] color : receivedRgbColors) {
+                                        List<Integer> colorList = new ArrayList<>();
+                                        for (int value : color) {
+                                            colorList.add(value); // Convert array to List
+                                        }
+
+                                        rgbColorsList.add(colorList);
+                                    }
+                            cakeRequest.setRgbColors(rgbColorsList);
                             cakeRequest.setCakeRequestStatus("Pending");
 
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
@@ -228,6 +267,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                             if (requestId != null) {
                                 databaseReference.child(requestId).setValue(cakeRequest)
                                         .addOnSuccessListener(aVoid -> {
+                                            updateRecommendation(rgbColorsList, imageUrl);
                                             Toast.makeText(C_CustomCakeRequestActivity.this, "Request saved successfully!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
                                         })
@@ -245,7 +285,18 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                         // progressBar.setVisibility(View.GONE); // Hide loading indicator
                     });
         }
+
+
     }
 
+    private void updateRecommendation(List<List<Integer>> rgbColorsList, String imageUrl) {
 
+        RecommendationCake recommendationCake = new RecommendationCake();
+        recommendationCake.setImageUrl(imageUrl);
+        recommendationCake.setRgbColors(rgbColorsList);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
+        String recommendationId = databaseReference.push().getKey();
+        databaseReference.child(recommendationId).setValue(recommendationCake);
+    }
 }

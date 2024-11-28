@@ -15,21 +15,33 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.adapters.RecommendationAdapter;
+import com.example.bakelink.bakers.models.RecommendationCake;
 import com.example.bakelink.common.models.VisionRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.gson.Gson;
 
@@ -41,7 +53,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -61,7 +76,9 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
     private Uri cakeImgUri;
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    List<int[]> rgbColorsList;
+    ArrayList<int[]> rgbColorArrayList;
+    RecyclerView recyclerView;
+    RecommendationAdapter cakeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +90,8 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        rgbColorArrayList = new ArrayList<>();
 
         cartIcon = findViewById(R.id.cart_icon);
 
@@ -100,7 +119,6 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
         uploadFrame.setOnClickListener(v -> {
             openImagePicker();
         });
-
 
 
     }
@@ -140,6 +158,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(C_RequestQuoteActivity.this, C_CustomCakeRequestActivity.class);
                 intent.putExtra("imageUri", imageUri.toString());
+                intent.putExtra("rgbColors", rgbColorArrayList);
                 startActivity(intent);
 
             });
@@ -201,10 +220,12 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
                 rgbColors.add(new int[]{red, green, blue});
             }
 
+            rgbColorArrayList.addAll(rgbColors);
 
 
             // Update the color swatches on the UI
             runOnUiThread(() -> updateColorSwatches(rgbColors));
+            loadRecommendations(rgbColors);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -226,6 +247,145 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             swatch4.setBackgroundColor(Color.rgb(colors.get(3)[0], colors.get(3)[1], colors.get(3)[2]));
             swatch5.setBackgroundColor(Color.rgb(colors.get(4)[0], colors.get(4)[1], colors.get(4)[2]));
         }
+
+    }
+
+//    private void loadRecommendations(List<int[]> colors) {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
+//
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                List<RecommendationCake> similarCakes = new ArrayList<>();
+//
+//                // Assuming currentCakeColors is the RGB colors of the current cake
+//                ArrayList<int[]> currentCakeColors = new ArrayList<>(colors);
+//
+//                // Loop through the database entries and compare their colors with the current cake's colors
+//                for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
+//                    // Retrieve the RGB colors for each cake
+//                    GenericTypeIndicator<List<List<Integer>>> typeIndicator = new GenericTypeIndicator<List<List<Integer>>>() {};
+//                    List<List<Integer>> cakeColorsList = cakeSnapshot.child("rgbColors").getValue(typeIndicator);
+//
+//                    // Convert to ArrayList<int[]>
+//                    ArrayList<int[]> cakeColors = new ArrayList<>();
+//                    if (cakeColorsList != null) {
+//                        for (List<Integer> colorList : cakeColorsList) {
+//                            int[] colorArray = new int[colorList.size()];
+//                            for (int i = 0; i < colorList.size(); i++) {
+//                                colorArray[i] = colorList.get(i);
+//                            }
+//                            cakeColors.add(colorArray);
+//                        }
+//                    }
+//
+//                    // Compare the colors (find the smallest distance)
+//                    for (int[] cakeColor : cakeColors) {
+//                        for (int[] currentColor : currentCakeColors) {
+//                            double distance = calculateColorDistance(cakeColor, currentColor);
+//                            if (distance < 25) {  // Define a threshold for matching colors
+//                                similarCakes.add(cakeSnapshot.getValue(RecommendationCake.class));
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                // Display results
+//                displayMatchingCakes(similarCakes);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
+    private void loadRecommendations(List<int[]> colors) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<RecommendationCake> similarCakes = new ArrayList<>();
+                Set<String> addedCakeIds = new HashSet<>();  // Set to track added cakes by their ID
+
+                // Assuming currentCakeColors is the RGB colors of the current cake
+                ArrayList<int[]> currentCakeColors = new ArrayList<>(colors);
+
+                // Loop through the database entries and compare their colors with the current cake's colors
+                for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
+                    // Retrieve the RGB colors for each cake
+                    GenericTypeIndicator<List<List<Integer>>> typeIndicator = new GenericTypeIndicator<List<List<Integer>>>() {};
+                    List<List<Integer>> cakeColorsList = cakeSnapshot.child("rgbColors").getValue(typeIndicator);
+
+                    // Convert to ArrayList<int[]>
+                    ArrayList<int[]> cakeColors = new ArrayList<>();
+                    if (cakeColorsList != null) {
+                        for (List<Integer> colorList : cakeColorsList) {
+                            int[] colorArray = new int[colorList.size()];
+                            for (int i = 0; i < colorList.size(); i++) {
+                                colorArray[i] = colorList.get(i);
+                            }
+                            cakeColors.add(colorArray);
+                        }
+                    }
+
+                    boolean cakeMatched = false;  // Flag to track if this cake has matched with any color
+
+                    // Compare the colors (find the smallest distance)
+                    for (int[] cakeColor : cakeColors) {
+                        for (int[] currentColor : currentCakeColors) {
+                            double distance = calculateColorDistance(cakeColor, currentColor);
+                            if (distance < 25) {  // Define a threshold for matching colors
+                                // Check if the cake has already been added
+                                String cakeId = cakeSnapshot.getKey();  // or use any unique identifier
+                                if (!addedCakeIds.contains(cakeId)) {
+                                    similarCakes.add(cakeSnapshot.getValue(RecommendationCake.class));
+                                    addedCakeIds.add(cakeId);  // Mark this cake as added
+                                }
+                                cakeMatched = true;  // Once a match is found, no need to check further colors for this cake
+                                break;
+                            }
+                        }
+                        if (cakeMatched) break;  // Exit the loop early if a match was found
+                    }
+                }
+
+                // Display results
+                displayMatchingCakes(similarCakes);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle errors (if any)
+            }
+        });
+    }
+
+
+    private void displayMatchingCakes(List<RecommendationCake> matchingCakes) {
+        recyclerView = findViewById(R.id.recommendationRecycler);
+        if (matchingCakes.isEmpty()) {
+            Toast.makeText(this, "No cakes match your color scheme.", Toast.LENGTH_SHORT).show();
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            // Display matching cakes in the RecyclerView or any other UI component
+            // For example, you could pass the list to an adapter and refresh the UI
+            recyclerView.setVisibility(View.VISIBLE);
+            cakeAdapter = new RecommendationAdapter(matchingCakes);
+            recyclerView.setAdapter(cakeAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        }
+    }
+
+    private double calculateColorDistance(int[] color1, int[] color2) {
+        int rDiff = color1[0] - color2[0];
+        int gDiff = color1[1] - color2[1];
+        int bDiff = color1[2] - color2[2];
+
+        return Math.sqrt(rDiff * rDiff + gDiff * gDiff + bDiff * bDiff);
     }
 
 

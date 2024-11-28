@@ -45,36 +45,5 @@
 
         </FrameLayout>
 
-        <TextView
-            android:id="@+id/deal_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textColor="@color/black"
-            android:layout_below="@id/rImage" />
-
-        <TextView
-            android:id="@+id/deal_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:layout_margin="8dp"
-            android:layout_below="@id/deal_name"/>
-
-
-        <TextView
-            android:id="@+id/deal_valid_till"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="12sp"
-            android:textColor="@color/black"
-            android:layout_marginBottom="8dp"
-            android:layout_below="@id/deal_tag" />
-
-
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>
