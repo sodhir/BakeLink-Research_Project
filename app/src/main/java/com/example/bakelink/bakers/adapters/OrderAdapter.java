@@ -1,5 +1,6 @@
 package com.example.bakelink.bakers.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.B_OrderDetailActivity;
 import com.example.bakelink.bakers.models.Order;
 import com.example.bakelink.bakers.models.OrderItem;
 
@@ -56,6 +58,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 .placeholder(R.drawable.cakesample2)
                 .error(R.drawable.cakesample2)
                 .into(holder.cakeImage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.itemView.getContext(), B_OrderDetailActivity.class);
+                intent.putExtra("order_id", order.getOrderId());
+                intent.putExtra("order_type", order.getOrderType());
+                intent.putExtra("order_date", order.getOrderDate());
+                intent.putExtra("order_status", order.getOrderItems().get(0).getStatus());
+                intent.putExtra("customer_name", order.getCustomerName());
+                intent.putExtra("cake_type", order.getCakeType());
+                intent.putExtra("delivery_address", order.getDeliveryAddress());
+                intent.putExtra("image_resource", order.getOrderItems().get(0).getImageUrl());
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
 
 
     }

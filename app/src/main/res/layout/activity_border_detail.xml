@@ -294,53 +294,7 @@
                     android:textColor="@android:color/black"  />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/vqCakeColorsTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cake Colors:"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:paddingBottom="8dp"/>
-
             <!-- Cake colors (assuming a list of colored views) -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="16dp">
-
-                <!-- Placeholder for color swatches -->
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="#F4A623" />
-
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="#E07A5F" />
-
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="#A7C957" />
-
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="#6A994E" />
-
-                <View
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="#8B5E3C" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -394,19 +348,19 @@
                 android:layout_marginTop="12dp">
 
                 <Button
-                    android:id="@+id/btnMsgCustomer"
+                    android:id="@+id/btnUpdateOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_button_background"
                     android:paddingLeft="35dp"
                     android:paddingRight="35dp"
-                    android:text="Message Customer"
+                    android:text="Update Order"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:layout_marginStart="4dp"/>
+                    android:textSize="14sp" />
 
             </LinearLayout>
 

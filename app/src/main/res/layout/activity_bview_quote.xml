@@ -366,7 +366,7 @@
                 android:textAlignment="center">
 
                 <Button
-                    android:id="@+id/btnMsgCustomer"
+                    android:id="@+id/btnUpdateOrder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

@@ -14,9 +14,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
@@ -87,7 +84,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
          loadQuoteDetails(quoteId);
 
          generateQuote = findViewById(R.id.btnGenerateQuote);
-         sendMessage = findViewById(R.id.btnMsgCustomer);
+         sendMessage = findViewById(R.id.btnUpdateOrder);
 
          generateQuote.setOnClickListener(view -> {
              Intent intent = new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class);

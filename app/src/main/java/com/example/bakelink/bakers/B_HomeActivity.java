@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -25,6 +26,16 @@ import com.example.bakelink.bakers.models.Quote;
 import com.example.bakelink.bakers.models.QuoteRequest;
 import com.example.bakelink.bakers.models.QuoteResponse;
 import com.example.bakelink.customers.modal.CustomCakeRequest;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,8 +44,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class B_HomeActivity extends AppCompatActivity {
@@ -96,6 +113,9 @@ public class B_HomeActivity extends AppCompatActivity {
         TextView chipWeekly = findViewById(R.id.chip_weekly);
         TextView chipMonthly = findViewById(R.id.chip_monthly);
 
+        fetchWeeklySales(currentUserId);
+        calculateTotalSalesAndOrders(currentUserId);
+
         // Set "Weekly" chip as selected by default
         chipWeekly.setBackgroundColor(Color.parseColor("#721124"));
         chipWeekly.setTextColor(Color.parseColor("#FFFFFF"));
@@ -108,6 +128,7 @@ public class B_HomeActivity extends AppCompatActivity {
             // Reset Monthly chip to default
             chipMonthly.setBackgroundColor(Color.parseColor("#F5F5F5"));
             chipMonthly.setTextColor(Color.parseColor("#80000000"));
+            fetchWeeklySales(currentUserId);
         });
 
         chipMonthly.setOnClickListener(view -> {
@@ -118,7 +139,10 @@ public class B_HomeActivity extends AppCompatActivity {
             // Reset Weekly chip to default
             chipWeekly.setBackgroundColor(Color.parseColor("#F5F5F5"));
             chipWeekly.setTextColor(Color.parseColor("#80000000"));
+            fetchMonthlySales(currentUserId);
         });
+
+        //fetchSalesDataLine(currentUserId);
 
 
         // Set up bottom navigation
@@ -319,5 +343,181 @@ public class B_HomeActivity extends AppCompatActivity {
         });
         return email;
     }
+
+    private void fetchWeeklySales(String bakerId) {
+        DatabaseReference salesRef = FirebaseDatabase.getInstance()
+                .getReference("bakers")
+                .child(bakerId)
+                .child("calendar");
+
+        // Get the last 7 days
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        List<String> last7Days = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            last7Days.add(dateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+        }
+
+        salesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, Float> weeklySales = new LinkedHashMap<>();
+
+                for (String date : last7Days) {
+                    float dailyTotal = 0;
+                    String[] dateParts = date.split("-");
+                    String year = dateParts[0];
+                    String month = dateParts[1];
+                    String day = dateParts[2];
+
+                    // Check if data for this day exists
+                    if (snapshot.child(year).child(month).child(day).hasChild("orders")) {
+                        for (DataSnapshot orderSnapshot : snapshot.child(year).child(month).child(day).child("orders").getChildren()) {
+                            Float orderTotal = orderSnapshot.child("orderTotal").getValue(Float.class);
+                            if (orderTotal != null) {
+                                dailyTotal += orderTotal;
+                            }
+                        }
+                    }
+
+                    weeklySales.put(date, dailyTotal);
+                }
+                displayLineChart(weeklySales, "Weekly Sales");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to load weekly sales", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void fetchMonthlySales(String bakerId) {
+        DatabaseReference salesRef = FirebaseDatabase.getInstance()
+                .getReference("bakers")
+                .child(bakerId)
+                .child("calendar");
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
+        SimpleDateFormat monthYearFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+
+        String currentMonthYear = monthYearFormat.format(calendar.getTime());
+        String[] parts = currentMonthYear.split("-");
+        String currentYear = parts[0];
+        String currentMonth = parts[1];
+
+        salesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Map<String, Float> monthlySales = new LinkedHashMap<>();
+
+                for (int day = 1; day <= 31; day++) {
+                    String dayString = day < 10 ? "0" + day : String.valueOf(day);
+
+                    if (snapshot.child(currentYear).child(currentMonth).child(dayString).hasChild("orders")) {
+                        float dailyTotal = 0;
+
+                        for (DataSnapshot orderSnapshot : snapshot.child(currentYear).child(currentMonth).child(dayString).child("orders").getChildren()) {
+                            Float orderTotal = orderSnapshot.child("orderTotal").getValue(Float.class);
+                            if (orderTotal != null) {
+                                dailyTotal += orderTotal;
+                            }
+                        }
+
+                        monthlySales.put(currentYear + "-" + currentMonth + "-" + dayString, dailyTotal);
+                    }
+                }
+                displayLineChart(monthlySales, "Monthly Sales");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to load monthly sales", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void displayLineChart(Map<String, Float> salesData, String label) {
+        LineChart lineChart = findViewById(R.id.lineChart);
+
+        List<Entry> entries = new ArrayList<>();
+        int index = 0;
+        List<String> labels = new ArrayList<>(); // For custom labels
+
+        for (Map.Entry<String, Float> entry : salesData.entrySet()) {
+            entries.add(new Entry(index, entry.getValue()));
+            labels.add(entry.getKey()); // Add date labels
+            index++;
+        }
+
+        LineDataSet dataSet = new LineDataSet(entries, label);
+        dataSet.setColor(Color.parseColor("#721124"));
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setCircleColor(Color.parseColor("#88A84F"));
+        dataSet.setLineWidth(2f);
+
+        LineData lineData = new LineData(dataSet);
+        lineChart.setData(lineData);
+
+        // Configure chart appearance
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        xAxis.setGranularityEnabled(true);
+
+        lineChart.getDescription().setText(label); // Set chart label
+        lineChart.animateX(1000); // Add animation
+        lineChart.invalidate(); // Refresh chart
+    }
+
+    private void calculateTotalSalesAndOrders(String bakerId) {
+        DatabaseReference salesRef = FirebaseDatabase.getInstance()
+                .getReference("bakers")
+                .child(bakerId)
+                .child("calendar");
+
+        salesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                float totalSales = 0;
+                int totalOrders = 0;
+
+                // Traverse the calendar structure
+                for (DataSnapshot yearSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
+                        for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
+                            if (daySnapshot.hasChild("orders")) {
+                                for (DataSnapshot orderSnapshot : daySnapshot.child("orders").getChildren()) {
+                                    // Calculate total sales
+                                    Float orderTotal = orderSnapshot.child("orderTotal").getValue(Float.class);
+                                    if (orderTotal != null) {
+                                        totalSales += orderTotal;
+                                    }
+                                    // Increment total orders count
+                                    totalOrders++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Display or process the results
+                TextView txtTotalSales = findViewById(R.id.txtTotalSales);
+                TextView txtTotalOrders = findViewById(R.id.txtTotalOrders);
+                txtTotalSales.setText("Total Sales: $" + totalSales);
+                txtTotalOrders.setText("Total Orders: " + totalOrders);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to calculate sales and orders", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
 }
