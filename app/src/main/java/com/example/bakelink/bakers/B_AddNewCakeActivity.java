@@ -20,7 +20,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.models.Cake;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class B_AddNewCakeActivity extends AppCompatActivity {
 
@@ -208,22 +214,57 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
         String description = etDescription.getText().toString().trim();
         String cakePrice = etCakePrice.getText().toString().trim();
 
-        /*if (cakeName.isEmpty() || description.isEmpty() || cakePrice.isEmpty()) {
-            Toast.makeText(this, "Please fill in all the details", Toast.LENGTH_SHORT).show();
+        if (cakeName.isEmpty() || description.isEmpty() || cakePrice.isEmpty() || ivCakeImageUri == null) {
+            Toast.makeText(this, "All fields are required, including an image", Toast.LENGTH_SHORT).show();
             return;
-        }*/
+        }
 
-        // Create a new Cake object
-        // Create a Cake model and a database method to save the cake
-        // Cake newCake = new Cake(cakeName, description, cakePrice, imageUri.toString());
-
-        // code to save data to database
-
-
-        Toast.makeText(this, "Cake added successfully", Toast.LENGTH_SHORT).show();
-
-
-        startActivity(new Intent(B_AddNewCakeActivity.this, B_MyAllCakesActivity.class));
-        finish();
+        try {
+            double price = Double.parseDouble(cakePrice);
+            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            uploadImageAndSaveDetails(cakeName, description, price, currentUserId);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Invalid price format", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
+    private void uploadImageAndSaveDetails(String cakeName, String description, double cakePrice, String currentUserId) {
+        if (ivCakeImageUri == null) {
+            Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Reference to Firebase Storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("cakeImages/" + System.currentTimeMillis() + ".jpg");
+        storageRef.putFile(ivCakeImageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString();
+
+                    // Save cake details after image upload
+                    DatabaseReference cakeRef = FirebaseDatabase.getInstance().getReference("bakers").child(currentUserId).child("cakes");
+                    String cakeId = cakeRef.push().getKey();
+
+                    Cake cake = new Cake();
+                    cake.setCakeId(cakeId);
+                    cake.setCakeName(cakeName);
+                    cake.setDescription(description);
+                    cake.setPrice(cakePrice);
+                    cake.setCakeImgUrl(imageUrl);
+
+                    cakeRef.child(cakeId).setValue(cake)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(B_AddNewCakeActivity.this, "Cake added successfully", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(B_AddNewCakeActivity.this, B_MyAllCakesActivity.class));
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(B_AddNewCakeActivity.this, "Failed to save cake: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                }))
+                .addOnFailureListener(e -> {
+                    Toast.makeText(B_AddNewCakeActivity.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

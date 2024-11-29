@@ -73,6 +73,17 @@ public class C_CartActivity extends AppCompatActivity {
         deliveryAdd = findViewById(R.id.deliveryAdd);
         checkoutbtn = findViewById(R.id.checkout_button);
 
+        String deliveryDateValue = getIntent().getStringExtra("deliveryDate");
+        String deliveryAddressValue = getIntent().getStringExtra("deliveryAddress");
+
+        if (deliveryDateValue != null) {
+            deliveryDate.setText(deliveryDateValue);
+        }
+
+        if (deliveryAddressValue != null) {
+            deliveryAdd.setText(deliveryAddressValue);
+        }
+
         deliveryDate.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);

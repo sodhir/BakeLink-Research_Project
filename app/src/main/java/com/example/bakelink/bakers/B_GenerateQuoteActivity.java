@@ -266,7 +266,7 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
         quoteResponse.setCakeType(cakeTypeName);
         quoteResponse.setCakeTypePrice(Double.parseDouble(cakeTypePrice.getText().toString()));
         quoteResponse.setCakeSizePrice(Double.parseDouble(cakeSizePrice.getText().toString()));
-        quoteResponse.setCakeLayersPrice(Double.parseDouble(cakeLayersPrice.getText().toString()));
+        quoteResponse.setCakeLayersPrice(cakeLayersPrice.getText().toString().isEmpty()?0 :Double.parseDouble(cakeLayersPrice.getText().toString()));
         quoteResponse.setCakeWeightPrice(Double.parseDouble(cakeWeightPrice.getText().toString()));
         quoteResponse.setCakeFlavorPrice(Double.parseDouble(cakeFlavorPrice.getText().toString()));
         quoteResponse.setCakeFillingPrice(Double.parseDouble(cakeFillingPrice.getText().toString()));

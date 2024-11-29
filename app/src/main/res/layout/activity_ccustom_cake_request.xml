@@ -477,10 +477,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Select Cake Colors"
-                android:textStyle="bold"
+                android:text="Selected Cake Colors"
                 android:textColor="@android:color/black"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <!-- Cake colors (assuming a list of colored views) -->
             <LinearLayout

@@ -7,6 +7,9 @@ public class RecommendationCake {
     private String imageUrl;
     private List<List<Integer>> rgbColors;
 
+    private String customCakeRequestId;
+    private String bakerTitle;
+
     public RecommendationCake() {
     }
 
@@ -32,5 +35,21 @@ public class RecommendationCake {
 
     public void setRgbColors(List<List<Integer>> rgbColors) {
         this.rgbColors = rgbColors;
+    }
+
+    public String getCustomCakeRequestId() {
+        return customCakeRequestId;
+    }
+
+    public void setCustomCakeRequestId(String customCakeRequestId) {
+        this.customCakeRequestId = customCakeRequestId;
+    }
+
+    public String getBakerTitle() {
+        return bakerTitle;
+    }
+
+    public void setBakerTitle(String bakerTitle) {
+        this.bakerTitle = bakerTitle;
     }
 }

@@ -41,7 +41,9 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
     String responseId, bakerId, cakeImageUrl;
 
     Double quotedPrice;
+    String deliveryDate, deliveryAdd;
 
+    String cakeRequestStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +91,21 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addOrderToCart();
-                updateStatus(customCakeRequestId, responseId, bakerId);
+                cakeRequestStatus = "Accepted";
+                updateStatus(customCakeRequestId, responseId, bakerId, cakeRequestStatus);
                 Intent intent = new Intent(C_ViewQuoteDetails.this, C_CartActivity.class);
+                intent.putExtra("deliveryDate", deliveryDate);
+                intent.putExtra("deliveryAddress", deliveryAdd);
+                startActivity(intent);
+            }
+        });
+
+        btnReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cakeRequestStatus = "Rejected";
+                updateStatus(customCakeRequestId, responseId, bakerId, cakeRequestStatus);
+                Intent intent = new Intent(C_ViewQuoteDetails.this, C_ViewQuotesPerCakeRequestActivity.class);
                 startActivity(intent);
             }
         });
@@ -123,24 +138,58 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         });
     }
 
-    private void updateStatus(String customCakeRequestId, String responseId, String bakerId) {
+    private void updateStatus(String customCakeRequestId, String responseId, String bakerId , String cakeRequestStatus) {
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId).child("responses").child(responseId);
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("status", "Accepted");
-        databaseReference.updateChildren(updates);
+        if(cakeRequestStatus.equals("Rejected")){
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId).child("responses").child(responseId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("status", "Rejected");
+            databaseReference.updateChildren(updates);
 
-        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId);
-        Map<String, Object> updates2 = new HashMap<>();
-        updates2.put("status", "Accepted");
-        databaseReference2.updateChildren(updates2);
+            DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("quoteResponses").child(responseId);
+            Map<String, Object> updates3 = new HashMap<>();
+            updates3.put("status", "Rejected");
+            databaseReference3.updateChildren(updates3);
 
-        DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("quoteResponses").child(responseId);
-        Map<String, Object> updates3 = new HashMap<>();
-        updates3.put("status", "Accepted");
-        databaseReference3.updateChildren(updates3);
+        } else {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId).child("responses").child(responseId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("status", "Accepted");
+            databaseReference.updateChildren(updates);
 
+            DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId);
+            Map<String, Object> updates2 = new HashMap<>();
+            updates2.put("cakeRequestStatus", "Completed");
+            databaseReference2.updateChildren(updates2);
 
+            DatabaseReference databaseReference3 = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("quoteResponses").child(responseId);
+            Map<String, Object> updates3 = new HashMap<>();
+            updates3.put("status", "Accepted");
+            databaseReference3.updateChildren(updates3);
+
+            updateRecommendationStatus(customCakeRequestId , bakerId);
+        }
+
+    }
+
+    private void updateRecommendationStatus(String customCakeRequestId, String bakerId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String recCakeId = dataSnapshot.child("customCakeRequestId").exists()? dataSnapshot.child("customCakeRequestId").getValue(String.class): "no value";
+                    if(recCakeId.equals(customCakeRequestId)){
+                            dataSnapshot.getRef().child("bakerTitle").setValue(bakerId);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void addOrderToCart() {
@@ -210,6 +259,10 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
 
                     additionalNotesText.setText(snapshot.child("additionalNotes").getValue(String.class));
+
+                    deliveryDate = snapshot.child("deliveryDate").getValue(String.class);
+                    deliveryAdd = snapshot.child("deliveryAddress").getValue(String.class);
+
                 }else{
                     Log.d("quotedetails", "snapshot does not exist");
                 }

@@ -108,8 +108,9 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
         // Handle calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-             selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-             dbStructureDate = year + "/" + (month + 1) + "/" + dayOfMonth;
+             selectedDate = String.format("%02d", dayOfMonth) + "/" + String.format("%02d", month + 1) + "/" + year;
+             dbStructureDate = year + "/" + String.format("%02d", month + 1) + "/" + String.format("%02d", dayOfMonth);
+             Log.d("selectedDate", selectedDate);
             loadBlockStatusFromDB(dbStructureDate);
             Log.d("OrderList", "Size: " + orderList.size());
             Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
