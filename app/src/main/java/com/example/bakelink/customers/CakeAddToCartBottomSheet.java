@@ -1,5 +1,7 @@
 package com.example.bakelink.customers;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,22 +76,41 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
 
             Glide.with(requireContext()).load(imageUrl).into(cakeImageView);
 
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-            String dateInput = dateOfDeliveryEditText.getText().toString().trim();
+            // Open date picker on click of the date EditText
+            dateOfDeliveryEditText.setOnClickListener(v -> {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                        (view1, selectedYear, selectedMonth, selectedDay) -> {
+                            // Format the selected date and display it
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+                            Calendar selectedDate = Calendar.getInstance();
+                            selectedDate.set(selectedYear, selectedMonth, selectedDay);
+                            formattedDate = df.format(selectedDate.getTime()); // Store formatted date
+                            dateOfDeliveryEditText.setText(formattedDate); // Show the date in EditText
+                        },
+                        year, month, day);
+
+                // Show the date picker dialog
+                datePickerDialog.show();
+            });
+
 
 
             addToCartButton.setOnClickListener(v -> {
-                if (!dateInput.isEmpty()) {
-                    formattedDate = df.format(dateInput);
-                } else {
-                    // Provide a fallback date if needed
-                    formattedDate = df.format(new Date());
+                if (formattedDate.isEmpty()) {
+                    // Set a fallback date if none is selected
+                    formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
                 }
                 getBakerId(getArguments().getString(ARG_CAKE_ID));
 
-                // Handle adding the item to the cart
-                // You can pass back data to the activity using an interface if needed
-                dismiss(); // Close the bottom sheet after adding
+                dismiss();
+                // Redirect to the cart activity
+                Intent intent = new Intent(getContext(), C_CartActivity.class); // Replace CartActivity with the actual name of your cart activity
+                startActivity(intent);
             });
         }
 
@@ -96,6 +118,7 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
     }
 
     public void getBakerId(String cakeId) {
+        Log.d("addtocart","cakeid:"+cakeId);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
         String targetCakeId = cakeId; // Replace with the actual cake ID you're searching for
 

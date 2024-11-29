@@ -141,7 +141,7 @@
             android:text="Top Cake Categories"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:textColor="@color/black"
             android:layout_marginBottom="8dp" />
 

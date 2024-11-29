@@ -57,7 +57,7 @@ public class BakerPage extends AppCompatActivity {
 
     private CakeServiceAdapter adapter;
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView, cakeRecycler;
 
     private TextView aboutBaker;
     private ImageButton cartIcon;
@@ -88,8 +88,14 @@ public class BakerPage extends AppCompatActivity {
         setupBottomNavigation();
 
         Intent intent = getIntent();
+
         String strBaker = intent.getStringExtra("bakerName");
         currentBakerId = intent.getStringExtra("bakerId");
+        if (currentBakerId != null) {
+            fetchBakerDetails();
+            fetchBakerServices();
+            fetchBakerCakes();
+        }
         bakerName = findViewById(R.id.txtBakerTitle);
         bakerName.setText(strBaker);
         bakerImage = findViewById(R.id.bakerImage);
@@ -122,6 +128,7 @@ public class BakerPage extends AppCompatActivity {
             // Load from URL using Glide
             Glide.with(context)
                     .load(imageUrl) // Load from URL
+                    .fitCenter()
                     .into(bakerImage);
         }
 
@@ -137,42 +144,79 @@ public class BakerPage extends AppCompatActivity {
         bakerRatingString.setText(bakerRating.toString());
 
         recyclerView = findViewById(R.id.servicesRecycler);
+        cakeRecycler = findViewById(R.id.cakeRecycler);
 
-       List<String> cakeServiceList = populateCakeServiceList();
-        adapter = new CakeServiceAdapter(cakeServiceList);
-        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         SetCustomerRecyclerView();
-        SetCakeRecyclerView();
 
-        aboutBaker = findViewById(R.id.txtAboutBaker);
-        aboutBaker.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.");
-
-    }
-
-    private void SetCakeRecyclerView() {
-
-        RecyclerView cakeRecycler = findViewById(R.id.cakeRecycler);
-        List<Cake> cakeList = GetCakeList();
-        BakerCakeAdapter adapter = new BakerCakeAdapter(cakeList);
-        cakeRecycler.setAdapter(adapter);
         cakeRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        aboutBaker = findViewById(R.id.textView5);
+
 
     }
 
-    private List<Cake> GetCakeList() {
-        List<Cake> cakesList = new ArrayList<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers")
-                .child(currentBakerId).child("cakes");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+    private void fetchBakerDetails() {
+        DatabaseReference bakerRef = FirebaseDatabase.getInstance().getReference("bakers").child(currentBakerId);
+        Log.d("bakerdetails","bakerid"+currentBakerId);
+        bakerRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               // List<Cake> cakesList = new ArrayList<>();
+                String bakeryTitle= snapshot.child("bakeryTitle").getValue(String.class);
+                Log.d("bakerdetails","bakertitle"+bakeryTitle);
+                //String imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                String description = snapshot.child("description").getValue(String.class);
+                Log.d("bakerdetails","bakerdesc"+description);
+
+                if (bakeryTitle != null) bakerName.setText(bakeryTitle);
+                if (description != null) aboutBaker.setText(description);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("BakerPage", "Failed to fetch baker details: " + error.getMessage());
+            }
+        });
+    }
+
+    private void fetchBakerServices() {
+        DatabaseReference servicesRef = FirebaseDatabase.getInstance().getReference("bakers")
+                .child(currentBakerId).child("specialtiesAndServices");
+
+        servicesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<String> services = new ArrayList<>();
+                for (DataSnapshot serviceSnapshot : snapshot.getChildren()) {
+                    String service = serviceSnapshot.getValue(String.class);
+                    if (service != null) services.add(service);
+                }
+
+                CakeServiceAdapter adapter = new CakeServiceAdapter(services);
+                recyclerView.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("BakerPage", "Failed to fetch services: " + error.getMessage());
+            }
+        });
+    }
+
+    private void fetchBakerCakes() {
+        DatabaseReference cakesRef = FirebaseDatabase.getInstance().getReference("bakers")
+                .child(currentBakerId).child("cakes");
+
+        cakesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Cake> cakes = new ArrayList<>();
                 for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
-                    // Assuming you have a Cake model class
                     String cakeId = cakeSnapshot.getKey();
                     String name = cakeSnapshot.child("cakeName").getValue(String.class);
                     String description = cakeSnapshot.child("description").getValue(String.class);
@@ -184,23 +228,23 @@ public class BakerPage extends AppCompatActivity {
                     cake.setDescription(description);
                     cake.setCakeName(name);
                     cake.setCakeImgUrl(imageUrl);
-                    cake.setPrice(price); // Assuming `price` is of type double
-                    cakesList.add(cake);
+                    cake.setPrice(price);
+
+                    cakes.add(cake);
                 }
 
-                Log.d("Cakes", "Cakes fetched: " + cakesList.size());
+                BakerCakeAdapter adapter = new BakerCakeAdapter(cakes);
+                cakeRecycler.setAdapter(adapter);
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e("BakerPage", "Failed to fetch cakes: " + error.getMessage());
             }
-
         });
-
-        return cakesList;
-
     }
+
 
     private void SetCustomerRecyclerView() {
         RecyclerView customerReviewRecycler = findViewById(R.id.customerReviewRecycler);
@@ -229,16 +273,13 @@ public class BakerPage extends AppCompatActivity {
 
     }
 
-    private List<String> populateCakeServiceList() {
-        List<String> cakeServiceList = List.of("Custom Wedding Cakes", "Gluten free", "Vegan");
-        return cakeServiceList;
-    }
+
 
 
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-
+        bottomNav.setSelectedItemId(R.id.none);
         bottomNav.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {
                 startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
