@@ -39,15 +39,6 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/black"/>
 
-    <EditText
-        android:id="@+id/edDateOfDelivery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter delivery date"
-        android:inputType="date"
-        android:textColor="@color/black"/>
-
     <Button
         android:id="@+id/addToCartButton"
         android:layout_width="match_parent"

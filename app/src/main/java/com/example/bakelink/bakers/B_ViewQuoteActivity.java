@@ -2,8 +2,10 @@ package com.example.bakelink.bakers;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,9 +14,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
@@ -24,11 +23,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class B_ViewQuoteActivity extends AppCompatActivity {
     ImageView cakeImg;
@@ -80,7 +84,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
          loadQuoteDetails(quoteId);
 
          generateQuote = findViewById(R.id.btnGenerateQuote);
-         sendMessage = findViewById(R.id.btnMsgCustomer);
+         sendMessage = findViewById(R.id.btnUpdateOrder);
 
          generateQuote.setOnClickListener(view -> {
              Intent intent = new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class);
@@ -171,6 +175,32 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                 deliveryTime.setText(time);
                 deliveryAddress.setText(strDeliveryAddress);
 
+                if (snapshot.child("rgbColors").exists() && snapshot.child("rgbColors").getValue() != null) {
+                    GenericTypeIndicator<List<List<Integer>>> typeIndicator = new GenericTypeIndicator<List<List<Integer>>>() {};
+                    List<List<Integer>> rgbColorsList = snapshot.child("rgbColors").getValue(typeIndicator);
+
+                    // Convert List<List<Integer>> to ArrayList<int[]>
+                    ArrayList<int[]> rgbColorsArrayList = new ArrayList<>();
+                    if (rgbColorsList != null) {
+                        for (List<Integer> colorList : rgbColorsList) {
+                            int[] colorArray = new int[colorList.size()];
+                            for (int i = 0; i < colorList.size(); i++) {
+                                colorArray[i] = colorList.get(i); // Convert List<Integer> to int[]
+                            }
+                            rgbColorsArrayList.add(colorArray);
+                        }
+                    }
+
+                    // Log the retrieved RGB colors for debugging
+                    Log.d("RGB_COLORS", "Colors retrieved: " + rgbColorsArrayList.size());
+                    for (int[] color : rgbColorsArrayList) {
+                        Log.d("RGB_COLORS", "Color: " + Arrays.toString(color));
+                    }
+
+                    // Call the method to load RGB colors into the views
+                    loadRgbColors(rgbColorsArrayList);
+                }
+
                 Glide.with(B_ViewQuoteActivity.this)
                         .load(imageUrl)  // Use the imageUrl directly here
                         .error(R.drawable.cakesample1)
@@ -184,6 +214,25 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                 Toast.makeText(B_ViewQuoteActivity.this, "Failed to fetch details.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadRgbColors(ArrayList<int[]> receivedRgbColors) {
+        if (receivedRgbColors.size() >= 5) { // Ensure at least 5 colors are available
+            // Get the View references
+            View swatch1 = findViewById(R.id.colorSwatch1);
+            View swatch2 = findViewById(R.id.colorSwatch2);
+            View swatch3 = findViewById(R.id.colorSwatch3);
+            View swatch4 = findViewById(R.id.colorSwatch4);
+            View swatch5 = findViewById(R.id.colorSwatch5);
+
+            // Convert RGB values to Color and set the backgrounds
+            swatch1.setBackgroundColor(Color.rgb(receivedRgbColors.get(0)[0], receivedRgbColors.get(0)[1], receivedRgbColors.get(0)[2]));
+            swatch2.setBackgroundColor(Color.rgb(receivedRgbColors.get(1)[0], receivedRgbColors.get(1)[1], receivedRgbColors.get(1)[2]));
+            swatch3.setBackgroundColor(Color.rgb(receivedRgbColors.get(2)[0], receivedRgbColors.get(2)[1], receivedRgbColors.get(2)[2]));
+            swatch4.setBackgroundColor(Color.rgb(receivedRgbColors.get(3)[0], receivedRgbColors.get(3)[1], receivedRgbColors.get(3)[2]));
+            swatch5.setBackgroundColor(Color.rgb(receivedRgbColors.get(4)[0], receivedRgbColors.get(4)[1], receivedRgbColors.get(4)[2]));
+        }
+
     }
 
     private void sendmessage() {

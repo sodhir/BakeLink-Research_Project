@@ -203,8 +203,14 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:background="#8B5E3C" />
+
             </LinearLayout>
 
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommendationRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/button_request_quote"

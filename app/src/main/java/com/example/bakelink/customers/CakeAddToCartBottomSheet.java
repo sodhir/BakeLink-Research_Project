@@ -61,7 +61,7 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         TextView cakeNameTextView = view.findViewById(R.id.cakeNameTextView);
         TextView cakeDescriptionTextView = view.findViewById(R.id.cakeDescriptionTextView);
         TextView cakePriceTextView = view.findViewById(R.id.cakePriceTextView);
-        EditText dateOfDeliveryEditText = view.findViewById(R.id.edDateOfDelivery);
+        //EditText dateOfDeliveryEditText = view.findViewById(R.id.edDateOfDelivery);
         Button addToCartButton = view.findViewById(R.id.addToCartButton);
 
         if (getArguments() != null) {
@@ -77,34 +77,34 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
             Glide.with(requireContext()).load(imageUrl).into(cakeImageView);
 
             // Open date picker on click of the date EditText
-            dateOfDeliveryEditText.setOnClickListener(v -> {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                        (view1, selectedYear, selectedMonth, selectedDay) -> {
-                            // Format the selected date and display it
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-                            Calendar selectedDate = Calendar.getInstance();
-                            selectedDate.set(selectedYear, selectedMonth, selectedDay);
-                            formattedDate = df.format(selectedDate.getTime()); // Store formatted date
-                            dateOfDeliveryEditText.setText(formattedDate); // Show the date in EditText
-                        },
-                        year, month, day);
-
-                // Show the date picker dialog
-                datePickerDialog.show();
-            });
+//            dateOfDeliveryEditText.setOnClickListener(v -> {
+//                Calendar calendar = Calendar.getInstance();
+//                int year = calendar.get(Calendar.YEAR);
+//                int month = calendar.get(Calendar.MONTH);
+//                int day = calendar.get(Calendar.DAY_OF_MONTH);
+//
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+//                        (view1, selectedYear, selectedMonth, selectedDay) -> {
+//                            // Format the selected date and display it
+//                            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+//                            Calendar selectedDate = Calendar.getInstance();
+//                            selectedDate.set(selectedYear, selectedMonth, selectedDay);
+//                            formattedDate = df.format(selectedDate.getTime()); // Store formatted date
+//                            dateOfDeliveryEditText.setText(formattedDate); // Show the date in EditText
+//                        },
+//                        year, month, day);
+//
+//                // Show the date picker dialog
+//                datePickerDialog.show();
+//            });
 
 
 
             addToCartButton.setOnClickListener(v -> {
-                if (formattedDate.isEmpty()) {
-                    // Set a fallback date if none is selected
-                    formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-                }
+//                if (formattedDate.isEmpty()) {
+//                    // Set a fallback date if none is selected
+//                    formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+//                }
                 getBakerId(getArguments().getString(ARG_CAKE_ID));
 
                 dismiss();

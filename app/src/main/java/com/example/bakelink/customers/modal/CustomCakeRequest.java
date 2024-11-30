@@ -1,5 +1,8 @@
 package com.example.bakelink.customers.modal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomCakeRequest {
 
     private String userId;
@@ -20,9 +23,13 @@ public class CustomCakeRequest {
 
     private String cakeRequestStatus;
 
+    private List<List<Integer>> rgbColors;
+
+
     public String getUserEmail() {
         return userEmail;
     }
+
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
@@ -161,5 +168,13 @@ public class CustomCakeRequest {
 
     public void setCakeRequestStatus(String cakeRequestStatus) {
         this.cakeRequestStatus = cakeRequestStatus;
+    }
+
+    public List<List<Integer>> getRgbColors() {
+        return rgbColors;
+    }
+
+    public void setRgbColors(List<List<Integer>> rgbColors) {
+        this.rgbColors = rgbColors;
     }
 }
