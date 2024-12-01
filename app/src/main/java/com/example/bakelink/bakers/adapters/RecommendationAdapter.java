@@ -8,12 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
 import com.example.bakelink.bakers.interfaces.BakeryTitleCallBack;
+import com.example.bakelink.bakers.models.Cake;
 import com.example.bakelink.bakers.models.RecommendationCake;
+import com.example.bakelink.customers.CakeAddToCartBottomSheet;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,15 +58,44 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
     public void onBindViewHolder(@NonNull RecommendationAdapter.RecommendationViewHolder holder, int position) {
         RecommendationCake recommendationCake = recommendationCakes.get(position);
         String imageUrl = recommendationCake.getImageUrl();
+        String cakeName = recommendationCake.getCake().getCakeName();
+        Cake cake = recommendationCake.getCake();
         //String bakerName = getBakeryTitle(recommendationCake.getBakerTitle());
-        String bakerId = recommendationCake.getBakerTitle();
+//        String bakerId;
+//        if(!recommendationCake.getCakeType().isEmpty()){
+//            if(recommendationCake.getCakeType().equals("Regular")){
+//
+//            }else{
+//                bakerId = recommendationCake.getBakerTitle();
+//                getBakeryTitle(bakerId, bakeryTitle -> {
+//                    holder.rBakerName.setText(bakeryTitle.isEmpty() ? "Test Baker" : bakeryTitle);
+//                });
+//            }
+//
+//        }else{
+//            bakerId = recommendationCake.getBakerTitle();
+//            getBakeryTitle(bakerId, bakeryTitle -> {
+//                holder.rBakerName.setText(bakeryTitle.isEmpty() ? "Test Baker" : bakeryTitle);
+//            });
+//        }
+
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl) // Load from URL
                 .into(holder.rImage);
 
-        getBakeryTitle(bakerId, bakeryTitle -> {
-            holder.rBakerName.setText(bakeryTitle.isEmpty() ? "Test Baker" : bakeryTitle);
+        holder.rBakerName.setText(cakeName);
+
+        holder.itemView.setOnClickListener(v -> {
+            CakeAddToCartBottomSheet bottomSheet = CakeAddToCartBottomSheet.newInstance(
+                    cake.getCakeId(),
+                    cake.getCakeName(),
+                    cake.getDescription(),
+                    cake.getPrice(),
+                    cake.getCakeImgUrl()
+            );
+            bottomSheet.show(((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager(), "CakeAddToCartBottomSheet");
         });
+
     }
 
     @Override

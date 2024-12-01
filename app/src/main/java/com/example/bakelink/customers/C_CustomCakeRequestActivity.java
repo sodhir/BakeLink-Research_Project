@@ -267,7 +267,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
                             if (requestId != null) {
                                 databaseReference.child(requestId).setValue(cakeRequest)
                                         .addOnSuccessListener(aVoid -> {
-                                            updateRecommendation(rgbColorsList, imageUrl, requestId);
+                                            //updateRecommendation(rgbColorsList, imageUrl, requestId);
                                             Toast.makeText(C_CustomCakeRequestActivity.this, "Request saved successfully!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(getApplicationContext(), C_CakeRequestsActivity.class));
                                         })
@@ -295,6 +295,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
         recommendationCake.setImageUrl(imageUrl);
         recommendationCake.setRgbColors(rgbColorsList);
         recommendationCake.setCustomCakeRequestId(requestId);
+        recommendationCake.setCakeType("Custom");
         recommendationCake.setBakerTitle("No Baker");
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");

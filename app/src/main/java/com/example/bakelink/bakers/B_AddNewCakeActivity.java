@@ -1,9 +1,15 @@
 package com.example.bakelink.bakers;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -13,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,13 +27,39 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.interfaces.BakeryTitleCallBack;
 import com.example.bakelink.bakers.models.Cake;
+import com.example.bakelink.bakers.models.RecommendationCake;
+import com.example.bakelink.common.models.VisionRequest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class B_AddNewCakeActivity extends AppCompatActivity {
 
@@ -256,6 +289,21 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(B_AddNewCakeActivity.this, "Cake added successfully", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(B_AddNewCakeActivity.this, B_MyAllCakesActivity.class));
+
+                                try {
+                                    InputStream inputStream = getContentResolver().openInputStream(ivCakeImageUri);
+                                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                    byte[] imageBytes = baos.toByteArray();
+                                    String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                                    sendImageToVisionAPI(base64Image, cake);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+
+
                                 finish();
                             })
                             .addOnFailureListener(e -> {
@@ -266,5 +314,125 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
                     Toast.makeText(B_AddNewCakeActivity.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
+
+    private void sendImageToVisionAPI(String base64Image, Cake cake) {
+        String apiKey = "AIzaSyCTUCTGGSKa9H_LIVNMFFLPoUnyVUiY7T4";
+        String apiUrl = "https://vision.googleapis.com/v1/images:annotate?key=" + apiKey;
+
+        VisionRequest visionRequest = new VisionRequest(base64Image);
+        String jsonRequest = new Gson().toJson(visionRequest);
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(jsonRequest, MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder()
+                .url(apiUrl)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("VisionAPI", "Request failed", e);
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String jsonResponse = response.body().string();
+                    Log.d("JSON Response", jsonResponse);
+                    parseColorDetails(jsonResponse, cake);
+                } else {
+                    Log.e("VisionAPI", "Request failed: " + response.code() + " - " + response.message());
+                    Log.e("VisionAPI", "Response body: " + response.body().string());
+                }
+            }
+        });
+    }
+
+
+    private void parseColorDetails(String jsonResponse, Cake cake) {
+        Log.d("JSON Response Parse", jsonResponse);
+        try {
+            JSONObject jsonObject = new JSONObject(jsonResponse);
+            JSONArray colors = jsonObject.getJSONArray("responses")
+                    .getJSONObject(0)
+                    .getJSONObject("imagePropertiesAnnotation")
+                    .getJSONObject("dominantColors")
+                    .getJSONArray("colors");
+
+            List<int[]> rgbColors = new ArrayList<>();
+
+            for (int i = 0; i < colors.length(); i++) {
+                JSONObject color = colors.getJSONObject(i).getJSONObject("color");
+                int red = color.getInt("red");
+                int green = color.getInt("green");
+                int blue = color.getInt("blue");
+                rgbColors.add(new int[]{red, green, blue});
+            }
+
+            List<List<Integer>> rgbColorsList = new ArrayList<>();
+            for (int[] color : rgbColors) {
+                List<Integer> colorList = new ArrayList<>();
+                for (int value : color) {
+                    colorList.add(value); // Convert array to List
+                }
+
+                rgbColorsList.add(colorList);
+            }
+
+
+            // Update the color swatches on the UI
+            updateRecommendation(rgbColorsList, cake);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateRecommendation(List<List<Integer>> rgbColorsList, Cake cake) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        RecommendationCake recommendationCake = new RecommendationCake();
+        recommendationCake.setImageUrl(cake.getCakeImgUrl());
+        recommendationCake.setRgbColors(rgbColorsList);
+        recommendationCake.setCakeType("Regular");
+        recommendationCake.setCake(cake);
+        getBakeryTitle(currentUserId, bakeryTitle -> {
+            recommendationCake.setBakerTitle(bakeryTitle);
+        });
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
+        String recommendationId = databaseReference.push().getKey();
+        databaseReference.child(recommendationId).setValue(recommendationCake);
+    }
+
+
+    private void getBakeryTitle(String bakerId, BakeryTitleCallBack callback) {
+        if (bakerId == null || bakerId.isEmpty()) {
+            callback.onBakeryTitleFetched(""); // Return empty if bakerId is invalid
+            return;
+        }
+
+        DatabaseReference bakersRef = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId);
+
+        bakersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.hasChild("bakeryTitle")) {
+                    String bakeryTitle = snapshot.child("bakeryTitle").getValue(String.class);
+                    callback.onBakeryTitleFetched(bakeryTitle); // Pass the fetched title to the callback
+                } else {
+                    callback.onBakeryTitleFetched(""); // No bakeryTitle found
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Failed to fetch bakery title: " + error.getMessage());
+                callback.onBakeryTitleFetched(""); // Return empty on failure
+            }
+        });
+    }
+
 
 }

@@ -10,6 +10,10 @@ public class RecommendationCake {
     private String customCakeRequestId;
     private String bakerTitle;
 
+    private String cakeType;
+
+    private Cake cake;
+
     public RecommendationCake() {
     }
 
@@ -51,5 +55,21 @@ public class RecommendationCake {
 
     public void setBakerTitle(String bakerTitle) {
         this.bakerTitle = bakerTitle;
+    }
+
+    public Cake getCake() {
+        return cake;
+    }
+
+    public void setCake(Cake cake) {
+        this.cake = cake;
+    }
+
+    public String getCakeType() {
+        return cakeType;
+    }
+
+    public void setCakeType(String cakeType) {
+        this.cakeType = cakeType;
     }
 }
