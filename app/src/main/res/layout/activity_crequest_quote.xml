@@ -118,6 +118,16 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tv_upload_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:text="Upload a photo of a cake you love, and we'll match it with the perfect cakes for you!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
             <!--<Button
                 android:id="@+id/btnUpload"
                 android:layout_width="wrap_content"
@@ -141,7 +151,8 @@
                 android:layout_height="280dp"
                 android:layout_gravity="center"
                 android:clipToPadding="false"
-                android:background="#EFEFEF">
+                android:background="#EFEFEF"
+                android:layout_marginBottom="16dp">
 
                 <ImageView
                     android:id="@+id/uploadedImg"
@@ -152,57 +163,61 @@
                     android:src="@drawable/ic_upload" />
             </FrameLayout>
 
+
             <TextView
-                android:id="@+id/tv_upload_desc"
+                android:id="@+id/tv_rec_subheading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Upload a photo of a cake you love, and we'll match it with the perfect cakes for you!"
+                android:layout_marginBottom="16dp"
+                android:text="Recommended cakes for you based on your uploaded image"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone"/>
 
             <LinearLayout
+                android:id="@+id/colorSwatchLinearLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="8dp">
+                android:paddingBottom="8dp"
+                android:layout_gravity="center"
+                android:visibility="gone">
 
                 <View
                     android:id="@+id/colorSwatch1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    android:background="#F4A623" />
+                    android:background="#EFEFEF" />
 
                 <View
                     android:id="@+id/colorSwatch2"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    android:background="#E07A5F" />
+                    android:background="#EFEFEF" />
 
                 <View
                     android:id="@+id/colorSwatch3"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    android:background="#A7C957" />
+                    android:background="#EFEFEF" />
 
                 <View
                     android:id="@+id/colorSwatch4"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="8dp"
-                    android:background="#6A994E" />
+                    android:background="#EFEFEF" />
 
                 <View
                     android:id="@+id/colorSwatch5"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="#8B5E3C" />
+                    android:background="#EFEFEF" />
 
             </LinearLayout>
 
@@ -211,6 +226,19 @@
                 android:id="@+id/recommendationRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_recbtm_subheading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Not Happy with the Recommendations? Personalize Your Cake!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/button_request_quote"

@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -149,6 +151,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
                 byte[] imageBytes = baos.toByteArray();
                 String base64Image = Base64.encodeToString(imageBytes, Base64.DEFAULT);
                 sendImageToVisionAPI(base64Image);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -319,6 +322,16 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             Toast.makeText(this, "No cakes match your color scheme.", Toast.LENGTH_SHORT).show();
             recyclerView.setVisibility(View.GONE);
         } else {
+            // Make the LinearLayout visible after image is uploaded and processed
+            TextView recTitle = findViewById(R.id.tv_rec_subheading);
+            recTitle.setVisibility(View.VISIBLE);
+
+            LinearLayout colorSwatchLinearLayout = findViewById(R.id.colorSwatchLinearLayout);
+            colorSwatchLinearLayout.setVisibility(View.VISIBLE);
+
+            TextView recbtmTitle = findViewById(R.id.tv_recbtm_subheading);
+            recbtmTitle.setVisibility(View.VISIBLE);
+
             // Display matching cakes in the RecyclerView or any other UI component
             // For example, you could pass the list to an adapter and refresh the UI
             recyclerView.setVisibility(View.VISIBLE);
