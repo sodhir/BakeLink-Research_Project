@@ -46,7 +46,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
     String cakeRequestStatus;
 
-    String cusflavor, cusfilling;
+    String cusflavor, cusfilling, cusWeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +213,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
                if(snapshot.exists()){
                    cusflavor = snapshot.child("flavor").getValue(String.class);
                    cusfilling = snapshot.child("filling").getValue(String.class);
+                   cusWeight = snapshot.child("cakeWeight").getValue(String.class);
 
                }
            }
@@ -240,7 +241,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         orderItem.setStatus("Pending");
         orderItem.setItemTitle("Custom Cake Order");
         orderItem.setFlavor(cusflavor);
-        orderItem.setWeight(cusfilling);
+        orderItem.setWeight(cusWeight);
         orderItem.setQuantity(1);
         orderItem.setPrice(quotedPrice);
         orderItem.setImageUrl(cakeImageUrl);
