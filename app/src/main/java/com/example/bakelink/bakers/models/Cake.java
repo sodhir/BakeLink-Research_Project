@@ -1,5 +1,7 @@
 package com.example.bakelink.bakers.models;
 
+import java.util.List;
+
 public class Cake {
 
     String cakeId;
@@ -8,6 +10,7 @@ public class Cake {
     Double price;
 
     String description;
+    private List<String> weights;
 
     String cakeImgUrl;
 
@@ -25,6 +28,14 @@ public class Cake {
     }
 
     public Cake() {
+    }
+
+    public List<String> getWeights() {
+        return weights;
+    }
+
+    public void setWeights(List<String> weights) {
+        this.weights = weights;
     }
 
     public String getCakeId() {

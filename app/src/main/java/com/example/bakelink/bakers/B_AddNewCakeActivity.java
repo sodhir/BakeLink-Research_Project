@@ -255,14 +255,26 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
         try {
             double price = Double.parseDouble(cakePrice);
             String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            uploadImageAndSaveDetails(cakeName, description, price, currentUserId);
+
+            // Collect weights data from the layout
+            List<String> weights = getWeightsFromList();
+
+            uploadImageAndSaveDetails(cakeName, description, price, currentUserId, weights);
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Invalid price format", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    private void uploadImageAndSaveDetails(String cakeName, String description, double cakePrice, String currentUserId) {
+    // Method to collect weights data from sizes_list_layout
+    private List<String> getWeightsFromList() {
+        List<String> weights = new ArrayList<>();
+        for (int i = 0; i < sizes_list_layout.getChildCount(); i++) {
+            TextView textView = (TextView) sizes_list_layout.getChildAt(i);
+            weights.add(textView.getText().toString().trim());
+        }
+        return weights;
+    }
+    private void uploadImageAndSaveDetails(String cakeName, String description, double cakePrice, String currentUserId, List<String> weights) {
         if (ivCakeImageUri == null) {
             Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show();
             return;
@@ -284,6 +296,7 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
                     cake.setDescription(description);
                     cake.setPrice(cakePrice);
                     cake.setCakeImgUrl(imageUrl);
+                    cake.setWeights(weights);
 
                     cakeRef.child(cakeId).setValue(cake)
                             .addOnSuccessListener(aVoid -> {

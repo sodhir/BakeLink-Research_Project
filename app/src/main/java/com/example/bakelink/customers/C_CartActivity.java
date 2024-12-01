@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -199,6 +200,7 @@ public class C_CartActivity extends AppCompatActivity {
         orderRef.child(order.getOrderId()).setValue(order).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d("Firebase", "Order added successfully");
+                Toast.makeText(this, "Order has been placed!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), C_HomeActivity.class));
             } else {
                 Log.e("Firebase", "Failed to add order", task.getException());
