@@ -259,7 +259,13 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
             // Collect weights data from the layout
             List<String> weights = getWeightsFromList();
 
-            uploadImageAndSaveDetails(cakeName, description, price, currentUserId, weights);
+            // Collect flavor data from the layout
+            List<String> flavors = getFlavorsFromList();
+
+            // Collect filling data from the layout
+            List<String> fillings = getFillingsFromList();
+
+            uploadImageAndSaveDetails(cakeName, description, price, currentUserId, weights, flavors, fillings);
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Invalid price format", Toast.LENGTH_SHORT).show();
         }
@@ -274,7 +280,23 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
         }
         return weights;
     }
-    private void uploadImageAndSaveDetails(String cakeName, String description, double cakePrice, String currentUserId, List<String> weights) {
+    private List<String> getFlavorsFromList() {
+        List<String> flavors = new ArrayList<>();
+        for (int i = 0; i < flavor_list_layout.getChildCount(); i++) {
+            TextView textView = (TextView) flavor_list_layout.getChildAt(i);
+            flavors.add(textView.getText().toString().trim());
+        }
+        return flavors;
+    }
+    private List<String> getFillingsFromList() {
+        List<String> fillings = new ArrayList<>();
+        for (int i = 0; i < filling_list_layout.getChildCount(); i++) {
+            TextView textView = (TextView) filling_list_layout.getChildAt(i);
+            fillings.add(textView.getText().toString().trim());
+        }
+        return fillings;
+    }
+    private void uploadImageAndSaveDetails(String cakeName, String description, double cakePrice, String currentUserId, List<String> weights, List<String> flavors, List<String> fillings) {
         if (ivCakeImageUri == null) {
             Toast.makeText(this, "Please upload an image", Toast.LENGTH_SHORT).show();
             return;
@@ -297,6 +319,8 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
                     cake.setPrice(cakePrice);
                     cake.setCakeImgUrl(imageUrl);
                     cake.setWeights(weights);
+                    cake.setFlavors(flavors);
+                    cake.setFillings(fillings);
 
                     cakeRef.child(cakeId).setValue(cake)
                             .addOnSuccessListener(aVoid -> {

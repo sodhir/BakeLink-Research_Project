@@ -11,6 +11,8 @@ public class Cake {
 
     String description;
     private List<String> weights;
+    private List<String> flavors;
+    private List<String> fillings;
 
     String cakeImgUrl;
 
@@ -36,6 +38,22 @@ public class Cake {
 
     public void setWeights(List<String> weights) {
         this.weights = weights;
+    }
+
+    public List<String> getFlavors() {
+        return flavors;
+    }
+
+    public void setFlavors(List<String> flavors) {
+        this.flavors = flavors;
+    }
+
+    public List<String> getFillings() {
+        return fillings;
+    }
+
+    public void setFillings(List<String> fillings) {
+        this.fillings = fillings;
     }
 
     public String getCakeId() {
