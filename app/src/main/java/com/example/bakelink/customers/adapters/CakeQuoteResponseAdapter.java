@@ -42,12 +42,12 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
 
         QuoteResponse quoteResponse = cakeQuoteResponses.get(position);
         holder.bakeryName.setText(quoteResponse.getBakeryTitle());
-        holder.cakePrice.setText("$" + quoteResponse.getQuotedPrice());
-
+        holder.cakePrice.setText("Quoted price: $" + quoteResponse.getQuotedPrice());
+        holder.cakeDetails.setText("Cake: " + quoteResponse.getCakeType());
 
         // Set status and background color based on quote status
         holder.quoteStatus.setText(quoteResponse.getStatus());
-        if ("Responded".equals(quoteResponse.getStatus())) {
+        if ("Awaiting Approval".equals(quoteResponse.getStatus())) {
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#FFD700"));
             holder.quoteStatus.setTextColor(Color.parseColor("#B77400"));
         } else if ("Accepted".equals(quoteResponse.getStatus())) {

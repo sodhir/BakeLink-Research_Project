@@ -31,7 +31,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class B_GenerateQuoteActivity extends AppCompatActivity {
 
@@ -294,6 +296,10 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
                                     if (bakerTask.isSuccessful()) {
                                         // Both response saved under request and baker's profile
                                         Toast.makeText(this, "Response submitted successfully", Toast.LENGTH_SHORT).show();
+
+                                        // Update the status of the custom cake request to "Completed"
+                                        updateCakeRequestStatus(currentCustomCakeRequestId);
+
                                         startActivity(new Intent(B_GenerateQuoteActivity.this, B_HomeActivity.class));
                                         //finish(); // Close the activity or return to the previous screen
                                     } else {
@@ -308,7 +314,26 @@ public class B_GenerateQuoteActivity extends AppCompatActivity {
                 });
     }
 
+    // Method to update the status of the cake request
+    private void updateCakeRequestStatus(String customCakeRequestId) {
+        // Reference to the specific custom cake request in the database
+        DatabaseReference databaseReference = mDatabase.child("customCakeRequests").child(customCakeRequestId);
 
+        // Update the status to "Completed"
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("cakeRequestStatus", "Completed");
+
+        databaseReference.updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    // Status updated successfully
+                    Log.d("UpdateStatus", "Status updated to 'Completed' for request ID: " + customCakeRequestId);
+                })
+                .addOnFailureListener(e -> {
+                    // Failed to update status
+                    Log.e("UpdateStatus", "Failed to update status: " + e.getMessage());
+                    Toast.makeText(this, "Failed to update request status. Please try again.", Toast.LENGTH_SHORT).show();
+                });
+    }
 
 
 
