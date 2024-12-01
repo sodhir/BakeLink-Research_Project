@@ -67,7 +67,8 @@ public class BakerCakeAdapter extends RecyclerView.Adapter<BakerCakeAdapter.Bake
                     cake.getCakeName(),
                     cake.getDescription(),
                     cake.getPrice(),
-                    cake.getCakeImgUrl()
+                    cake.getCakeImgUrl(),
+                    cake.getWeights().get(0)
             );
             bottomSheet.show(((AppCompatActivity) context).getSupportFragmentManager(), "CakeAddToCartBottomSheet");
         });

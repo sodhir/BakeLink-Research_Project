@@ -230,6 +230,17 @@ public class BakerPage extends AppCompatActivity {
                     cake.setCakeImgUrl(imageUrl);
                     cake.setPrice(price);
 
+                    if (cakeSnapshot.child("weights").exists()) {
+                        List<String> weights = new ArrayList<>();
+                        for (DataSnapshot weightSnapshot : cakeSnapshot.child("weights").getChildren()) {
+                            String weight = weightSnapshot.getValue(String.class);
+                            if (weight != null) {
+                                weights.add(weight);
+                            }
+                        }
+                        cake.setWeights(weights);
+                    }
+
                     cakes.add(cake);
                 }
 

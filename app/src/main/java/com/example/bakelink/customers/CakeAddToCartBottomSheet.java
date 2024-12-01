@@ -38,6 +38,9 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
     private static final String ARG_CAKE_DESC = "cakeDescription";
     private static final String ARG_CAKE_PRICE = "cakePrice";
     private static final String ARG_CAKE_IMAGE = "cakeImageUrl";
+
+    private static final String ARG_CAKE_WEIGHT = "cakeWeight";
+
     String formattedDate;
 
     public static CakeAddToCartBottomSheet newInstance(String id,String name, String description, double price, String imageUrl) {
@@ -48,6 +51,19 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         args.putString(ARG_CAKE_DESC, description);
         args.putDouble(ARG_CAKE_PRICE, price);
         args.putString(ARG_CAKE_IMAGE, imageUrl);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static CakeAddToCartBottomSheet newInstance(String id,String name, String description, double price, String imageUrl, String weight) {
+        CakeAddToCartBottomSheet fragment = new CakeAddToCartBottomSheet();
+        Bundle args = new Bundle();
+        args.putString(ARG_CAKE_ID, id);
+        args.putString(ARG_CAKE_NAME, name);
+        args.putString(ARG_CAKE_DESC, description);
+        args.putDouble(ARG_CAKE_PRICE, price);
+        args.putString(ARG_CAKE_IMAGE, imageUrl);
+        args.putString(ARG_CAKE_WEIGHT, weight);
         fragment.setArguments(args);
         return fragment;
     }
@@ -101,15 +117,12 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
 
 
             addToCartButton.setOnClickListener(v -> {
-//                if (formattedDate.isEmpty()) {
-//                    // Set a fallback date if none is selected
-//                    formattedDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-//                }
+
                 getBakerId(getArguments().getString(ARG_CAKE_ID));
 
                 dismiss();
                 // Redirect to the cart activity
-                Intent intent = new Intent(getContext(), C_CartActivity.class); // Replace CartActivity with the actual name of your cart activity
+                Intent intent = new Intent(getContext(), C_CartActivity.class);
                 startActivity(intent);
             });
         }
@@ -172,7 +185,7 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         orderItem.setStatus("Pending");
         orderItem.setItemTitle(getArguments().getString(ARG_CAKE_NAME));
         orderItem.setFlavor(getArguments().getString(ARG_CAKE_DESC));
-        orderItem.setWeight(getArguments().getString(ARG_CAKE_PRICE));
+        orderItem.setWeight(getArguments().getString(ARG_CAKE_WEIGHT));
         orderItem.setQuantity(1);
         orderItem.setPrice(getArguments().getDouble(ARG_CAKE_PRICE));
         orderItem.setImageUrl(getArguments().getString(ARG_CAKE_IMAGE));
