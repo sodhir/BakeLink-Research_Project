@@ -45,6 +45,8 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
     String cakeRequestStatus;
 
+    String cusflavor, cusfilling;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +70,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
          customCakeRequestId = getIntent().getStringExtra("customCakeRequestId");
 
         loadQuoteDetails(responseId, customCakeRequestId);
+        loadCustomCakeDetails(customCakeRequestId);
 
         cartIcon = findViewById(R.id.cart_icon);
 
@@ -192,6 +195,28 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         });
     }
 
+   public void loadCustomCakeDetails(String customCakeRequestId){
+       DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId);
+       databaseReference.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot snapshot) {
+               if(snapshot.exists()){
+                   cusflavor = snapshot.child("flavor").getValue(String.class);
+                   cusfilling = snapshot.child("filling").getValue(String.class);
+
+               }
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+
+           }
+       });
+
+
+
+    }
+
     private void addOrderToCart() {
 
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -204,8 +229,8 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         orderItem.setOrderType("Custom");
         orderItem.setStatus("Pending");
         orderItem.setItemTitle("Custom Cake Order");
-        orderItem.setFlavor("");
-        orderItem.setWeight("");
+        orderItem.setFlavor(cusflavor);
+        orderItem.setWeight(cusfilling);
         orderItem.setQuantity(1);
         orderItem.setPrice(quotedPrice);
         orderItem.setImageUrl(cakeImageUrl);
