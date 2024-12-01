@@ -250,58 +250,6 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
 
     }
 
-//    private void loadRecommendations(List<int[]> colors) {
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
-//
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                List<RecommendationCake> similarCakes = new ArrayList<>();
-//
-//                // Assuming currentCakeColors is the RGB colors of the current cake
-//                ArrayList<int[]> currentCakeColors = new ArrayList<>(colors);
-//
-//                // Loop through the database entries and compare their colors with the current cake's colors
-//                for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
-//                    // Retrieve the RGB colors for each cake
-//                    GenericTypeIndicator<List<List<Integer>>> typeIndicator = new GenericTypeIndicator<List<List<Integer>>>() {};
-//                    List<List<Integer>> cakeColorsList = cakeSnapshot.child("rgbColors").getValue(typeIndicator);
-//
-//                    // Convert to ArrayList<int[]>
-//                    ArrayList<int[]> cakeColors = new ArrayList<>();
-//                    if (cakeColorsList != null) {
-//                        for (List<Integer> colorList : cakeColorsList) {
-//                            int[] colorArray = new int[colorList.size()];
-//                            for (int i = 0; i < colorList.size(); i++) {
-//                                colorArray[i] = colorList.get(i);
-//                            }
-//                            cakeColors.add(colorArray);
-//                        }
-//                    }
-//
-//                    // Compare the colors (find the smallest distance)
-//                    for (int[] cakeColor : cakeColors) {
-//                        for (int[] currentColor : currentCakeColors) {
-//                            double distance = calculateColorDistance(cakeColor, currentColor);
-//                            if (distance < 25) {  // Define a threshold for matching colors
-//                                similarCakes.add(cakeSnapshot.getValue(RecommendationCake.class));
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//
-//                // Display results
-//                displayMatchingCakes(similarCakes);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
     private void loadRecommendations(List<int[]> colors) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
 
