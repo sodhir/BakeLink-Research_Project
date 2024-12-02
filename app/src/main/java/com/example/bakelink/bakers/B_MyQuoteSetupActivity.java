@@ -367,7 +367,7 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         databaseReference.setValue(quoteDefaults)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
                         // Navigate to Home Activity
                         Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
                         startActivity(intent);

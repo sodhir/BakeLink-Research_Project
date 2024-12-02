@@ -248,6 +248,6 @@ public class C_CartActivity extends AppCompatActivity {
         for(OrderItem item : orderItems){
             myCartTotal = myCartTotal + item.getPrice();
         }
-        total.setText(myCartTotal.toString());
+        total.setText("$" + myCartTotal.toString());
     }
 }

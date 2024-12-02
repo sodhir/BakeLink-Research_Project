@@ -116,7 +116,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     .addOnCompleteListener(saveTask -> {
                                         progressDialog.dismiss();
                                         if (saveTask.isSuccessful()) {
-                                            Toast.makeText(SignUpActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(SignUpActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
 
                                             // Navigate based on userType
                                             if (userType.equals("Baker")) {

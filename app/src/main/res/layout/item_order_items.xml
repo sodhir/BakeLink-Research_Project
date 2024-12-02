@@ -57,7 +57,8 @@
             android:text="Weight: 2 lbs"
             android:textSize="14sp"
             android:textColor="@android:color/black"
-            android:layout_marginBottom="2dp" />
+            android:layout_marginBottom="2dp"
+            android:visibility="gone"/>
 
         <!-- Price -->
         <TextView

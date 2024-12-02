@@ -138,16 +138,36 @@ public class B_OrderDetailActivity extends AppCompatActivity {
                     TextView orderTypeTextView = findViewById(R.id.vqCakeType);
                     orderTypeTextView.setText(cakeType);
                     TextView orderSizeTextView = findViewById(R.id.vqCakeSize);
-                    orderSizeTextView.setText(cakeSize);
+                    if (cakeSize == null || cakeSize.trim().isEmpty()) {
+                        orderSizeTextView.setText("N/A");
+                    } else {
+                        orderSizeTextView.setText(cakeSize);
+                    }
                     TextView orderLayersTextView = findViewById(R.id.vqCakeLayers);
-                    orderLayersTextView.setText(cakeLayers);
+                    if (cakeLayers == null || cakeLayers.trim().isEmpty()) {
+                        orderLayersTextView.setText("N/A");
+                    } else {
+                        orderLayersTextView.setText(cakeLayers);
+                    }
 
                     TextView cakeFlaovorTextView = findViewById(R.id.vqCakeFlavor);
-                    cakeFlaovorTextView.setText(cakeFlavor);
+                    if (cakeFlavor == null || cakeFlavor.trim().isEmpty()) {
+                        cakeFlaovorTextView.setText("N/A");
+                    } else {
+                        cakeFlaovorTextView.setText(cakeFlavor);
+                    }
                     TextView cakeFillingTextView = findViewById(R.id.vqCakeFilling);
-                    cakeFillingTextView.setText(cakeFilling);
+                    if (cakeFilling == null || cakeFilling.trim().isEmpty()) {
+                        cakeFillingTextView.setText("N/A");
+                    } else {
+                        cakeFillingTextView.setText(cakeFilling);
+                    }
                     TextView additionalNotesTextView = findViewById(R.id.vqAdditionalNotes);
-                    additionalNotesTextView.setText(additionalNotes);
+                    if (additionalNotes == null || additionalNotes.trim().isEmpty()) {
+                        additionalNotesTextView.setText("N/A");
+                    } else {
+                        additionalNotesTextView.setText(additionalNotes);
+                    }
                     TextView priceTextView = findViewById(R.id.vqPrice);
                     priceTextView.setText(String.valueOf(price));
 
