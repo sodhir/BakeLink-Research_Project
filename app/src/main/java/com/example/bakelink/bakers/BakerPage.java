@@ -241,6 +241,28 @@ public class BakerPage extends AppCompatActivity {
                         cake.setWeights(weights);
                     }
 
+                    if (cakeSnapshot.child("flavors").exists()) {
+                        List<String> flavors = new ArrayList<>();
+                        for (DataSnapshot flavorSnapshot : cakeSnapshot.child("flavors").getChildren()) {
+                            String flavor = flavorSnapshot.getValue(String.class);
+                            if (flavor != null) {
+                                flavors.add(flavor);
+                            }
+                        }
+                        cake.setFlavors(flavors);
+                    }
+
+                    if (cakeSnapshot.child("fillings").exists()) {
+                        List<String> fillings = new ArrayList<>();
+                        for (DataSnapshot fillingSnapshot : cakeSnapshot.child("fillings").getChildren()) {
+                            String filling = fillingSnapshot.getValue(String.class);
+                            if (filling != null) {
+                                fillings.add(filling);
+                            }
+                        }
+                        cake.setFillings(fillings);
+                    }
+
                     cakes.add(cake);
                 }
 

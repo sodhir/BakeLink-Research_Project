@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.example.bakelink.R;
+import com.example.bakelink.bakers.models.Cake;
 import com.example.bakelink.bakers.models.OrderItem;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,11 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
     private static final String ARG_CAKE_IMAGE = "cakeImageUrl";
 
     private static final String ARG_CAKE_WEIGHT = "cakeWeight";
+    private static final String ARG_CAKE_FLAVOR = "cakeFlavor";
+    private static final String ARG_CAKE_FILLING = "cakeFilling";
+    private static final String ARG_CAKE_SIZE = "cakeSize";
+
+
 
     String formattedDate;
 
@@ -67,6 +73,22 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static CakeAddToCartBottomSheet newInstance(String id,String name, String description, double price, String imageUrl, String weight, String flavor, String filling) {
+        CakeAddToCartBottomSheet fragment = new CakeAddToCartBottomSheet();
+        Bundle args = new Bundle();
+        args.putString(ARG_CAKE_ID, id);
+        args.putString(ARG_CAKE_NAME, name);
+        args.putString(ARG_CAKE_DESC, description);
+        args.putDouble(ARG_CAKE_PRICE, price);
+        args.putString(ARG_CAKE_IMAGE, imageUrl);
+        args.putString(ARG_CAKE_WEIGHT, weight);
+        args.putString(ARG_CAKE_FILLING, flavor);
+        args.putString(ARG_CAKE_FLAVOR, filling);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Nullable
     @Override
@@ -184,11 +206,15 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         orderItem.setOrderType("Regular");
         orderItem.setStatus("Pending");
         orderItem.setItemTitle(getArguments().getString(ARG_CAKE_NAME));
-        orderItem.setFlavor(getArguments().getString(ARG_CAKE_DESC));
+        orderItem.setFlavor(getArguments().getString(ARG_CAKE_FLAVOR));
         orderItem.setWeight(getArguments().getString(ARG_CAKE_WEIGHT));
         orderItem.setQuantity(1);
         orderItem.setPrice(getArguments().getDouble(ARG_CAKE_PRICE));
         orderItem.setImageUrl(getArguments().getString(ARG_CAKE_IMAGE));
+        orderItem.setCakeFilling(getArguments().getString(ARG_CAKE_FILLING));
+        orderItem.setCakeLayers("N/A");
+        orderItem.setCakeSize(getArguments().getString(ARG_CAKE_SIZE));
+        orderItem.setAdditionalNotes("N/A");
         orderItem.setBakerId(bakerId);
 
 

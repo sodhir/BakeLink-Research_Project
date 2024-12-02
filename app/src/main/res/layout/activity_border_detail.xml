@@ -102,28 +102,6 @@
                 android:orientation="horizontal"
                 android:paddingBottom="8dp">
                 <TextView
-                    android:id="@+id/vqCakeSizeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cake Size:"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black" />
-                <TextView
-                    android:id="@+id/vqCakeSize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8 inches"
-                    android:paddingStart="4dp"
-                    android:textColor="@android:color/black"  />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="8dp">
-                <TextView
                     android:id="@+id/vqCakeLayersTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

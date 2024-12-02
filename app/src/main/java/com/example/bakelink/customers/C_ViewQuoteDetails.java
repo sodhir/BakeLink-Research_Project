@@ -46,7 +46,7 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
     String cakeRequestStatus;
 
-    String cusflavor, cusfilling, cusWeight;
+    String cusflavor, cusfilling, cusWeight, cusLayers, cusAdditionalNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +214,8 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
                    cusflavor = snapshot.child("flavor").getValue(String.class);
                    cusfilling = snapshot.child("filling").getValue(String.class);
                    cusWeight = snapshot.child("cakeWeight").getValue(String.class);
+                   cusLayers = snapshot.child("noOfLayers").getValue(String.class);
+                   cusAdditionalNotes = snapshot.child("notes").getValue(String.class);
 
                }
            }
@@ -234,6 +236,19 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems");
 
+//        OrderItem orderItem = new OrderItem();
+//        orderItem.setOrderItemId(databaseReference.push().getKey());
+//        orderItem.setCakeId(customCakeRequestId);
+//        orderItem.setOrderType("Custom");
+//        orderItem.setStatus("Pending");
+//        orderItem.setItemTitle("Custom Cake Order");
+//        orderItem.setFlavor(cusflavor);
+//        orderItem.setWeight(cusWeight);
+//        orderItem.setQuantity(1);
+//        orderItem.setPrice(quotedPrice);
+//        orderItem.setImageUrl(cakeImageUrl);
+//        orderItem.setBakerId(bakerId);
+
         OrderItem orderItem = new OrderItem();
         orderItem.setOrderItemId(databaseReference.push().getKey());
         orderItem.setCakeId(customCakeRequestId);
@@ -245,6 +260,9 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
         orderItem.setQuantity(1);
         orderItem.setPrice(quotedPrice);
         orderItem.setImageUrl(cakeImageUrl);
+        orderItem.setCakeFilling(cusfilling);
+        orderItem.setCakeLayers(cusLayers);
+        orderItem.setAdditionalNotes(cusAdditionalNotes);
         orderItem.setBakerId(bakerId);
 
 

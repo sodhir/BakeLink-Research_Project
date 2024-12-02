@@ -16,6 +16,12 @@ public class OrderItem {
 
     private String bakerId;
 
+    private String cakeSize;
+    private String cakeLayers;
+    private String cakeFilling;
+    private String additionalNotes;
+
+
     public OrderItem() {
     }
 
@@ -117,5 +123,37 @@ public class OrderItem {
 
     public void setBakerId(String bakerId) {
         this.bakerId = bakerId;
+    }
+
+    public String getAdditionalNotes() {
+        return additionalNotes;
+    }
+
+    public void setAdditionalNotes(String additionalNotes) {
+        this.additionalNotes = additionalNotes;
+    }
+
+    public String getCakeFilling() {
+        return cakeFilling;
+    }
+
+    public void setCakeFilling(String cakeFilling) {
+        this.cakeFilling = cakeFilling;
+    }
+
+    public String getCakeLayers() {
+        return cakeLayers;
+    }
+
+    public void setCakeLayers(String cakeLayers) {
+        this.cakeLayers = cakeLayers;
+    }
+
+    public String getCakeSize() {
+        return cakeSize;
+    }
+
+    public void setCakeSize(String cakeSize) {
+        this.cakeSize = cakeSize;
     }
 }
