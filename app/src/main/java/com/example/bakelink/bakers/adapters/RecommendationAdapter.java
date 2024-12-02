@@ -91,7 +91,10 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
                     cake.getCakeName(),
                     cake.getDescription(),
                     cake.getPrice(),
-                    cake.getCakeImgUrl()
+                    cake.getCakeImgUrl(),
+                    cake.getWeights().get(0),
+                    cake.getFlavors().get(0),
+                    cake.getFillings().get(0)
             );
             bottomSheet.show(((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager(), "CakeAddToCartBottomSheet");
         });

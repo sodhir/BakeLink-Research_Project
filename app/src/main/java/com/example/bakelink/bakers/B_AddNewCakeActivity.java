@@ -441,6 +441,7 @@ public class B_AddNewCakeActivity extends AppCompatActivity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("recommendations");
         String recommendationId = databaseReference.push().getKey();
         databaseReference.child(recommendationId).setValue(recommendationCake);
+       // Toast.makeText(this, "Recommendation added successfully", Toast.LENGTH_SHORT).show();
     }
 
 
