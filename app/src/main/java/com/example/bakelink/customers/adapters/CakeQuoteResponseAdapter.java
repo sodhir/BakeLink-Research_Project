@@ -45,7 +45,6 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
         holder.cakePrice.setText("Quoted price: $" + quoteResponse.getQuotedPrice());
         holder.cakeDetails.setText("Cake: " + quoteResponse.getCakeType());
 
-        // Set status and background color based on quote status
         holder.quoteStatus.setText(quoteResponse.getStatus());
         if ("Awaiting Approval".equals(quoteResponse.getStatus())) {
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#FFD700"));
@@ -54,10 +53,9 @@ public class CakeQuoteResponseAdapter extends RecyclerView.Adapter<CakeQuoteResp
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#88A84F"));
             holder.quoteStatus.setTextColor(Color.parseColor("#FFFFFF"));
         } else if ("Rejected".equals(quoteResponse.getStatus())) {
-            holder.quoteStatus.setBackgroundColor(Color.parseColor("#8B0000")); // Example color
+            holder.quoteStatus.setBackgroundColor(Color.parseColor("#8B0000"));
             holder.quoteStatus.setTextColor(Color.parseColor("#FFFFFF"));
         } else {
-            // Default case for any other statuses
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#D3D3D3"));
             holder.quoteStatus.setTextColor(Color.parseColor("#000000"));
         }

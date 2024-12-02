@@ -100,53 +100,47 @@ public class B_MyCakesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData(); // This is the URI of the selected image
-            mcCakePicture.setImageURI(imageUri); // Display image in ImageView (if needed)
-            // Save this URI to use it for uploading later
-            mcCakeImageUri = imageUri; // Assuming you have declared ivProfilePictureUri as a global variable
+            Uri imageUri = data.getData();
+            mcCakePicture.setImageURI(imageUri);
+
+            mcCakeImageUri = imageUri;
         }
     }
 
 
 
-    // Method to save cake data
+
     private void saveCakeData(Uri imageUri) {
-        // Get user inputs
+
         String cakeName = mcCakeName.getText().toString().trim();
         String description = mcDescription.getText().toString().trim();
         Double price = Double.parseDouble(mcPrice.getText().toString());
 
-        // Validation (simple example)
+
         if (cakeName.isEmpty() || description.isEmpty() || price == null || imageUri == null) {
             Toast.makeText(this, "Please fill in all fields and upload an image.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Show a loading indicator if necessary
-        // progressBar.setVisibility(View.VISIBLE);
 
-        // Firebase Storage reference to store the image
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("cake_images/" + UUID.randomUUID().toString());
 
-        // Upload the image
+
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Get the image URL after a successful upload
+
                     storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
 
-                        // Create a data model for the cake
                         Map<String, Object> cakeData = new HashMap<>();
                         cakeData.put("cakeName", cakeName);
                         cakeData.put("description", description);
                         cakeData.put("price", price);
                         cakeData.put("cakeImgUrl", imageUrl);
 
-                        // Get the baker's UID (assuming you have the user's ID)
                         String bakerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                        // Save the data under "bakers" collection -> bakerId -> "cakes"
                         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("bakers").child(bakerId).child("cakes");
                         databaseRef.push().setValue(cakeData)
                                 .addOnCompleteListener(task -> {
@@ -156,13 +150,13 @@ public class B_MyCakesActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(this, "Failed to save cake data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                     }
-                                    // progressBar.setVisibility(View.GONE); // Hide loading indicator
+
                                 });
                     });
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    // progressBar.setVisibility(View.GONE); // Hide loading indicator
+
                 });
     }
 

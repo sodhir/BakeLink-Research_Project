@@ -81,33 +81,18 @@ public class B_HomeActivity extends AppCompatActivity {
         // Set welcome text
         TextView welcomeText = findViewById(R.id.welcomeText);
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        String bakeryName = sharedPreferences.getString("bakery_name", null);
         welcomeText.setText("Welcome back, " + bakeryName + "!");
 
         recyclerView = findViewById(R.id.recyclerViewNewQuoteRequests);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Initialize data
+
         loadAllCustomQuotes();
-//        quoteRequestList = new ArrayList<>();
-//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample2));
-//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.themed_cake_image));
-//        quoteRequestList.add(new QuoteRequest("[Customer name]", "[Cake type]", "[Delivery date]", "[Location]", R.drawable.cakesample3));
-        // Add more items as needed
-
-        // Set adapter
-
 
         //track submitted quote section
         recyclerTrackSubmittedQuotes = findViewById(R.id.recyclerViewTrackSubmittedQuote);
         loadSubmittedQuotes();
-//        quotesSentList = new ArrayList<>();
-//        quotesSentList.add(new Quote("[Customer name]", 250.00, "Awaiting Approval",R.drawable.cakesample2));
-//        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.themed_cake_image));
-//        quotesSentList.add(new Quote("[Customer name]", 180.00, "Approved",R.drawable.cakesample3));
-//        submittedQuotesAdapter = new TrackSubmittedQuotesAdapter(this,quotesSentList);
-//        recyclerTrackSubmittedQuotes.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        recyclerTrackSubmittedQuotes.setAdapter(submittedQuotesAdapter);
 
         //weekly and monthly sales section
         TextView chipWeekly = findViewById(R.id.chip_weekly);
@@ -121,29 +106,22 @@ public class B_HomeActivity extends AppCompatActivity {
         chipWeekly.setTextColor(Color.parseColor("#FFFFFF"));
 
         chipWeekly.setOnClickListener(view -> {
-            // Set selected colors for Weekly chip
             chipWeekly.setBackgroundColor(Color.parseColor("#721124"));
             chipWeekly.setTextColor(Color.parseColor("#FFFFFF"));
 
-            // Reset Monthly chip to default
             chipMonthly.setBackgroundColor(Color.parseColor("#F5F5F5"));
             chipMonthly.setTextColor(Color.parseColor("#80000000"));
             fetchWeeklySales(currentUserId);
         });
 
         chipMonthly.setOnClickListener(view -> {
-            // Set selected colors for Monthly chip
             chipMonthly.setBackgroundColor(Color.parseColor("#721124"));
             chipMonthly.setTextColor(Color.parseColor("#FFFFFF"));
 
-            // Reset Weekly chip to default
             chipWeekly.setBackgroundColor(Color.parseColor("#F5F5F5"));
             chipWeekly.setTextColor(Color.parseColor("#80000000"));
             fetchMonthlySales(currentUserId);
         });
-
-        //fetchSalesDataLine(currentUserId);
-
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
@@ -178,19 +156,19 @@ public class B_HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 quotesSentList = new ArrayList<>();
                 int quoteCount = (int) snapshot.getChildrenCount();
-                AtomicInteger loadedQuotes = new AtomicInteger(0); // Track how many quotes are fully loaded
+                AtomicInteger loadedQuotes = new AtomicInteger(0);
 
-                // Get the reference to the UI elements
+
                 TextView noQuotesMessage = findViewById(R.id.noQuotesMessage);
-                RecyclerView quotesRecyclerView = findViewById(R.id.recyclerViewTrackSubmittedQuote); // Assuming you have a RecyclerView
+                RecyclerView quotesRecyclerView = findViewById(R.id.recyclerViewTrackSubmittedQuote);
 
                 // If no quotes found, show the "no quotes" message and hide the RecyclerView
                 if (quoteCount == 0) {
-                    noQuotesMessage.setVisibility(View.VISIBLE); // Show the "No quotes yet" message
-                    quotesRecyclerView.setVisibility(View.GONE); // Hide the RecyclerView
+                    noQuotesMessage.setVisibility(View.VISIBLE);
+                    quotesRecyclerView.setVisibility(View.GONE);
                 } else {
-                    noQuotesMessage.setVisibility(View.GONE); // Hide the "No quotes" message
-                    quotesRecyclerView.setVisibility(View.VISIBLE); // Show the RecyclerView
+                    noQuotesMessage.setVisibility(View.GONE);
+                    quotesRecyclerView.setVisibility(View.VISIBLE);
                 }
 
                 for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
@@ -213,7 +191,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     cakeResponse.setImageUrl(imageUrl);
                     cakeResponse.setCakeType(cakeType);
 
-                    // Fetch additional details from customCakeRequests
+
                     DatabaseReference customCakeRef = FirebaseDatabase.getInstance()
                             .getReference("customCakeRequests")
                             .child(customCakeRequestId);
@@ -270,17 +248,14 @@ public class B_HomeActivity extends AppCompatActivity {
 
     private void loadAllCustomQuotes() {
 
-        // Reference to the baker's cakes node
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests");
 
-
-        // Attach a listener to fetch data
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                quoteRequestList = new ArrayList<>();
                 for (DataSnapshot customCakeSnapshot : snapshot.getChildren()) {
-                    // Assuming you have a Cake model class
                     String customCakeRequestId = customCakeSnapshot.getKey();
                     String deliveryDate = customCakeSnapshot.child("deliveryDate").getValue(String.class);
                     String deliveryTime = customCakeSnapshot.child("deliveryTime").getValue(String.class);
@@ -315,8 +290,6 @@ public class B_HomeActivity extends AppCompatActivity {
                 }
 
                 Log.d("Cakes", "Cakes fetched: " + quoteRequestList.size());
-                // Use the fetched list of cakes (e.g., update your UI)
-                // Implement this method to handle the list of cakes
                 adapter = new QuoteRequestAdapter(B_HomeActivity.this, quoteRequestList);
                 recyclerView.setAdapter(adapter);
 
@@ -461,16 +434,16 @@ public class B_HomeActivity extends AppCompatActivity {
         LineData lineData = new LineData(dataSet);
         lineChart.setData(lineData);
 
-        // Configure chart appearance
+
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
         xAxis.setGranularityEnabled(true);
 
-        lineChart.getDescription().setText(label); // Set chart label
-        lineChart.animateX(1000); // Add animation
-        lineChart.invalidate(); // Refresh chart
+        lineChart.getDescription().setText(label);
+        lineChart.animateX(1000);
+        lineChart.invalidate();
     }
 
     private void calculateTotalSalesAndOrders(String bakerId) {
@@ -485,18 +458,18 @@ public class B_HomeActivity extends AppCompatActivity {
                 float totalSales = 0;
                 int totalOrders = 0;
 
-                // Traverse the calendar structure
+
                 for (DataSnapshot yearSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot monthSnapshot : yearSnapshot.getChildren()) {
                         for (DataSnapshot daySnapshot : monthSnapshot.getChildren()) {
                             if (daySnapshot.hasChild("orders")) {
                                 for (DataSnapshot orderSnapshot : daySnapshot.child("orders").getChildren()) {
-                                    // Calculate total sales
+
                                     Float orderTotal = orderSnapshot.child("orderTotal").getValue(Float.class);
                                     if (orderTotal != null) {
                                         totalSales += orderTotal;
                                     }
-                                    // Increment total orders count
+
                                     totalOrders++;
                                 }
                             }
@@ -504,7 +477,7 @@ public class B_HomeActivity extends AppCompatActivity {
                     }
                 }
 
-                // Display or process the results
+
                 TextView txtTotalSales = findViewById(R.id.txtTotalSales);
                 TextView txtTotalOrders = findViewById(R.id.txtTotalOrders);
                 txtTotalSales.setText("Total Sales: $" + totalSales);

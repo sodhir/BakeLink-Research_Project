@@ -169,7 +169,7 @@ public class C_CartActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e("DateError", "Invalid date format: " + dateInput, e);
-            formattedDate = df.format(new Date()); // Fallback to current date
+            formattedDate = df.format(new Date());
         }
 
         String deliveryAdd = this.deliveryAdd.getText().toString();
@@ -179,7 +179,7 @@ public class C_CartActivity extends AppCompatActivity {
 
            String bakerID = orderItems.get(0).getBakerId().trim();
 
-        // Firebase reference
+
         DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("bakers")
                 .child(bakerID)
                 .child("calendar")

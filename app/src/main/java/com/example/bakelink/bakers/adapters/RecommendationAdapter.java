@@ -80,7 +80,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
 //        }
 
         Glide.with(holder.itemView.getContext())
-                .load(imageUrl) // Load from URL
+                .load(imageUrl)
                 .into(holder.rImage);
 
         holder.rBakerName.setText(cakeName);
@@ -129,16 +129,16 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists() && snapshot.hasChild("bakeryTitle")) {
                     String bakeryTitle = snapshot.child("bakeryTitle").getValue(String.class);
-                    callback.onBakeryTitleFetched(bakeryTitle); // Pass the fetched title to the callback
+                    callback.onBakeryTitleFetched(bakeryTitle);
                 } else {
-                    callback.onBakeryTitleFetched(""); // No bakeryTitle found
+                    callback.onBakeryTitleFetched("");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Failed to fetch bakery title: " + error.getMessage());
-                callback.onBakeryTitleFetched(""); // Return empty on failure
+                callback.onBakeryTitleFetched("");
             }
         });
     }

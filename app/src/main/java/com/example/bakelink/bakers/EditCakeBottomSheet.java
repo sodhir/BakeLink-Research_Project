@@ -44,14 +44,14 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
         etCakePrice = view.findViewById(R.id.etCakePrice);
         btnSaveChanges = view.findViewById(R.id.btnSaveChanges);
 
-        // Prepopulate data
+
         etCakeName.setText(cake.getCakeName());
         etCakeDescription.setText(cake.getDescription());
         etCakePrice.setText(String.valueOf(cake.getPrice()));
 
-        // Handle save button click
+
         btnSaveChanges.setOnClickListener(v -> {
-            // Update cake data
+
             cake.setCakeName(etCakeName.getText().toString());
             cake.setDescription(etCakeDescription.getText().toString());
             try {
@@ -63,7 +63,7 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
 
             updateCakeInDatabase(cake);
 
-            // Notify listener about the update
+
             if (updateListener != null) {
                 updateListener.onCakeUpdated(cake);
             }
@@ -77,7 +77,7 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
     private void updateCakeInDatabase(Cake updatedCake) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        // Assuming 'bakerId' is the current user's (baker's) unique ID
+
         String bakerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String cakeId = updatedCake.getCakeId();
 
@@ -85,23 +85,23 @@ public class EditCakeBottomSheet extends BottomSheetDialogFragment {
         Log.d("Update Cake", "Baker ID: " + bakerId);
         Log.d("Update Cake", "Cake ID: " + cakeId);
 
-        // Check if bakerId and cakeId are not null
+
         if (bakerId == null || cakeId == null) {
-            //Toast.makeText(getContext(), "Invalid baker or cake ID", Toast.LENGTH_SHORT).show();
+
             return;
         }
 
-        // Reference to the specific cake node within the baker's cakes collection
+
         DatabaseReference cakeRef = databaseReference.child("bakers").child(bakerId).child("cakes").child(cakeId);
 
-        // Create a map of the fields to update
+
         Map<String, Object> updates = new HashMap<>();
         updates.put("cakeName", updatedCake.getCakeName());
         updates.put("description", updatedCake.getDescription());
         updates.put("price", updatedCake.getPrice());  // Ensure this is a number
         updates.put("cakeImgUrl", updatedCake.getCakeImgUrl());  // Update other fields as needed
 
-        // Perform the update
+
         cakeRef.updateChildren(updates).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                // Toast.makeText(getContext(), "Cake updated successfully", Toast.LENGTH_SHORT).show();

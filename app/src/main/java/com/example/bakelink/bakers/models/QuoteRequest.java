@@ -5,7 +5,7 @@ public class QuoteRequest {
     private String cakeType;
     private String deliveryDate;
     private String location;
-    private int imageResource; // Assuming drawable resource ID for now
+    private int imageResource;
 
     public QuoteRequest(String customerName, String cakeType, String deliveryDate, String location, int imageResource) {
         this.customerName = customerName;

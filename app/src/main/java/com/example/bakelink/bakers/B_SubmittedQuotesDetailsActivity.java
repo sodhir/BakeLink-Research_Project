@@ -43,7 +43,7 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
         String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
         welcomeText.setText("Welcome back, " + bakeryName + "!");
 
-        // Get references to UI elements
+
         cakeTypeText = findViewById(R.id.qcakeType);
         cakeSizeText = findViewById(R.id.qcakeSize);
         cakeLayersText = findViewById(R.id.qcakeLayer);
@@ -96,10 +96,10 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
         database.child(quoteId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //Log.d("FirebaseResponseData", dataSnapshot.toString());
-                // Get data from snapshot
+
+
                 String cakeType = dataSnapshot.child("cakeType").getValue(String.class);
-                //Log.d("FirebaseResponseData", "caketype:" + cakeType);
+
                 String cakeSize = dataSnapshot.child("cakeSize").getValue(String.class);
                 String cakeLayers = dataSnapshot.child("noOfLayers").getValue(String.class);
                 String cakeWeight = dataSnapshot.child("cakeWeight").getValue(String.class);
@@ -110,20 +110,12 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
                 String deliveryDate = dataSnapshot.child("deliveryDate").getValue(String.class);
                 String deliveryTime = dataSnapshot.child("deliveryTime").getValue(String.class);
                 String imageUrl = dataSnapshot.child("imageUrl").getValue(String.class);
-                //Log.d("FirebaseDebug", "quoteId: " + quoteId);
-                //Log.d("FirebaseDebug", "responseId: " + responseId);
-                // Now fetch price details from the responses node using responseId
+
                 database.child(quoteId).child("responses").child(responseId)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot responseSnapshot) {
-                                //Log.d("FirebaseResponseData", responseSnapshot.toString());
-//                                if (responseSnapshot.exists()) {
-//                                    Log.d("FirebaseResponseData", "Data: " + responseSnapshot.getValue());
-//                                } else {
-//                                    Log.d("FirebaseResponseData", "Response snapshot does not exist.");
-//                                }
-                                // Retrieve price data from the responses node
+
                                 double cakeTypePriceVal = responseSnapshot.child("cakeTypePrice").exists()? responseSnapshot.child("cakeTypePrice").getValue(Double.class) : 0.0;
                                 double cakeSizePriceVal = responseSnapshot.child("cakeSizePrice").getValue(Double.class);
                                 double cakeLayersPriceVal = responseSnapshot.child("cakeLayersPrice").getValue(Double.class);
@@ -135,7 +127,7 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
                                 double discountsPriceVal = responseSnapshot.child("discountsPrice").getValue(Double.class);
                                 double cakeTotal = responseSnapshot.child("quotedPrice").getValue(Double.class);
 
-                                // Update UI with the fetched data from customcakeRequests node
+
                                 cakeTypeText.setText("Cake type: " + cakeType);
                                 cakeSizeText.setText("Cake size: " + cakeSize);
                                 cakeLayersText.setText("No. of layers: " + cakeLayers);
@@ -144,7 +136,7 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
                                 cakeFillingText.setText("Cake filling: " + cakeFilling);
                                 additionalNotesText.setText("Additional notes: " + additionalNotes);
 
-                                // Update price fields with the fetched prices from responses node
+
                                 cakeTypePrice.setText(String.format("%.2f", cakeTypePriceVal));
                                 cakeSizePrice.setText(String.format("%.2f", cakeSizePriceVal));
                                 cakeLayersPrice.setText(String.format("%.2f", cakeLayersPriceVal));
@@ -159,14 +151,14 @@ public class B_SubmittedQuotesDetailsActivity extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                // Handle potential errors in the responses node fetch
+
                             }
                         });
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle potential errors in the customcakeRequests fetch
+
             }
         });
     }

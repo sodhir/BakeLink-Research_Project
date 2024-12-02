@@ -46,7 +46,7 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
             star4 = view.findViewById(R.id.star_4);
             star5 = view.findViewById(R.id.star_5);
 
-            // Set click listener for the entire item
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,22 +83,22 @@ public class TrendingBakerAdapter extends RecyclerView.Adapter<TrendingBakerAdap
 
         String imageUrl = baker.getImageUrl();
 
-        // Checking if the imageUrl starts with "drawable" or is a URL
+
         if (imageUrl != null && imageUrl.startsWith("drawable/")) {
-            // Get the drawable resource name from imageUrl
+
             String drawableName = imageUrl.replace("drawable/", "");
 
-            // Get the resource ID from the drawable name
+
             int resourceId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
 
-            // Use Glide to load from the drawable resource
+
             Glide.with(context)
-                    .load(resourceId) // Load from drawable
+                    .load(resourceId)
                     .into(holder.bakerImage);
         } else {
-            // Load from URL using Glide
+
             Glide.with(context)
-                    .load(imageUrl) // Load from URL
+                    .load(imageUrl)
                     .into(holder.bakerImage);
         }
 

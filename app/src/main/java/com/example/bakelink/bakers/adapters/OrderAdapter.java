@@ -37,14 +37,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         Order order = orderList.get(position);
         List<OrderItem> orderItems = order.getOrderItems();
 
-        // Set the values for customer name, cake type, location, and delivery date
+
         //holder.cakeImage.setImageResource(order.getImageResource());
        // holder.customerName.setText(order.getCustomerName());
         holder.cakeType.setText(order.getCakeType());
         holder.deliveryDate.setText(order.getOrderDate());
         holder.location.setText(order.getDeliveryAddress());
 
-        // Set background color based on order type
+
         if (order.getOrderType().equals("Regular")) {
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.regular_order_bg));
         } else {

@@ -60,7 +60,7 @@ public class BakerAllCakeAdapter extends RecyclerView.Adapter<BakerAllCakeAdapte
         holder.editImage.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager();
             EditCakeBottomSheet bottomSheet = new EditCakeBottomSheet(cake, updatedCake -> {
-                notifyDataSetChanged(); // Refresh the adapter if needed
+                notifyDataSetChanged();
             });
             bottomSheet.show(fragmentManager, bottomSheet.getTag());
         });
@@ -74,7 +74,6 @@ public class BakerAllCakeAdapter extends RecyclerView.Adapter<BakerAllCakeAdapte
             // Delete the cake from Firebase
             cakeRef.removeValue().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Remove the cake from the list locally and notify the adapter
                     allCakeList.remove(position);
                     notifyItemRemoved(position);
                     Toast.makeText(holder.itemView.getContext(), "Cake deleted successfully", Toast.LENGTH_SHORT).show();

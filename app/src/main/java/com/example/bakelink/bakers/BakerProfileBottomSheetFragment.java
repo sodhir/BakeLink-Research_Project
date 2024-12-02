@@ -37,19 +37,19 @@ public class BakerProfileBottomSheetFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_edit_baker_profile, container, false);
 
-        // Initialize Views
+
         bakeryTitle = view.findViewById(R.id.bakeryName);
         description = view.findViewById(R.id.bakeryDescription);
         saveButton = view.findViewById(R.id.bakerybtnSaveChanges);
 
-        // Pre-fill data
+
         bakeryTitle.setText(title);
         description.setText(bakerDesc);
 
-        // Firebase Database Reference
+
         databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(currentUserId);
 
-        // Save button listener
+
         saveButton.setOnClickListener(v -> {
             String updatedTitle = bakeryTitle.getText().toString().trim();
             String updatedDescription = description.getText().toString().trim();
@@ -59,7 +59,7 @@ public class BakerProfileBottomSheetFragment extends BottomSheetDialogFragment {
                 return;
             }
 
-            // Update data in Firebase
+
             databaseReference.child("bakeryTitle").setValue(updatedTitle);
             databaseReference.child("description").setValue(updatedDescription)
                     .addOnCompleteListener(task -> {

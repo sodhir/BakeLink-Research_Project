@@ -4,7 +4,7 @@ public class Quote {
     private String customerName;
     private double amount;
     private String status;
-    private int imageResource; // Assuming drawable resource ID for now
+    private int imageResource;
 
     // Constructor
     public Quote(String customerName, double amount, String status, int imageResource) {
@@ -14,7 +14,7 @@ public class Quote {
         this.imageResource = imageResource;
     }
 
-    // Getter and Setter for Customer Name
+    // Getter and Setters
     public String getCustomerName() {
         return customerName;
     }
@@ -23,7 +23,6 @@ public class Quote {
         this.customerName = customerName;
     }
 
-    // Getter and Setter for Amount
     public double getAmount() {
         return amount;
     }
@@ -32,7 +31,6 @@ public class Quote {
         this.amount = amount;
     }
 
-    // Getter and Setter for Status
     public String getStatus() {
         return status;
     }

@@ -32,17 +32,16 @@ public class B_MyCakesSetupActivity extends AppCompatActivity {
         ckbtnAddNewCake = findViewById(R.id.allckbtnAddNewCake);
         ckbtnSaveAndContinue = findViewById(R.id.ckbtnSaveAndContinue);
 
-        // Add new cake button click listener
+
         ckbtnAddNewCake.setOnClickListener(v -> addNewCake());
 
-        // Save and Continue button click listener
+
         ckbtnSaveAndContinue.setOnClickListener(v -> saveProfileAndContinue());
 
 
         // Set up bottom navigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
-        // Deselect the item (no item should be highlighted)
-        bottomNavigationView.setSelectedItemId(-1);
+        bottomNavigationView.setSelectedItemId(R.id.none);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_home) {

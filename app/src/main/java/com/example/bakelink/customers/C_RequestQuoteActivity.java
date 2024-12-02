@@ -97,11 +97,9 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
                 Intent intent = new Intent(C_RequestQuoteActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -137,9 +135,8 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData(); // This is the URI of the selected image
-            cakeImg.setImageURI(imageUri); // Display image in ImageView (if needed)
-            // Save this URI to use it for uploading later
+            Uri imageUri = data.getData();
+            cakeImg.setImageURI(imageUri);
             cakeImgUri = imageUri;
             Log.d("JSON Request", "Selected image URI: " + imageUri);
 
@@ -235,15 +232,15 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
     }
 
     private void updateColorSwatches(List<int[]> colors) {
-        if (colors.size() >= 5) { // Ensure at least 5 colors are available
-            // Get the View references
+        if (colors.size() >= 5) {
+
             View swatch1 = findViewById(R.id.colorSwatch1);
             View swatch2 = findViewById(R.id.colorSwatch2);
             View swatch3 = findViewById(R.id.colorSwatch3);
             View swatch4 = findViewById(R.id.colorSwatch4);
             View swatch5 = findViewById(R.id.colorSwatch5);
 
-            // Convert RGB values to Color and set the backgrounds
+
             swatch1.setBackgroundColor(Color.rgb(colors.get(0)[0], colors.get(0)[1], colors.get(0)[2]));
             swatch2.setBackgroundColor(Color.rgb(colors.get(1)[0], colors.get(1)[1], colors.get(1)[2]));
             swatch3.setBackgroundColor(Color.rgb(colors.get(2)[0], colors.get(2)[1], colors.get(2)[2]));
@@ -260,12 +257,10 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<RecommendationCake> similarCakes = new ArrayList<>();
-                Set<String> addedCakeIds = new HashSet<>();  // Set to track added cakes by their ID
+                Set<String> addedCakeIds = new HashSet<>();
 
-                // Assuming currentCakeColors is the RGB colors of the current cake
                 ArrayList<int[]> currentCakeColors = new ArrayList<>(colors);
 
-                // Loop through the database entries and compare their colors with the current cake's colors
                 for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
                     // Retrieve the RGB colors for each cake
                     GenericTypeIndicator<List<List<Integer>>> typeIndicator = new GenericTypeIndicator<List<List<Integer>>>() {};
@@ -291,16 +286,16 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
                             double distance = calculateColorDistance(cakeColor, currentColor);
                             if (distance < 25) {  // Define a threshold for matching colors
                                 // Check if the cake has already been added
-                                String cakeId = cakeSnapshot.getKey();  // or use any unique identifier
+                                String cakeId = cakeSnapshot.getKey();
                                 if (!addedCakeIds.contains(cakeId)) {
                                     similarCakes.add(cakeSnapshot.getValue(RecommendationCake.class));
                                     addedCakeIds.add(cakeId);  // Mark this cake as added
                                 }
-                                cakeMatched = true;  // Once a match is found, no need to check further colors for this cake
+                                cakeMatched = true;
                                 break;
                             }
                         }
-                        if (cakeMatched) break;  // Exit the loop early if a match was found
+                        if (cakeMatched) break;
                     }
                 }
 
@@ -332,8 +327,7 @@ public class C_RequestQuoteActivity extends AppCompatActivity {
             TextView recbtmTitle = findViewById(R.id.tv_recbtm_subheading);
             recbtmTitle.setVisibility(View.VISIBLE);
 
-            // Display matching cakes in the RecyclerView or any other UI component
-            // For example, you could pass the list to an adapter and refresh the UI
+            // Display matching cakes
             recyclerView.setVisibility(View.VISIBLE);
             cakeAdapter = new RecommendationAdapter(matchingCakes);
             recyclerView.setAdapter(cakeAdapter);

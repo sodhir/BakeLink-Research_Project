@@ -49,7 +49,7 @@ public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.Or
                 .load(orderItem.getImageUrl())
                 .into(holder.itemImage);
 
-        // Handle increase/decrease and delete actions
+
         holder.buttonIncrease.setOnClickListener(v -> {
             int newQuantity = orderItem.getQuantity() + 1;
             orderItem.setQuantity(newQuantity);
@@ -68,7 +68,7 @@ public class OrderItemsAdapter extends RecyclerView.Adapter<OrderItemsAdapter.Or
             orderItems.remove(position);
             notifyItemRemoved(position);
             deleteOrderItem(orderItem.getOrderItemId());
-            //notifyDataSetChanged();
+
         });
     }
 

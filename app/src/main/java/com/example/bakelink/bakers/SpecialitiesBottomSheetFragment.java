@@ -30,10 +30,10 @@ public class SpecialitiesBottomSheetFragment extends BottomSheetDialogFragment {
         saveButton.setOnClickListener(v -> {
             String speciality = editTextSpeciality.getText().toString().trim();
             if (!speciality.isEmpty()) {
-                // Pass data back to activity or fragment
+
                 ((B_ProfileSetupActivity) getActivity()).addSpecialityToList(speciality);
 
-                dismiss(); // Dismiss bottom sheet
+                dismiss();
             }
         });
 

@@ -40,7 +40,6 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
     private ImageView ivProfilePicture;
     private FrameLayout ivProfileFrame;
     private Button btnSaveAndContinue;
-    //add for specialities and services section
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private Uri ivProfilePictureUri;
@@ -60,7 +59,7 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize views
+
         etBakeryTitle = findViewById(R.id.etBakeryTitle);
         etDescription = findViewById(R.id.etDescription);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
@@ -69,20 +68,20 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
         servicesListLayout = findViewById(R.id.services_list_layout);
         addServiceButton = findViewById(R.id.add_specialities_button);
 
-        // Set listener for profile picture upload
+
         ivProfileFrame.setOnClickListener(v -> {
-            //functionality for upload picture
+
             //Toast.makeText(this, "Upload Profile Picture", Toast.LENGTH_SHORT).show();
             openImagePicker();
         });
 
-        //Set listener for adding specialities
+
         addServiceButton.setOnClickListener(v -> {
             bottomSheetFragment = new SpecialitiesBottomSheetFragment();
             bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
         });
 
-        // Save and Continue button click listener
+
         btnSaveAndContinue.setOnClickListener(v -> saveProfileAndContinue());
 
 
@@ -121,9 +120,9 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData(); // This is the URI of the selected image
-            ivProfilePicture.setImageURI(imageUri); // Display image in ImageView (if needed)
-            // Save this URI to use it for uploading later
+            Uri imageUri = data.getData();
+            ivProfilePicture.setImageURI(imageUri);
+
             ivProfilePictureUri = imageUri;
         }
     }
@@ -131,33 +130,32 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
     public void addSpecialityToList(String speciality) {
         specialtiesList.add(speciality);
         TextView textView = new TextView(this);
-        // Set the text for the TextView
+
         textView.setText(speciality);
-        // Set the text color
+
         textView.setTextColor(getResources().getColor(android.R.color.black));
-        // Set the text size
+
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        // Set padding
+
         textView.setPadding(0, 8, 0, 8);
-        // Set the layout parameters (margin top)
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         layoutParams.topMargin = 8; // 8dp margin top
-        // Apply the layout parameters to the TextView
+
         textView.setLayoutParams(layoutParams);
-        // Add the TextView to the layout
+
         servicesListLayout.addView(textView);
     }
 
     private void saveProfileAndContinue() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Check if the user is authenticated
         if (currentUser == null) {
             //Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
-            return; // Stop further execution if the user is not authenticated
+            return;
         }
 
         String bakeryTitle = etBakeryTitle.getText().toString().trim();
@@ -166,30 +164,30 @@ public class B_ProfileSetupActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("bakery_name", bakeryTitle); // Save bakery name
+        editor.putString("bakery_name", bakeryTitle);
         editor.apply();
 
        if (currentUser != null) {
            //Toast.makeText(this, "User authenticated.", Toast.LENGTH_SHORT).show();
             String userId = currentUser.getUid();
 
-            // Reference to Firebase Storage
+
             StorageReference storageReference = FirebaseStorage.getInstance().getReference("profilePictures").child(userId + ".jpg");
             storageReference.putFile(imageUri).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Get the image download URL
+
                     storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
 
-                        // Create a Map to hold baker profile data
+
                         Map<String, Object> bakerProfile = new HashMap<>();
                         bakerProfile.put("bakeryTitle", bakeryTitle);
                         bakerProfile.put("description", description);
                         bakerProfile.put("profilePictureUrl", imageUrl); // Save image URL
                         bakerProfile.put("specialtiesAndServices", specialtiesList);
-                        // Add other fields as necessary
 
-                        // Save to "bakers" collection
+
+
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
                         databaseReference.child(userId).setValue(bakerProfile)
                                 .addOnSuccessListener(aVoid -> {

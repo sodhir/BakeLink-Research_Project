@@ -64,7 +64,6 @@ public class TrackSubmittedQuotesAdapter extends RecyclerView.Adapter<TrackSubmi
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#8B0000")); // Example color
             holder.quoteStatus.setTextColor(Color.parseColor("#FFFFFF"));
         } else {
-            // Default case for any other statuses
             holder.quoteStatus.setBackgroundColor(Color.parseColor("#D3D3D3"));
             holder.quoteStatus.setTextColor(Color.parseColor("#000000"));
         }

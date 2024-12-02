@@ -77,10 +77,10 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         ordersRecyclerView = findViewById(R.id.ordersRecyclerView);
         noOrdersTextView = findViewById(R.id.noOrdersTextView);
 
-        // Initialize RecyclerView
+
         ordersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Initialize order list and adapter
+
         orderList = new ArrayList<>();
         orderAdapter = new OrderAdapter(orderList);
         ordersRecyclerView.setAdapter(orderAdapter);
@@ -99,13 +99,6 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         // Load orders for the current date
         loadOrdersForDate(currentDate);
 
-        /*// Add sample orders
-        orderList.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.",R.drawable.cakesample2));
-        orderList.add(new Order("Custom", "15/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.",R.drawable.themed_cake_image));
-        orderList.add(new Order("Custom", "16/11/2024", "Hello", "Jane Smith", "Wedding Cake", "456 Cake Ave.",R.drawable.cakesample2));*/
-
-
-
         // Handle calendar date selection
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
              selectedDate = String.format("%02d", dayOfMonth) + "/" + String.format("%02d", month + 1) + "/" + year;
@@ -113,14 +106,13 @@ public class B_MyScheduleActivity extends AppCompatActivity {
              Log.d("selectedDate", selectedDate);
             loadBlockStatusFromDB(dbStructureDate);
             Log.d("OrderList", "Size: " + orderList.size());
-            Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(B_MyScheduleActivity.this, "Selected Date: " + selectedDate, Toast.LENGTH_SHORT).show();
 
             // Set order details for the selected date
             String orderDetailsText = getString(R.string.order_details_title, selectedDate);
             orderDetailsTitle.setText(orderDetailsText);
 
             // Load orders for the selected date
-           // loadOrdersForDate(selectedDate);
             loadOrdersFromFirebase(dbStructureDate);
 
 
@@ -129,15 +121,14 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
 
         // Set an initial checked state
-        blockDaySwitch.setChecked(false); // depending on the default state
+        blockDaySwitch.setChecked(false);
 
-        // Add a listener to detect switch state changes
         blockDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Code to execute when switch is turned ON
-                   // Toast.makeText(getApplicationContext(), "Day blocked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Day blocked", Toast.LENGTH_SHORT).show();
                     blockDate(dbStructureDate, isChecked);
                 } else {
                     blockDate(dbStructureDate, isChecked);
@@ -174,7 +165,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
     private void loadBlockStatusFromDB(String dbStructureDate) {
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // Assumes user is signed in
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference calendarRef = FirebaseDatabase.getInstance()
                 .getReference("bakers")
                 .child(userId)
@@ -189,19 +180,19 @@ public class B_MyScheduleActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     Boolean isBlocked = snapshot.child("blocked").getValue(Boolean.class);
                     if (isBlocked != null) {
-                        blockDaySwitch.setChecked(isBlocked); // Update the switch state
+                        blockDaySwitch.setChecked(isBlocked);
                     } else {
-                        blockDaySwitch.setChecked(false); // Default to unblocked if no data found
+                        blockDaySwitch.setChecked(false);
                     }
                 } else {
-                    // If no data exists for this date, set default state
+
                     blockDaySwitch.setChecked(false);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors (optional)
+
                 Log.e("Firebase", "Error fetching block status", error.toException());
             }
         });
@@ -223,10 +214,8 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         databaseRef.child(bakerId).child("calendar").child(selectedDate).updateChildren(calendarData)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Data saved successfully
                         Log.d("Firebase", "Calendar data saved successfully.");
                     } else {
-                        // Handle the error
                         Log.e("Firebase", "Error saving calendar data", task.getException());
                     }
                 });
@@ -235,33 +224,20 @@ public class B_MyScheduleActivity extends AppCompatActivity {
 
     // Method to load orders for the given date
     private void loadOrdersForDate(String selectedDate) {
-//        // Clear previous orders
-//        List<Order> filteredOrders = new ArrayList<>();
-//
-//        // Sample orders (normally you will fetch this from a database or API)
-//        List<Order> allOrders = getAllSampleOrders();
-//
-//        // Filter orders based on the selected date
-//        for (Order order : allOrders) {
-//            if (order.getOrderDate().equals(selectedDate)) {
-//                filteredOrders.add(order);
-//            }
-//        }
-
         // If there are no orders, show "No orders for this date"
         if (orderList.isEmpty()) {
-            noOrdersTextView.setVisibility(View.VISIBLE);  // Show message
-            ordersRecyclerView.setVisibility(View.GONE);   // Hide RecyclerView
+            noOrdersTextView.setVisibility(View.VISIBLE);
+            ordersRecyclerView.setVisibility(View.GONE);
         } else {
-            noOrdersTextView.setVisibility(View.GONE);     // Hide message
-            ordersRecyclerView.setVisibility(View.VISIBLE);  // Show RecyclerView
+            noOrdersTextView.setVisibility(View.GONE);
+            ordersRecyclerView.setVisibility(View.VISIBLE);
             orderAdapter = new OrderAdapter(orderList);
             ordersRecyclerView.setAdapter(orderAdapter);
             orderAdapter.notifyDataSetChanged();
         }
     }
 
-    // Sample orders
+
     private List<Order> getAllSampleOrders() {
         List<Order> orders = new ArrayList<>();
        // orders.add(new Order("Regular", "15/11/2024", "Hi", "John Doe", "Chocolate Cake", "123 Baker St.", R.drawable.cakesample2));
@@ -280,7 +256,7 @@ public class B_MyScheduleActivity extends AppCompatActivity {
         orderRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                orderList.clear(); // Clear the existing orders before adding new ones.
+                orderList.clear(); // Clear the existing orders before adding new ones
 
                 if (snapshot.exists()) {
                     Log.d("orderDate", "Data exists for this date.");
@@ -305,20 +281,19 @@ public class B_MyScheduleActivity extends AppCompatActivity {
                             }
                         }
                         order.setOrderItems(orderItems);
-                        orderList.add(order); // Add to the list.
+                        orderList.add(order);
                     }
 
-                    loadOrdersForDate(selectedDate); // Optional callback for UI or logic.
-                    orderAdapter.notifyDataSetChanged(); // Notify RecyclerView adapter.
+                    loadOrdersForDate(selectedDate);
+                    orderAdapter.notifyDataSetChanged();
                 } else {
                     Log.d("orderDate", "No data for this date.");
-                    // Handle UI state for empty data (optional).
+
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle possible errors (optional)
                 Log.e("Firebase", "Error fetching orders", error.toException());
             }
         });

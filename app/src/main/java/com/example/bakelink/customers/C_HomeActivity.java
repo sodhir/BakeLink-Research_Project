@@ -66,7 +66,7 @@ public class C_HomeActivity extends AppCompatActivity {
 
         TextView welcomeText = findViewById(R.id.tv_welcome_back);
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-        String customerEmail = sharedPreferences.getString("customer_email", null); // Get bakery name
+        String customerEmail = sharedPreferences.getString("customer_email", null);
         welcomeText.setText("Welcome back, " + customerEmail + "!");
 
         // Set up the top toolbar
@@ -74,12 +74,8 @@ public class C_HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         //Trending baker section
-        // Initialize RecyclerView
         recyclerViewTrendingBakers = findViewById(R.id.recycler_view_trending_bakers);
         trendingBakersList = new ArrayList<>(); // Populate this with your data
-       // trendingBakersList.add(new Baker("Sweet Crumbs Bakery", "drawable/baker_a_image", 4.8f));
-        //trendingBakersList.add(new Baker("Frosted Perfection", "drawable/baker_b_image", 4.7f));
-        //trendingBakersList.add(new Baker("Bake Me Happy", "drawable/baker_c_image", 4.7f));
 
         // Setup the adapter
         trendingBakerAdapter = new TrendingBakerAdapter(trendingBakersList);
@@ -89,8 +85,6 @@ public class C_HomeActivity extends AppCompatActivity {
         fetchBakers();
 
         //Top cake categories section
-        //recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
-        //recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewCategories = findViewById(R.id.recyclerViewCategories);
         recyclerViewCategories.setLayoutManager(new GridLayoutManager(this, 3));
 
@@ -123,11 +117,9 @@ public class C_HomeActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
                 Intent intent = new Intent(C_HomeActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -206,7 +198,7 @@ public class C_HomeActivity extends AppCompatActivity {
 
                     }
                 }
-                trendingBakerAdapter.notifyDataSetChanged(); // Notify adapter of data change
+                trendingBakerAdapter.notifyDataSetChanged();
             }
 
             @Override
