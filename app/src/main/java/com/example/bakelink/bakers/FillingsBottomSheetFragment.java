@@ -25,9 +25,9 @@ public class FillingsBottomSheetFragment extends BottomSheetDialogFragment {
         saveButton.setOnClickListener(v -> {
             String fillings = editTextFillings.getText().toString().trim();
             if (!fillings.isEmpty()) {
-                // Pass data back to activity or fragment
+
                 ((B_AddNewCakeActivity) getActivity()).addFillingsToList(fillings);
-                dismiss(); // Dismiss bottom sheet
+                dismiss();
             }
         });
 

@@ -59,52 +59,24 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         priceWeightTemplateLayout = findViewById(R.id.priceWeightTemplate);
         addPriceWeightButton = findViewById(R.id.addPriceWeightButton);
 
-        // Handle Add Price Type Button Click
         addPriceTypeButton.setOnClickListener(v -> {
             Log.d("ButtonClick", "Add button clicked");
             addPriceTypeSection();
         });
 
-        // Handle Add Price by Weight Button Click
         addPriceWeightButton.setOnClickListener(v -> {
             addPriceByWeightSection();
         });
 
-        // Save and Finish button click listener
-        //btnSaveAndFinish.setOnClickListener(v -> saveAndFinish());
         btnSaveAndFinish.setOnClickListener(v -> {
             captureData();
         });
 
 
 
-        /*// Set up bottom navigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_baker);
-        // Deselect the item (no item should be highlighted)
-        bottomNavigationView.setSelectedItemId(-1);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            bottomNavigationView.setSelectedItemId(-1);
-            if (item.getItemId() == R.id.nav_home) {
-                startActivity(new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class));
-                return true;
-            } else if (item.getItemId() == R.id.nav_schedule) {
-                startActivity(new Intent(B_MyQuoteSetupActivity.this, B_MyScheduleActivity.class));
-                return true;
-            } else if (item.getItemId() == R.id.nav_my_cakes) {
-                startActivity(new Intent(B_MyQuoteSetupActivity.this, B_MyAllCakesActivity.class));
-                return true;
-            } else if (item.getItemId() == R.id.nav_profile) {
-                startActivity(new Intent(B_MyQuoteSetupActivity.this, B_ProfileActivity.class));
-                return true;
-            }
-            return false;
-        });*/
-
     }
 
     private void addPriceTypeSection() {
-        // Create a new LinearLayout to hold the Spinner and EditText for a new price type section
         LinearLayout newPriceTypeSection = new LinearLayout(this);
         newPriceTypeSection.setOrientation(LinearLayout.HORIZONTAL);
         newPriceTypeSection.setLayoutParams(new LinearLayout.LayoutParams(
@@ -112,7 +84,6 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         newPriceTypeSection.setPadding(16, 8, 16, 8);
 
-        // Create the Spinner for Cake Type (Dropdown)
         Spinner priceTypeSpinner = new Spinner(this);
         priceTypeSpinner.setId(View.generateViewId()); // Assign unique ID
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -120,15 +91,11 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         priceTypeSpinner.setAdapter(adapter);
 
-        // Adjust weight for spinner to take less space
         LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f);  // Set weight to 60% for the spinner
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f);
         priceTypeSpinner.setLayoutParams(spinnerParams);
-        priceTypeSpinner.setPadding(8, 8, 8, 8);  // Add padding to spinner
-        //priceTypeSpinner.setBackgroundResource(R.drawable.spinner_background);
+        priceTypeSpinner.setPadding(8, 8, 8, 8);
 
-
-        // Create the TextView for "$" (to show currency symbol)
         TextView priceSymbolTextView = new TextView(this);
         priceSymbolTextView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -140,28 +107,25 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         priceSymbolTextView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        priceSymbolTextView.setPadding(10, 0, 0, 0);  // Padding for spacing
+        priceSymbolTextView.setPadding(10, 0, 0, 0);
 
-        // Create the EditText for entering the price
         EditText priceEditText = new EditText(this);
-        priceEditText.setId(View.generateViewId()); // Assign unique ID
+        priceEditText.setId(View.generateViewId());
         priceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         priceEditText.setLayoutParams(new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));  // Set weight to 40% for the EditText
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.4f));
         priceEditText.setPadding(8, 8, 8, 8);
         priceEditText.setTextSize(16f);
 
-        // Add the Spinner, TextView (for "$"), and EditText to the new LinearLayout
         newPriceTypeSection.addView(priceTypeSpinner);
         newPriceTypeSection.addView(priceSymbolTextView);
         newPriceTypeSection.addView(priceEditText);
 
-        // Add the new price type section to the priceTypeTemplateLayout
         priceTypeTemplateLayout.addView(newPriceTypeSection);
     }
 
     private void addPriceByWeightSection() {
-        // Create a new LinearLayout for the weight-based price section
+
         LinearLayout newWeightSection = new LinearLayout(this);
         newWeightSection.setOrientation(LinearLayout.HORIZONTAL);
         newWeightSection.setLayoutParams(new LinearLayout.LayoutParams(
@@ -169,20 +133,20 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         newWeightSection.setPadding(16, 8, 16, 8);
 
-        // Create the Spinner for Weight selection
+
         Spinner weightSpinner = new Spinner(this);
-        weightSpinner.setId(View.generateViewId()); // Assign unique ID
+        weightSpinner.setId(View.generateViewId());
         ArrayAdapter<CharSequence> weightAdapter = ArrayAdapter.createFromResource(this,
                 R.array.weight_types, android.R.layout.simple_spinner_item);
         weightAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         weightSpinner.setAdapter(weightAdapter);
 
         LinearLayout.LayoutParams weightSpinnerParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f);  // Set width to 60%
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.6f);
         weightSpinner.setLayoutParams(weightSpinnerParams);
-        weightSpinner.setPadding(8, 8, 8, 8);  // Apply padding to the Spinner
+        weightSpinner.setPadding(8, 8, 8, 8);
 
-        // Create TextView for "$" symbol
+
         TextView priceSymbolTextView = new TextView(this);
         priceSymbolTextView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -193,17 +157,17 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         priceSymbolTextView.setTextSize(16f);
         priceSymbolTextView.setPadding(10, 0, 0, 0);
 
-        // Create the EditText for entering additional price
+
         EditText extraPriceEditText = new EditText(this);
-        extraPriceEditText.setId(View.generateViewId()); // Assign unique ID
+        extraPriceEditText.setId(View.generateViewId());
         extraPriceEditText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         LinearLayout.LayoutParams priceEditTextParams = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f);  // Set width to 30%
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f);
         extraPriceEditText.setLayoutParams(priceEditTextParams);
         extraPriceEditText.setPadding(8, 8, 8, 8);
         extraPriceEditText.setTextSize(16f);
 
-        // Create TextView for "extra" text
+
         TextView extraTextView = new TextView(this);
         extraTextView.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -214,13 +178,13 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         extraTextView.setTextSize(16f);
         extraTextView.setPadding(10, 0, 0, 0);
 
-        // Add views to the LinearLayout for the weight section
+
         newWeightSection.addView(weightSpinner);
         newWeightSection.addView(priceSymbolTextView);
         newWeightSection.addView(extraPriceEditText);
         newWeightSection.addView(extraTextView);
 
-        // Add the new weight section to the priceWeightTemplateLayout
+
         priceWeightTemplateLayout.addView(newWeightSection);
     }
 
@@ -315,51 +279,51 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         List<String> basePrices = new ArrayList<>();
         List<String> weightPrices = new ArrayList<>();
 
-        // Iterate through the layout to get Spinner and EditText values
+
         for (int i = 0; i < priceTypeTemplateLayout.getChildCount(); i++) {
             View view = priceTypeTemplateLayout.getChildAt(i);
 
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
 
-                // Look for the Spinner and EditText in this LinearLayout
-                Spinner priceTypeSpinner = (Spinner) linearLayout.getChildAt(0); // Spinner is the first child
-                EditText priceEditText = (EditText) linearLayout.getChildAt(2); // EditText is the third child
 
-                // Get values from the Spinner and EditText
+                Spinner priceTypeSpinner = (Spinner) linearLayout.getChildAt(0);
+                EditText priceEditText = (EditText) linearLayout.getChildAt(2);
+
+
                 String priceType = priceTypeSpinner.getSelectedItem().toString();
                 String priceValue = priceEditText.getText().toString().trim();
 
-                // Add to the lists
+
                 basePrices.add(priceType + ": $" + priceValue);
             }
         }
 
-        // Repeat for the weight sections
+
         for (int i = 0; i < priceWeightTemplateLayout.getChildCount(); i++) {
             View view = priceWeightTemplateLayout.getChildAt(i);
 
             if (view instanceof LinearLayout) {
                 LinearLayout linearLayout = (LinearLayout) view;
 
-                // Look for the Spinner and EditText in this LinearLayout
-                Spinner weightSpinner = (Spinner) linearLayout.getChildAt(0); // Spinner is the first child
-                EditText extraPriceEditText = (EditText) linearLayout.getChildAt(2); // EditText is the third child
 
-                // Get values from the Spinner and EditText
+                Spinner weightSpinner = (Spinner) linearLayout.getChildAt(0);
+                EditText extraPriceEditText = (EditText) linearLayout.getChildAt(2);
+
+
                 String weightType = weightSpinner.getSelectedItem().toString();
                 String extraPrice = extraPriceEditText.getText().toString().trim();
 
-                // Add to the list
+
                 weightPrices.add(weightType + ": $" + extraPrice);
             }
         }
 
-        // Log the values for debugging
+
         Log.d("Captured Data", "Base Prices: " + basePrices);
         Log.d("Captured Data", "Weight Prices: " + weightPrices);
 
-        // Proceed to save the data
+
         saveDataToFirebase(basePrices, weightPrices);
     }
 
@@ -367,15 +331,15 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
 
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Reference to the correct path
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(userId).child("quoteDefaults");
 
-        // Prepare the data to save to Firebase
+
         Map<String, Object> quoteDefaults = new HashMap<>();
-        // Base Price Data
+
         List<Map<String, String>> basePriceList = new ArrayList<>();
         for (String basePrice : basePrices) {
-            // Split the basePrice string like "Birthday Cake: $70" into a map
+
             String[] parts = basePrice.split(": ");
             Map<String, String> basePriceData = new HashMap<>();
             basePriceData.put("cakeType", parts[0]);
@@ -383,13 +347,13 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
             basePriceList.add(basePriceData);
         }
         quoteDefaults.put("basePricePerCake", basePriceList);
-        // Weight and Price Data
+
         List<Map<String, String>> weightPriceList = new ArrayList<>();
         for (String weightPrice : weightPrices) {
-            // Split the weightPrice string like "1 lbs: $5" into a map
+
             String[] parts = weightPrice.split(": ");
-            String weight = parts[0].split(" ")[0];  // Get the numeric weight (e.g., "1" from "1 lbs")
-            String priceExtra = parts[1].replace("$", "").trim();  // Get the price (e.g., "5")
+            String weight = parts[0].split(" ")[0];
+            String priceExtra = parts[1].replace("$", "").trim();
 
             Map<String, String> weightPriceData = new HashMap<>();
             weightPriceData.put("weight", weight);
@@ -398,12 +362,12 @@ public class B_MyQuoteSetupActivity extends AppCompatActivity {
         }
         quoteDefaults.put("cakeWeightAndPrice", weightPriceList);
 
-        // Save to Firebase
+
 
         databaseReference.setValue(quoteDefaults)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Data saved successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
                         // Navigate to Home Activity
                         Intent intent = new Intent(B_MyQuoteSetupActivity.this, B_HomeActivity.class);
                         startActivity(intent);

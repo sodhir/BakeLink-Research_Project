@@ -89,7 +89,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
          generateQuote.setOnClickListener(view -> {
              Intent intent = new Intent(B_ViewQuoteActivity.this, B_GenerateQuoteActivity.class);
              intent.putExtra("customCakeRequestId", quoteId);
-             // Pass the values fetched from Firebase
+
              intent.putExtra("cakeType", cakeType.getText().toString());
              intent.putExtra("cakeSize", cakeSize.getText().toString());
              intent.putExtra("cakeLayers", cakeLayers.getText().toString());
@@ -99,7 +99,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
              intent.putExtra("additionalNotes", additionalNotes.getText().toString());
              intent.putExtra("bakerId", currentUser);
              intent.putExtra("customerId", customerName.getText().toString());
-             intent.putExtra("imageUrl", imageUrl); // Pass imageUrl to the next activity
+             intent.putExtra("imageUrl", imageUrl);
              startActivity(intent);
 
          });
@@ -191,7 +191,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Log the retrieved RGB colors for debugging
+
                     Log.d("RGB_COLORS", "Colors retrieved: " + rgbColorsArrayList.size());
                     for (int[] color : rgbColorsArrayList) {
                         Log.d("RGB_COLORS", "Color: " + Arrays.toString(color));
@@ -217,8 +217,8 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
     }
 
     private void loadRgbColors(ArrayList<int[]> receivedRgbColors) {
-        if (receivedRgbColors.size() >= 5) { // Ensure at least 5 colors are available
-            // Get the View references
+        if (receivedRgbColors.size() >= 5) {
+
             View swatch1 = findViewById(R.id.colorSwatch1);
             View swatch2 = findViewById(R.id.colorSwatch2);
             View swatch3 = findViewById(R.id.colorSwatch3);
@@ -239,25 +239,25 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Generate a unique message ID
+
         String messageID = mDatabase.child("messages").push().getKey();
         String senderID = currentUser;
         String receiverID = receiverId;
         String messageContent = "Test message";
 
         if (messageID != null) {
-            // Create the message object
+
             Message message = new Message(senderID, receiverID, messageContent, ServerValue.TIMESTAMP, "unread");
 
-            // Save the message in the messages node
+
             mDatabase.child("messages").child(messageID).setValue(message)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            // Save message reference for both the sender and receiver
+
                             mDatabase.child("bakers").child(senderID).child("messages").child(messageID).setValue(true);
                             mDatabase.child("users").child(receiverID).child("messages").child(messageID).setValue(true);
 
-                            // Optionally, send a push notification to the receiver
+
                             sendPushNotification(receiverID, messageContent);
 
                             Toast.makeText(getApplicationContext(), "Message sent", Toast.LENGTH_SHORT).show();
@@ -268,7 +268,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
         }
     }
     private void sendPushNotification(String receiverID, String messageContent) {
-        // Fetch the receiver's FCM token
+
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(receiverID).child("fcmToken")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -282,13 +282,13 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        // Handle any error
+
                     }
                 });
     }
 
     private void sendFCMRequest(String fcmToken, String message) {
-        // Construct a simple FCM payload
+
         JSONObject notification = new JSONObject();
         try {
             notification.put("to", fcmToken);
@@ -300,7 +300,7 @@ public class B_ViewQuoteActivity extends AppCompatActivity {
 
             notification.put("notification", notificationBody);
 
-            // You would send this FCM request here (via Retrofit, OkHttp, etc.)
+
 
         } catch (JSONException e) {
             e.printStackTrace();

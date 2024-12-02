@@ -25,7 +25,7 @@ public class QuoteResponse {
 
     // Constructor for Firebase
     public QuoteResponse() {
-        // Firebase requires an empty constructor
+
     }
 
     // Constructor with data

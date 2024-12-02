@@ -114,36 +114,13 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
 
             Glide.with(requireContext()).load(imageUrl).into(cakeImageView);
 
-            // Open date picker on click of the date EditText
-//            dateOfDeliveryEditText.setOnClickListener(v -> {
-//                Calendar calendar = Calendar.getInstance();
-//                int year = calendar.get(Calendar.YEAR);
-//                int month = calendar.get(Calendar.MONTH);
-//                int day = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-//                        (view1, selectedYear, selectedMonth, selectedDay) -> {
-//                            // Format the selected date and display it
-//                            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-//                            Calendar selectedDate = Calendar.getInstance();
-//                            selectedDate.set(selectedYear, selectedMonth, selectedDay);
-//                            formattedDate = df.format(selectedDate.getTime()); // Store formatted date
-//                            dateOfDeliveryEditText.setText(formattedDate); // Show the date in EditText
-//                        },
-//                        year, month, day);
-//
-//                // Show the date picker dialog
-//                datePickerDialog.show();
-//            });
-
-
 
             addToCartButton.setOnClickListener(v -> {
 
                 getBakerId(getArguments().getString(ARG_CAKE_ID));
 
                 dismiss();
-                // Redirect to the cart activity
+
                 Intent intent = new Intent(getContext(), C_CartActivity.class);
                 startActivity(intent);
             });
@@ -155,22 +132,22 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
     public void getBakerId(String cakeId) {
         Log.d("addtocart","cakeid:"+cakeId);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers");
-        String targetCakeId = cakeId; // Replace with the actual cake ID you're searching for
+        String targetCakeId = cakeId;
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean found = false;
                 for (DataSnapshot bakerSnapshot : snapshot.getChildren()) {
-                    String bakerId = bakerSnapshot.getKey(); // Get baker ID
+                    String bakerId = bakerSnapshot.getKey();
                     DataSnapshot cakesSnapshot = bakerSnapshot.child("cakes");
 
                     if (cakesSnapshot.hasChild(targetCakeId)) {
                         Log.d("Baker ID", "Baker ID found: " + bakerId);
-                        // Do something with the bakerId (e.g., store it, pass it to a method, etc.)
+
                         found = true;
                         addCakeToCart(bakerId, cakeId);
-                        break; // Stop searching once found
+                        break;
                     }
                 }
 
@@ -193,7 +170,7 @@ public class CakeAddToCartBottomSheet extends BottomSheetDialogFragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("userCarts").child(currentUserId).child("temporaryCartItems");
 
         Map<String, Object> orderData = new HashMap<>();
-       // orderData.put("orderId", databaseReference.push().getKey());
+
         orderData.put("cakeId", cakeId);
         orderData.put("bakerId", bakerId);
         orderData.put("deliveryDate", formattedDate);

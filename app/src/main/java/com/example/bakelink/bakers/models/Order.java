@@ -5,12 +5,12 @@ import java.util.List;
 public class Order {
     private String orderId;
     private String orderType;  // Regular or Custom
-    private String orderDate;  // The date of the order
-    private String orderDetails; // Details of the order
-    private String customerName;  // Name of the customer
-    private String cakeType;  // Type of the cake
-    private String deliveryAddress;  // Delivery address for the order
-    private String imageResource; // Assuming drawable resource ID for now
+    private String orderDate;
+    private String orderDetails;
+    private String customerName;
+    private String cakeType;
+    private String deliveryAddress;
+    private String imageResource;
 
     private Double orderTotal;
 

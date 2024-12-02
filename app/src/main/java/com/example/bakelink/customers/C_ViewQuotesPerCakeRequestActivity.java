@@ -58,11 +58,9 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
                 Intent intent = new Intent(C_ViewQuotesPerCakeRequestActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -108,7 +106,7 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
         responseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                responseList.clear(); // Clear list before adding new data to avoid duplicates
+                responseList.clear();
                 for (DataSnapshot responseSnapshot : snapshot.getChildren()) {
                     String responseId = responseSnapshot.getKey();
                     String userId = responseSnapshot.child("bakerId").getValue(String.class);
@@ -124,7 +122,6 @@ public class C_ViewQuotesPerCakeRequestActivity extends AppCompatActivity {
                     cakeResponse.setResponseMessage(responseMessage);
                     cakeResponse.setStatus(status);
 
-                    // Fetch bakery title asynchronously
                     getBakeryTitle(userId, bakeryTitle -> {
                         cakeResponse.setBakeryTitle(bakeryTitle);
                         responseList.add(cakeResponse);

@@ -38,22 +38,22 @@ public class TopCakeCategoryAdapter extends RecyclerView.Adapter<TopCakeCategory
 
         Context context = holder.itemView.getContext();
         String imageUrl = category.getImageUrl();
-        // Checking if the imageUrl starts with "drawable" or is a URL
+
         if (imageUrl != null && imageUrl.startsWith("drawable/")) {
-            // Get the drawable resource name from imageUrl
+
             String drawableName = imageUrl.replace("drawable/", "");
 
-            // Get the resource ID from the drawable name
+
             int resourceId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
 
-            // Use Glide to load from the drawable resource
+
             Glide.with(context)
-                    .load(resourceId) // Load from drawable
+                    .load(resourceId)
                     .into(holder.categoryImage);
         } else {
-            // Load from URL using Glide
+
             Glide.with(context)
-                    .load(imageUrl) // Load from URL
+                    .load(imageUrl)
                     .into(holder.categoryImage);
         }
     }

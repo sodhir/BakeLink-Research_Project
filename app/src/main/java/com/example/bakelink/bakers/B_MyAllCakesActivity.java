@@ -44,16 +44,11 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bmy_all_cakes);
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-//            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-//            return insets;
-//        });
 
         // Set welcome text
         TextView welcomeText = findViewById(R.id.welcomeText);
         SharedPreferences sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
-        String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
+        String bakeryName = sharedPreferences.getString("bakery_name", null);
         welcomeText.setText("Welcome back, " + bakeryName + "!");
 
         allCakeRecycler = findViewById(R.id.allmyCakesRecycler);
@@ -89,45 +84,39 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
     }
 
     public void fetchAllCakes(){
-// Get the current user (baker) UID
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String currentBakerId = mAuth.getCurrentUser().getUid();
 
-// Reference to the baker's cakes node
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("bakers")
                 .child(currentBakerId).child("cakes");
 
-// Attach a listener to fetch data
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Cake> cakesList = new ArrayList<>();
                 for (DataSnapshot cakeSnapshot : snapshot.getChildren()) {
-                    // Assuming you have a Cake model class
+
                     String cakeId = cakeSnapshot.getKey();
                     String name = cakeSnapshot.child("cakeName").getValue(String.class);
                     String description = cakeSnapshot.child("description").getValue(String.class);
                     Double price = cakeSnapshot.child("price").getValue(Double.class);
                     String imageUrl = cakeSnapshot.child("cakeImgUrl").getValue(String.class);
-                    //double price = 0;
-//                    try {
-//                        price = Double.parseDouble(priceString);
-//                    } catch (NumberFormatException e) {
-//                        Log.e("ParsingError", "Failed to parse price to double: " + e.getMessage());
-//                    }
 
                     Cake cake = new Cake();
                     cake.setCakeId(cakeId);
                     cake.setDescription(description);
                     cake.setCakeName(name);
                     cake.setCakeImgUrl(imageUrl);
-                    cake.setPrice(price); // Assuming `price` is of type double
+                    cake.setPrice(price);
                     cakesList.add(cake);
                 }
 
                 Log.d("Cakes", "Cakes fetched: " + cakesList.size());
-                // Use the fetched list of cakes (e.g., update your UI)
-                displayCakes(cakesList); // Implement this method to handle the list of cakes
+
+                displayCakes(cakesList);
             }
 
             @Override
@@ -140,7 +129,7 @@ public class B_MyAllCakesActivity extends AppCompatActivity {
     }
 
     private void displayCakes(List<Cake> cakesList) {
-        // Create an adapter and set it to the RecyclerView
+
         BakerAllCakeAdapter adapter = new BakerAllCakeAdapter(cakesList);
         allCakeRecycler.setAdapter(adapter);
         allCakeRecycler.setLayoutManager(new LinearLayoutManager(this));

@@ -1,11 +1,11 @@
 package com.example.bakelink.customers.modal;
 
 public class Deal {
-    private String name;       // For the name of the deal
-    private String dealCode;   // For the deal code
-    private String validTill;   // For the validity date of the deal
+    private String name;
+    private String dealCode;
+    private String validTill;
     private String imageUrl;
-    private String dealTag;    // For the image URL
+    private String dealTag;
 
     // Constructor
     public Deal(String name, String dealCode, String validTill, String imageUrl, String dealTag) {

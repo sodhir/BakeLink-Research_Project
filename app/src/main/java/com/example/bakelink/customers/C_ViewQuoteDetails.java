@@ -84,11 +84,9 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
                 Intent intent = new Intent(C_ViewQuoteDetails.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -273,77 +271,27 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
 
         Log.d("quotedetails", responseId + " " + customCakeRequestId);
 
-        // Fetch and display quote details based on quoteId
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("customCakeRequests").child(customCakeRequestId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Extract data from snapshot
                     Log.d("quotedetails", snapshot.toString());
                     String cakeType = snapshot.child("cakeType").getValue(String.class);
-                    //String cakeTypePrice = "$" + snapshot.child("cakeTypePrice").getValue(Double.class);
-                    //Log.d("cakeType", cakeTypePrice);
-
                     String cakeSize = snapshot.child("cakeSize").getValue(String.class);
-                    //String cakeSizePrice = "$" + snapshot.child("cakeSizePrice").getValue(Double.class);
-
                     String cakeLayers = snapshot.child("noOfLayers").getValue(String.class);
-                    //String cakeLayersPrice = "$" + snapshot.child("cakeLayersPrice").getValue(Double.class);
-
                     String cakeWeight = snapshot.child("cakeWeight").getValue(String.class);
-                    //String cakeWeightPrice = "$" + snapshot.child("cakeWeightPrice").getValue(Double.class);
-
                     String cakeFlavor = snapshot.child("flavor").getValue(String.class);
-                    //String cakeFlavorPrice = "$" + snapshot.child("cakeFlavorPrice").getValue(Double.class);
-
                     String cakeFilling = snapshot.child("filling").getValue(String.class);
-                    //String cakeFillingPrice = "$" + snapshot.child("cakeFillingPrice").getValue(Double.class);
-
                     String additionalNotes = snapshot.child("notes").getValue(String.class);
-                    //String additionalNotesPrice = "$" + snapshot.child("additionalNotesPrice").getValue(Double.class);
-
-                    //String deliveryPrice = "$" + snapshot.child("deliveryChargesPrice").getValue(Double.class);
-
-                    //String discountPrice = "$" + snapshot.child("discountsPrice").getValue(Double.class);
-
-                    //bakerId = snapshot.child("bakerId").getValue(String.class);
-                    // Update UI components
-                    //cakeImageUrl = snapshot.child("imageUrl").getValue(String.class);
 
                     cakeTypeText.setText("Cake type: " + cakeType);
-                    //cakeTypePriceText.setText(cakeTypePrice);
-
                     cakeSizeText.setText("Cake size: " + cakeSize);
-                    //cakeSizePriceText.setText(cakeSizePrice);
-
                     cakeLayersText.setText("No. of layers: " + cakeLayers);
-                    //cakeLayersPriceText.setText(cakeLayersPrice);
-
                     cakeWeightText.setText("Cake weight: " + cakeWeight);
-                    //cakeWeightPriceText.setText(cakeWeightPrice);
-
                     cakeFlavorText.setText("Cake flavor: " + cakeFlavor);
-                    //cakeFlavorPriceText.setText(cakeFlavorPrice);
-
                     cakeFillingText.setText("Cake filling: " + cakeFilling);
-                    //cakeFillingPriceText.setText(cakeFillingPrice);
-
                     additionalNotesText.setText("Additional notes: " + additionalNotes);
-                    //additionalNotesPriceText.setText(additionalNotesPrice);
-
-                    //deliveryPriceText.setText(deliveryPrice);
-                    //discountPriceText.setText(discountPrice);
-
-                    //quotedPrice =  snapshot.child("quotedPrice").getValue(Double.class);
-
-                    //totalPriceText.setText("$" + snapshot.child("quotedPrice").getValue(Double.class));
-
-                    //String bakerMessage = snapshot.child("responseMessage").getValue(String.class);
-                    //notesFromBaker.setText(bakerMessage);
-
-                    //deliveryDate = snapshot.child("deliveryDate").getValue(String.class);
-                    //deliveryAdd = snapshot.child("deliveryAddress").getValue(String.class);
 
                 }else{
                     Log.d("quotedetails", "snapshot does not exist");
@@ -359,28 +307,20 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Extract data from snapshot
                     Log.d("quotedetails", snapshot.toString());
-                    //String cakeType = snapshot.child("cakeType").getValue(String.class);
                     String cakeTypePrice = "$" + snapshot.child("cakeTypePrice").getValue(Double.class);
                     Log.d("cakeType", cakeTypePrice);
 
-                    //String cakeSize = snapshot.child("cakeSize").getValue(String.class);
                     String cakeSizePrice = "$" + snapshot.child("cakeSizePrice").getValue(Double.class);
 
-                    //String cakeLayers = snapshot.child("cakeLayers").getValue(String.class);
                     String cakeLayersPrice = "$" + snapshot.child("cakeLayersPrice").getValue(Double.class);
 
-                    //String cakeWeight = snapshot.child("cakeWeight").getValue(String.class);
                     String cakeWeightPrice = "$" + snapshot.child("cakeWeightPrice").getValue(Double.class);
 
-                    //String cakeFlavor = snapshot.child("flavor").getValue(String.class);
                     String cakeFlavorPrice = "$" + snapshot.child("cakeFlavorPrice").getValue(Double.class);
 
-                    //String cakeFilling = snapshot.child("filling").getValue(String.class);
                     String cakeFillingPrice = "$" + snapshot.child("cakeFillingPrice").getValue(Double.class);
 
-                    //String additionalNotes = snapshot.child("additionalNotes").getValue(String.class);
                     String additionalNotesPrice = "$" + snapshot.child("additionalNotesPrice").getValue(Double.class);
 
                     String deliveryPrice = "$" + snapshot.child("deliveryChargesPrice").getValue(Double.class);
@@ -388,28 +328,21 @@ public class C_ViewQuoteDetails extends AppCompatActivity {
                     String discountPrice = "$" + snapshot.child("discountsPrice").getValue(Double.class);
 
                     bakerId = snapshot.child("bakerId").getValue(String.class);
-                    // Update UI components
+
                     cakeImageUrl = snapshot.child("imageUrl").getValue(String.class);
 
-                    //cakeTypeText.setText("Cake type: " + cakeType);
                     cakeTypePriceText.setText(cakeTypePrice);
 
-                    //cakeSizeText.setText("Cake size: " + cakeSize);
                     cakeSizePriceText.setText(cakeSizePrice);
 
-                    //cakeLayersText.setText("No. of layers: " + cakeLayers);
                     cakeLayersPriceText.setText(cakeLayersPrice);
 
-                    //cakeWeightText.setText("Cake weight: " + cakeWeight);
                     cakeWeightPriceText.setText(cakeWeightPrice);
 
-                    //cakeFlavorText.setText("Cake flavor: " + cakeFlavor);
                     cakeFlavorPriceText.setText(cakeFlavorPrice);
 
-                    //cakeFillingText.setText("Cake filling: " + cakeFilling);
                     cakeFillingPriceText.setText(cakeFillingPrice);
 
-                    //additionalNotesText.setText("Additional notes: " + additionalNotes);
                     additionalNotesPriceText.setText(additionalNotesPrice);
 
                     deliveryPriceText.setText(deliveryPrice);

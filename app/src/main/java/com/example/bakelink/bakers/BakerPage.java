@@ -75,11 +75,11 @@ public class BakerPage extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
+
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
+
                 Intent intent = new Intent(BakerPage.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -112,22 +112,22 @@ public class BakerPage extends AppCompatActivity {
 
         String imageUrl = intent.getStringExtra("bakerImage");
 
-        // Checking if the imageUrl starts with "drawable" or is a URL
+
         if (imageUrl != null && imageUrl.startsWith("drawable/")) {
-            // Get the drawable resource name from imageUrl
+
             String drawableName = imageUrl.replace("drawable/", "");
 
-            // Get the resource ID from the drawable name
+
             int resourceId = context.getResources().getIdentifier(drawableName, "drawable", context.getPackageName());
 
-            // Use Glide to load from the drawable resource
+
             Glide.with(context)
-                    .load(resourceId) // Load from drawable
+                    .load(resourceId)
                     .into(bakerImage);
         } else {
-            // Load from URL using Glide
+
             Glide.with(context)
-                    .load(imageUrl) // Load from URL
+                    .load(imageUrl)
                     .fitCenter()
                     .into(bakerImage);
         }

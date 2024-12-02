@@ -58,17 +58,15 @@ public class C_ProfileActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
+
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
                 Intent intent = new Intent(C_ProfileActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
         });
 
-        // Initialize Firebase and UI components
         auth = FirebaseAuth.getInstance();
         customersReference = FirebaseDatabase.getInstance().getReference("Customers");
 
@@ -78,41 +76,35 @@ public class C_ProfileActivity extends AppCompatActivity {
         dobTextView = findViewById(R.id.tv_dob);
         editProfileButton = findViewById(R.id.btn_edit_profile);
         logoutButton = findViewById(R.id.logout_button);
-        storageReference = FirebaseStorage.getInstance().getReference("profile_images"); // Reference for profile images in Firebase Storage
+        storageReference = FirebaseStorage.getInstance().getReference("profile_images");
 
-        // Load user data
         String userId = auth.getCurrentUser().getUid();
         loadCustomerData(userId);
         Log.d("customerProfile","userid:"+userId);
 
-        // Edit Profile button
         editProfileButton.setOnClickListener(v -> {
             String fullNameText = fullNameTextView.getText().toString();
             String addressText = addressTextView.getText().toString();
             String dobText = dobTextView.getText().toString();
             BottomSheetEditProfile editProfileSheet = new BottomSheetEditProfile(userId,fullNameText,addressText,dobText);
             editProfileSheet.setProfileUpdateListener(() -> {
-                // Reload data when profile is updated
                 loadCustomerData(userId);
             });
             editProfileSheet.show(getSupportFragmentManager(), "EditProfileBottomSheet");
         });
 
         logoutButton.setOnClickListener(v -> {
-            // Clear SharedPreferences
             SharedPreferences sharePreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharePreferences.edit();
-            editor.clear(); // Clear all saved data
+            editor.clear();
             editor.apply();
 
-            // Firebase sign out
             FirebaseAuth.getInstance().signOut();
 
-            // Redirect to Login Activity
             Intent intent = new Intent(C_ProfileActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
             startActivity(intent);
-            finish(); // End the current activity
+            finish();
         });
 
         //fab
@@ -151,7 +143,6 @@ public class C_ProfileActivity extends AppCompatActivity {
     private void loadCustomerData(String userId) {
         Log.d("customerProfile", "useridinsidefnc:" + userId);
 
-        // Fetch email from Users collection
         DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
         usersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -172,7 +163,6 @@ public class C_ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Fetch other details from Customers collection
         customersReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -203,7 +193,7 @@ public class C_ProfileActivity extends AppCompatActivity {
         Log.d("customerProfile", "Creating default customer data for userId: " + userId);
         DatabaseReference defaultCustomerRef = customersReference.child(userId);
 
-        // Example default data with placeholder profile image URL
+        // default data
         CustomerProfile defaultProfile = new CustomerProfile(
                 "N/A",
                 "N/A",
@@ -215,7 +205,6 @@ public class C_ProfileActivity extends AppCompatActivity {
                 Log.d("customerProfile", "Default customer data created successfully.");
                 //Toast.makeText(C_ProfileActivity.this, "Default profile created. Please edit your details.", Toast.LENGTH_SHORT).show();
 
-                // Update UI with default values
                 fullNameTextView.setText(defaultProfile.getFullName());
                 addressTextView.setText(defaultProfile.getAddress());
                 dobTextView.setText(defaultProfile.getDob());

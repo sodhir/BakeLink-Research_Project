@@ -91,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(SignUpActivity.this);
         progressDialog.setMessage("Signing up...");
-        progressDialog.setCancelable(false); // Prevent closing the dialog while processing
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
@@ -107,16 +107,16 @@ public class SignUpActivity extends AppCompatActivity {
                             editor.apply();
                             Log.d("USER_ID", "Retrieved userId: " + userId);
 
-                            // Create a user object with additional info
+                            // Create a user object
                             User user = new User(email, userType);
 
-                            // Save to Firebase Realtime Database
+                            // Save to Database
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
                             databaseReference.child(userId).setValue(user)
                                     .addOnCompleteListener(saveTask -> {
                                         progressDialog.dismiss();
                                         if (saveTask.isSuccessful()) {
-                                            Toast.makeText(SignUpActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(SignUpActivity.this, "Sign-up successful!", Toast.LENGTH_SHORT).show();
 
                                             // Navigate based on userType
                                             if (userType.equals("Baker")) {

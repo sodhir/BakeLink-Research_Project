@@ -54,7 +54,7 @@ public class B_ProfileActivity extends AppCompatActivity {
         String bakeryName = sharedPreferences.getString("bakery_name", null); // Get bakery name
         welcomeText.setText("Welcome back, " + bakeryName + "!");
 
-        // Initialize Views
+
         bakerName = findViewById(R.id.baker_name);
         bakerDescription = findViewById(R.id.baker_description);
         bakerSpecialities = findViewById(R.id.baker_specialities);
@@ -65,35 +65,31 @@ public class B_ProfileActivity extends AppCompatActivity {
         currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference("bakers").child(currentUserId);
 
-        // Fetch baker data
+
         fetchBakerData();
 
 
-        // Set button click listeners
+
         editProfileButton.setOnClickListener(v -> {
             String bakeryTitleText = bakerName.getText().toString();
             String descriptionText = bakerDescription.getText().toString();
 
-            // Open Bottom Sheet
             BakerProfileBottomSheetFragment bottomSheet = new BakerProfileBottomSheetFragment(currentUserId, bakeryTitleText, descriptionText);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         });
 
         logoutButton.setOnClickListener(v -> {
-            // Clear SharedPreferences
             SharedPreferences sharePreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharePreferences.edit();
-            editor.clear(); // Clear all saved data
+            editor.clear();
             editor.apply();
 
-            // Firebase sign out
             FirebaseAuth.getInstance().signOut();
 
-            // Redirect to Login Activity
             Intent intent = new Intent(B_ProfileActivity.this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
             startActivity(intent);
-            finish(); // End the current activity
+            finish();
         });
 
         // Set up bottom navigation
@@ -117,7 +113,7 @@ public class B_ProfileActivity extends AppCompatActivity {
         });
     }
     private void fetchBakerData() {
-        // Fetch the baker's data from Firebase Database
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -128,16 +124,16 @@ public class B_ProfileActivity extends AppCompatActivity {
                     Log.d("profile",baker.toString());
 
                     if (baker != null) {
-                        // Set the fetched data into the views
+
                         bakerName.setText(baker.getBakeryTitle());
                         bakerDescription.setText(baker.getDescription());
                         List<String> specialities = baker.getSpecialtiesAndServices();
                         String specialitiesText = TextUtils.join("\n", specialities);
                         bakerSpecialities.setText(specialitiesText);
 
-                        // Load the profile picture (if you have the URL)
+
                         if (!baker.getProfilePictureUrl().isEmpty()) {
-                            // Load the profile image using Glide
+
                             Glide.with(B_ProfileActivity.this)
                                     .load(baker.getProfilePictureUrl())
                                     .circleCrop()
@@ -149,7 +145,7 @@ public class B_ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handle error (e.g., show a toast or log the error)
+
             }
         });
     }

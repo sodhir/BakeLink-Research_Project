@@ -25,9 +25,9 @@ public class WeightsBottomSheetFragment extends BottomSheetDialogFragment {
         saveButton.setOnClickListener(v -> {
             String weight = editTextWeights.getText().toString().trim();
             if (!weight.isEmpty()) {
-                // Pass data back to activity or fragment
+
                 ((B_AddNewCakeActivity) getActivity()).addWeightsToList(weight);
-                dismiss(); // Dismiss bottom sheet
+                dismiss();
             }
         });
 

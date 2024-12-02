@@ -125,7 +125,7 @@ public class B_OrderDetailActivity extends AppCompatActivity {
                     String cakeSize = orderItemSnapshot.child("cakeSize").getValue(String.class);
                     String cakeLayers = orderItemSnapshot.child("cakeLayers").getValue(String.class);
                     String cakeWeight = orderItemSnapshot.child("cakeWeight").getValue(String.class);
-                    String cakeFlavor = orderItemSnapshot.child("flavor").getValue(String.class);
+                    String cakeFlavor = orderItemSnapshot.child("cakeFlavor").getValue(String.class);
                     String cakeFilling = orderItemSnapshot.child("cakeFilling").getValue(String.class);
                     String additionalNotes = orderItemSnapshot.child("additionalNotes").getValue(String.class);
                     Double price = orderItemSnapshot.child("price").getValue(Double.class);
@@ -137,8 +137,8 @@ public class B_OrderDetailActivity extends AppCompatActivity {
                     Glide.with(cakeImage.getContext()).load(imageUrl).into(cakeImage);
                     TextView orderTypeTextView = findViewById(R.id.vqCakeType);
                     orderTypeTextView.setText(cakeType);
-//                    TextView orderSizeTextView = findViewById(R.id.vqCakeSize);
-//                    orderSizeTextView.setText(cakeSize);
+                    TextView orderSizeTextView = findViewById(R.id.vqCakeSize);
+                    orderSizeTextView.setText(cakeSize);
                     TextView orderLayersTextView = findViewById(R.id.vqCakeLayers);
                     orderLayersTextView.setText(cakeLayers);
 
@@ -150,6 +150,8 @@ public class B_OrderDetailActivity extends AppCompatActivity {
                     additionalNotesTextView.setText(additionalNotes);
                     TextView priceTextView = findViewById(R.id.vqPrice);
                     priceTextView.setText(String.valueOf(price));
+
+
 
                 }
 

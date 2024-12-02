@@ -52,11 +52,11 @@ public class C_CakeRequestsActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
+
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
+
                 Intent intent = new Intent(C_CakeRequestsActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }

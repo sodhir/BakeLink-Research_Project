@@ -71,11 +71,11 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
+
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
+
                 Intent intent = new Intent(C_CustomCakeRequestActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
@@ -83,7 +83,7 @@ public class C_CustomCakeRequestActivity extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.img_custom_cake_img);
 
-        // Get the image URI from the intent
+
         imageUriString = getIntent().getStringExtra("imageUri");
         receivedRgbColors = (ArrayList<int[]>) getIntent().getSerializableExtra("rgbColors");
 

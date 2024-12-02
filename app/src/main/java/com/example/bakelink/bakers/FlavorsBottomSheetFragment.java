@@ -25,9 +25,9 @@ public class FlavorsBottomSheetFragment extends BottomSheetDialogFragment {
         saveButton.setOnClickListener(v -> {
             String flavor = editTextFlavor.getText().toString().trim();
             if (!flavor.isEmpty()) {
-                // Pass data back to activity or fragment
+
                 ((B_AddNewCakeActivity) getActivity()).addFlavorsToList(flavor);
-                dismiss(); // Dismiss bottom sheet
+                dismiss();
             }
         });
 

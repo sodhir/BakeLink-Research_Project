@@ -2,8 +2,6 @@ package com.example.bakelink.customers.modal;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.database.PropertyName;
-
 import java.util.List;
 
 public class Baker {
@@ -21,7 +19,7 @@ public class Baker {
     public Baker() {
     }
 
-    // Constructor
+
     public Baker(String name, String imageUrl, float rating) {
         this.name = name;
         this.imageUrl = imageUrl;

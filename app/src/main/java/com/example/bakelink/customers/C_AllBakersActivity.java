@@ -49,23 +49,23 @@ public class C_AllBakersActivity extends AppCompatActivity {
         //fab
         ImageButton fab = findViewById(R.id.fab_request_quote);
         fab.setOnClickListener(v -> {
-            //startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
+            startActivity(new Intent(getApplicationContext(), C_RequestQuoteActivity.class));
         });
 
         cartIcon = findViewById(R.id.cart_icon);
 
-        // Set OnClickListener for the cart icon
+
         cartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to C_CartActivity
+
                 Intent intent = new Intent(C_AllBakersActivity.this, C_CartActivity.class);
                 startActivity(intent);
             }
         });
 
         recyclerViewTrendingBakers = findViewById(R.id.recycler_view_trending_bakers);
-        trendingBakersList = new ArrayList<>(); // Populate this with your data
+        trendingBakersList = new ArrayList<>();
 
         // Setup the adapter
         trendingBakerAdapter = new TrendingBakerAdapter(trendingBakersList);
@@ -125,7 +125,7 @@ public class C_AllBakersActivity extends AppCompatActivity {
 
                     }
                 }
-                trendingBakerAdapter.notifyDataSetChanged(); // Notify adapter of data change
+                trendingBakerAdapter.notifyDataSetChanged();
             }
 
             @Override

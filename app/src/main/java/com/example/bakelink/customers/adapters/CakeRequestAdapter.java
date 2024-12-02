@@ -46,8 +46,8 @@ public class CakeRequestAdapter extends RecyclerView.Adapter<CakeRequestAdapter.
         holder.cakeDetails.setText(cakeDetails);
         Glide.with(holder.cakeImage.getContext())
                 .load(request.getImageUrl())
-                .placeholder(R.drawable.cakesample1) // Optional placeholder while loading
-                .error(R.drawable.cakesample1) // Optional error image if loading fails
+                .placeholder(R.drawable.cakesample1)
+                .error(R.drawable.cakesample1)
                 .into(holder.cakeImage);
 
         holder.btnViewQuotes.setOnClickListener(new View.OnClickListener() {
